@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java反射：判断方法是Getter还是Setter</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Java反射：判断方法是Getter还是Setter</h1>
+<div class="preview" id="orgb57f1d8">
+<p>
+在使用反射（Reflection）过程中，常常需要获取Class的Getter或Setter，以下代码可以用来检查Method,是Getter还是Setter。
+</p>
+
+</div>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">boolean</span> <span style="color: #bc6ec5; font-weight: bold;">isGetter</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Method</span> <span style="color: #7590db;">method</span><span style="color: #4f97d7;">){</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">(</span>Modifier.isPublic<span style="color: #67b11d;">(</span>method.getModifiers<span style="color: #b1951d;">()</span><span style="color: #67b11d;">)</span> &amp;&amp; method.getName<span style="color: #67b11d;">()</span>.startsWith<span style="color: #67b11d;">(</span><span style="color: #2d9574;">"get"</span><span style="color: #67b11d;">)</span> || method.getName<span style="color: #67b11d;">()</span>.startsWith<span style="color: #67b11d;">(</span><span style="color: #2d9574;">"is"</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span> 
+       &amp;&amp; method.getParameterCount<span style="color: #2d9574;">()</span> == <span style="color: #a45bad;">0</span> &amp;&amp; <span style="color: #a45bad;">!</span>method.getReturnType<span style="color: #2d9574;">()</span>.equals<span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">void</span>.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">){</span>
+        <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;
+    <span style="color: #bc6ec5;">}</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">false</span>;    
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">boolean</span> <span style="color: #bc6ec5; font-weight: bold;">isSetter</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Method</span> <span style="color: #7590db;">method</span><span style="color: #4f97d7;">){</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span><span style="color: #bc6ec5;">(</span>Modifier.isPublic<span style="color: #2d9574;">(</span>method.getModifiers<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> &amp;&amp; method.getName<span style="color: #2d9574;">()</span>.startsWith<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"set"</span><span style="color: #2d9574;">)</span> &amp;&amp; method.getParameterCount<span style="color: #2d9574;">()</span> == <span style="color: #a45bad;">1</span> 
+       &amp;&amp; method.getReturnType<span style="color: #2d9574;">()</span>.equals<span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">void</span>.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">){</span>
+        <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">true</span>;
+    <span style="color: #bc6ec5;">}</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">false</span>;    
+<span style="color: #4f97d7;">}</span>
+
+</pre>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 18:06<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

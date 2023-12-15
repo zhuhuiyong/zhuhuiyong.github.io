@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 14:09 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sitemap</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Sitemap</h1>
+
+<div id="outline-container-org2141d64" class="outline-2">
+<h2 id="org2141d64"><a href="posts.html">[2023-12-06] 文章</a></h2>
+</div>
+<div id="outline-container-org6496344" class="outline-2">
+<h2 id="org6496344"><a href="index.html">[2023-11-20] Something</a></h2>
+</div>
+<div id="outline-container-org317308d" class="outline-2">
+<h2 id="org317308d">posts</h2>
+<div class="outline-text-2" id="text-org317308d">
+</div>
+<div id="outline-container-org3f86f47" class="outline-3">
+<h3 id="org3f86f47"><a href="posts/how-to-clean-linux-system-journal-logs.html">[2023-12-15] 如何清理Linux系统日志</a></h3>
+<div class="outline-text-3" id="text-org3f86f47">
+<p>
+systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
+</p>
+
+<p>
+systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log 中，由于日志是经历过压缩和格式化的二进制数据，所以在查看和定位的时候很迅速。
+</p>
+
+<p>
+日志记录的问题是，随着时间的推移，它开始变得越来越大。如果你检查Linux中的磁盘空间，你会发现有时它需要几个GB的空间。
+</p>
+
+<p>
+本文将介绍如何清理systemd日志，释放Linux系统上的磁盘空间。
+</p>
+</div>
+</div>
+<div id="outline-container-orga5c7ff5" class="outline-3">
+<h3 id="orga5c7ff5"><a href="posts/spring-cors.html">[2023-12-06] SpringBoot处理CORS跨域请求</a></h3>
+<div class="outline-text-3" id="text-orga5c7ff5">
+<p>
+In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
+</p>
+
+<p>
+Often, the host that serves the JS (e.g. example.com) is different from the host that serves the data (e.g. api.example.com). In such a case, CORS enables cross-domain communication.
+</p>
+
+<p>
+Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html">support</a> for CORS, offering an easy and powerful way of configuring it in any Spring or Spring Boot web application.
+</p>
+</div>
+</div>
+<div id="outline-container-org0a03854" class="outline-3">
+<h3 id="org0a03854"><a href="posts/how-to-find-java-class-file-version.html">[2023-11-30] 查看Java .class文件版本号</a></h3>
+<div class="outline-text-3" id="text-org0a03854">
+<p>
+本文将介绍如何查看.class文件和jar文件的Java发行版本。
+</p>
+</div>
+</div>
+<div id="outline-container-org36fdbfa" class="outline-3">
+<h3 id="org36fdbfa"><a href="posts/how-to-find-first-and-last-day-of-a-week-in-shell.html">[2023-11-27] 如何在Linux Shell中获取本周的第一天和最后一天</a></h3>
+<div class="outline-text-3" id="text-org36fdbfa">
+<p>
+在Shell编程中，可以使用 <code>date</code> 命令获取本周的第一天和最后一天。
+</p>
+</div>
+</div>
+<div id="outline-container-org469f46c" class="outline-3">
+<h3 id="org469f46c"><a href="posts/java-unit-testing-environment-variables.html">[2023-11-23] How to Mock Environment Variables in Unit Tests</a></h3>
+<div class="outline-text-3" id="text-org469f46c">
+<p>
+When we’re unit testing code that depends on environment variables, we may wish to provide specific values for them as part of our test implementation.
+</p>
+
+<p>
+Java doesn’t allow us to edit the environment variables, but there are workarounds we can use, and some libraries which can help us.
+</p>
+
+<p>
+In this tutorial we’ll look at the challenges of depending on environment variables in unit tests, how Java has made this even harder in recent versions, and the JUnit Pioneer, System Stubs, System Lambda and System Rules libraries. We’ll look at this for JUnit 4, JUnit 5 and TestNG.
+</p>
+</div>
+</div>
+<div id="outline-container-org2af86a7" class="outline-3">
+<h3 id="org2af86a7"><a href="posts/executable-comments-in-java.html">[2023-11-20] Executable Comments in Java</a></h3>
+<div class="outline-text-3" id="text-org2af86a7">
+<p>
+Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
+</p>
+
+<p>
+In this tutorial, we’ll explore cases where comments in our code can become executable. Or at least it may appear like they can.
+</p>
+</div>
+</div>
+<div id="outline-container-org6a4c324" class="outline-3">
+<h3 id="org6a4c324"><a href="posts/how-to-check-method-is-get-or-set-in-java.html">[2023-11-13] Java反射：判断方法是Getter还是Setter</a></h3>
+<div class="outline-text-3" id="text-org6a4c324">
+<p>
+在使用反射（Reflection）过程中，常常需要获取Class的Getter或Setter，以下代码可以用来检查Method,是Getter还是Setter。
+</p>
+</div>
+</div>
+<div id="outline-container-org8ddbdeb" class="outline-3">
+<h3 id="org8ddbdeb"><a href="posts/ASCIICode.html">[2023-11-10] ASCII Code - The extended ASCII table</a></h3>
+<div class="outline-text-3" id="text-org8ddbdeb">
+<p>
+<b>ASCII</b>, stands for American Standard Code for Information Interchange.
+It's a 7-bit character code where every single bit represents a unique
+character. On this webpage you will find 8 bits, 256 characters, ASCII
+table according to Windows-1252 (code page 1252) which is a superset of
+ISO 8859-1 in terms of printable characters. In the range 128 to 159
+(hex 80 to 9F), ISO/IEC 8859-1 has invisible control characters, while
+Windows-1252 has writable characters. Windows-1252 is probably the
+most-used 8-bit character encoding in the world.
+</p>
+</div>
+</div>
+<div id="outline-container-orgc0b751d" class="outline-3">
+<h3 id="orgc0b751d"><a href="posts/how-to-remove-html-tags-in-mysql.html">[2023-11-10] 如何移除MySQL字段中的Html标签</a></h3>
+<div class="outline-text-3" id="text-orgc0b751d">
+<p>
+在处理文本数据时，我们经常会遇到需要清除HTML标签的情况，在MySQL中，我们可以使用正则表达式和一些字符串函数来实现这一目标。 本文将介绍如何使用MySQL清除HTML标签。
+</p>
+</div>
+</div>
+<div id="outline-container-org8365ce7" class="outline-3">
+<h3 id="org8365ce7"><a href="posts/how-to-disable-f12-devtools-in-browser.html">[2023-11-10] 如何禁用F12浏览器开发者工具</a></h3>
+<div class="outline-text-3" id="text-org8365ce7">
+<p>
+当不想让自己的前端代码被用户调试时，需要使用户无法打开或使用浏览器的开发者工具。
+</p>
+
+<p>
+使用如下JS脚本后，用户打开浏览器开发者工具时，将无限debugger，从而实现禁用效果。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-15 五 14:09<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

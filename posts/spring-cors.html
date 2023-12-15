@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpringBoot处理CORS跨域请求</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">SpringBoot处理CORS跨域请求</h1>
+
+<div id="outline-container-org7691558" class="outline-2">
+<h2 id="org7691558">原文地址</h2>
+<div class="outline-text-2" id="text-org7691558">
+<p>
+<a href="https://www.baeldung.com/spring-cors">https://www.baeldung.com/spring-cors</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2711d58" class="outline-2">
+<h2 id="org2711d58">Overview</h2>
+<div class="outline-text-2" id="text-org2711d58">
+<div class="preview" id="org61d7e21">
+<p>
+In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
+</p>
+
+<p>
+Often, the host that serves the JS (e.g. example.com) is different from the host that serves the data (e.g. api.example.com). In such a case, CORS enables cross-domain communication.
+</p>
+
+<p>
+Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html">support</a> for CORS, offering an easy and powerful way of configuring it in any Spring or Spring Boot web application.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb50ed7d" class="outline-2">
+<h2 id="orgb50ed7d">Controller Method CORS Configuration</h2>
+<div class="outline-text-2" id="text-orgb50ed7d">
+<p>
+<b>Enabling CORS is straightforward &#x2013; just add the annotation <code>@CrossOrigin</code>.</b>
+</p>
+
+<p>
+We can implement this in several different ways.
+</p>
+</div>
+
+<div id="outline-container-org83fa214" class="outline-3">
+<h3 id="org83fa214">@CrossOrigin on a @RequestMapping Annotated Handler Method</h3>
+<div class="outline-text-3" id="text-org83fa214">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@RestController</span>
+<span style="color: #a45bad;">@RequestMapping</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"/account"</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">AccountController</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #a45bad;">@CrossOrigin</span>
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.GET, path = <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">Account</span> <span style="color: #bc6ec5; font-weight: bold;">retrieve</span>*<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.DELETE, path = <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">remove</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+In the example above, we only enabled CORS for the <code>retrieve()</code> method. We
+can see that we didn't set any configuration for the <code>@CrossOrigin</code> annotation, so it uses the defaults:
+</p>
+
+<ul class="org-ul">
+<li>All origins are allowed.</li>
+<li>The HTTP methods allowed are those specified in  the <code>@RequestMapping</code> annotation (GET, for this example).</li>
+<li>The time that the preflight response is cached (maxAge) is 30 minutes.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org24fdb34" class="outline-3">
+<h3 id="org24fdb34">@CrossOrigin on the Controller</h3>
+<div class="outline-text-3" id="text-org24fdb34">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>origins = <span style="color: #2d9574;">"http://example.com"</span>, maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
+<span style="color: #a45bad;">@RestController</span>
+<span style="color: #a45bad;">@RequestMapping</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"/account"</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">AccountController</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.GET, path = <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">Account</span> <span style="color: #bc6ec5; font-weight: bold;">retrieve</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.DELETE, path = <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">remove</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+This time, we added <code>@CrossOrigin</code> on the class level. So, both <code>retrieve()</code> and <code>remove()</code> methods have it enabled. We can customize the configuration by specifying the value of one of the annotation attributes: <code>origins</code>, <code>methods</code>, <code>allowedHeaders</code>, <code>exposedHeaders</code>, <code>allowCredentials</code>,or <code>maxAge</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org834201c" class="outline-3">
+<h3 id="org834201c">@CrossOrigin on Controller and Handler Method</h3>
+<div class="outline-text-3" id="text-org834201c">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
+<span style="color: #a45bad;">@RestController</span>
+<span style="color: #a45bad;">@RequestMapping</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"/account"</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">AccountController</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #a45bad;">@CrossOrigin</span><span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"http://example.com"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.GET, <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">Account</span> <span style="color: #bc6ec5; font-weight: bold;">retrieve</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+
+    <span style="color: #a45bad;">@RequestMapping</span><span style="color: #bc6ec5;">(</span>method = <span style="color: #a45bad;">RequestMethod</span>.DELETE, path = <span style="color: #2d9574;">"/{id}"</span><span style="color: #bc6ec5;">)</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">remove</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">@PathVariable</span> <span style="color: #ce537a; font-weight: bold;">Long</span> <span style="color: #7590db;">id</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">...</span>
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+Spring will combine attributes from both annotations to create a merged CORS configuration. Here, both methods will have a <code>maxAge</code> of 3600 seconds, the method <code>remove()</code> will allow all origins, and the method <code>retrieve()</code> will only allow origins from <a href="http://example.com">http://example.com</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ad6238" class="outline-2">
+<h2 id="org1ad6238">Global CORS Configuration</h2>
+<div class="outline-text-2" id="text-org1ad6238">
+<p>
+As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of our controllers. This is similar to using a <code>Filter</code> based solution but can be declared within Spring MVC and combined with a fine-grained <code>@CrossOrigin</code> configuration.
+</p>
+
+<p>
+By default, all origins and GET, HEAD, and POST methods are allowed.
+</p>
+</div>
+
+<div id="outline-container-orgfdb03fd" class="outline-3">
+<h3 id="orgfdb03fd">JavaConfig</h3>
+<div class="outline-text-3" id="text-orgfdb03fd">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Configuration</span>
+<span style="color: #a45bad;">@EnableWebMvc</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">WebConfig</span> <span style="color: #4f97d7; font-weight: bold;">implements</span> <span style="color: #ce537a; font-weight: bold;">WebMvcConfigurer</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #a45bad;">@Override</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">addCorsMappings</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">CorsRegistry</span> <span style="color: #7590db;">registry</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        registry.addMapping<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"/**"</span><span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+The example above enables CORS requests from any origin to any endpoint in the application.
+</p>
+
+<p>
+To lock this down a bit more, the <code>registry.addMapping</code> method returns a <code>CorsRegistration</code> object, which we can use for additional configuration. There's also an <code>allowedOrigins</code> method that lets us specify an array of allowed origins. This can be useful if we need to load this array from an external source at runtime.
+</p>
+
+<p>
+Additionally, there are also <code>allowedMethods</code>, <code>allowedHeaders</code>, <code>exposedHeaders</code>, <code>maxAge</code>, and <code>allowCredentials</code> that we can use to set the response headers and customization options. For example, we can open up CORS to any HTTP method by adding the <code>allowedMethods("*")</code> to the above configuration.
+</p>
+
+<p>
+It is worth noting that since version 2.4.0, Spring Boot introduced <code>allowedOriginPatterns</code> in addition to just <code>allowedOrigins</code>. This new element gives more flexibility when defining patterns. Furthermore, when <code>allowCredentials</code> is true, <code>allowedOrigins</code> cannot contain the special value '*' since that cannot be set on the <code>Access-Control-Allow-Origin</code> response header. To solve this issue and allow the credentials to a set of origins, we can either list them explicitly or consider using <code>allowedOriginPatterns</code> instead.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org75bd94d" class="outline-3">
+<h3 id="org75bd94d">XML Namespace</h3>
+<div class="outline-text-3" id="text-org75bd94d">
+<p>
+This minimal XML configuration enables CORS on a /** path pattern with the same default properties as the JavaConfig one:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">cors</span>&gt;
+  &lt;<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">mapping</span> <span style="color: #7590db;">path</span>=<span style="color: #2d9574;">"/**"</span> /&gt;
+&lt;/<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">cors</span>&gt;
+</pre>
+</div>
+
+<p>
+It's also possible to declare several CORS mappings with customized properties:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">cors</span>&gt;
+  &lt;<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">mapping</span> <span style="color: #7590db;">path</span>=<span style="color: #2d9574;">"/api/**"</span>
+             <span style="color: #7590db;">allowed-origins</span>=<span style="color: #2d9574;">"http://domain1.com, http://domain2.com"</span>
+             <span style="color: #7590db;">allowed-methods</span>=<span style="color: #2d9574;">"GET, PUT"</span>
+             <span style="color: #7590db;">allowed-headers</span>=<span style="color: #2d9574;">"header1, header2, header3"</span>
+             <span style="color: #7590db;">exposed-headers</span>=<span style="color: #2d9574;">"header1, header2"</span>
+             <span style="color: #7590db;">allow-credentials</span>=<span style="color: #2d9574;">"false"</span>
+             <span style="color: #7590db;">max-age</span>=<span style="color: #2d9574;">"123"</span> /&gt;
+
+  &lt;<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">mapping</span> <span style="color: #7590db;">path</span>=<span style="color: #2d9574;">"/resources/**"</span>
+             <span style="color: #7590db;">allowed-origins</span>=<span style="color: #2d9574;">"http://domain1.com"</span> /&gt;
+&lt;/<span style="color: #4f97d7;">mvc</span>:<span style="color: #bc6ec5; font-weight: bold;">cors</span>&gt;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9e2dc5a" class="outline-2">
+<h2 id="org9e2dc5a">CORS With Spring Security</h2>
+<div class="outline-text-2" id="text-org9e2dc5a">
+<p>
+If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That's because CORS needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC.
+</p>
+
+<p>
+Luckily, Spring Security provides an out-of-the-box solution:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">
+<span style="color: #a45bad;">@EnableWebSecurity</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">WebSecurityConfig</span> <span style="color: #4f97d7;">{</span>
+
+    <span style="color: #a45bad;">@Bean</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">SecurityFilterChain</span> <span style="color: #bc6ec5; font-weight: bold;">filterChain</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">HttpSecurity</span> <span style="color: #7590db;">http</span><span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">Exception</span> <span style="color: #bc6ec5;">{</span>
+        http.cors<span style="color: #2d9574;">()</span>.and<span style="color: #2d9574;">()</span>...
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<a href="https://www.baeldung.com/spring-security-cors-preflight">This article</a> explains it in more detail.
+</p>
+
+<p>
+We can configure CORS to override the default Spring Security CORS handling. For that, we need to add a  CorsConfigurationSource  bean that takes care of the CORS configuration using a  CorsConfiguration  instance. The  http.cors()  method uses  CorsFilter  if a  corsFilter_ bean is added, else it uses  CorsConfigurationSource_. If neither is configured, then it uses the Spring MVC pattern inspector handler.
+</p>
+
+<p>
+Let's add the  CorsConfigurationSource  bean to the  WebSecurityConfig  class:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Bean</span>
+<span style="color: #ce537a; font-weight: bold;">CorsConfigurationSource</span> <span style="color: #bc6ec5; font-weight: bold;">corsConfigurationSource</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">CorsConfiguration</span> <span style="color: #7590db;">configuration</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">CorsConfiguration</span><span style="color: #bc6ec5;">()</span>;
+    configuration.setAllowedOrigins<span style="color: #bc6ec5;">(</span>Arrays.asList<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"*"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    configuration.setAllowedMethods<span style="color: #bc6ec5;">(</span>Arrays.asList<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"*"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    configuration.setAllowedHeaders<span style="color: #bc6ec5;">(</span>Arrays.asList<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"*"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #ce537a; font-weight: bold;">UrlBasedCorsConfigurationSource</span> <span style="color: #7590db;">source</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">UrlBasedCorsConfigurationSource</span><span style="color: #bc6ec5;">()</span>;
+    source.registerCorsConfiguration<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"/**"</span>, configuration<span style="color: #bc6ec5;">)</span>;
+    <span style="color: #4f97d7; font-weight: bold;">return</span> source;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+Here, we create a  CorsConfiguration  instance using the default constructor and then set the allowed origins, allowed methods, and response headers. The above configuration enables CORS requests from any origin, any method, and any header to any endpoint in the application. Finally, we pass it as an argument while registering it to the  UrlBasedCorsConfigurationSource  instance and returning it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org181eeac" class="outline-2">
+<h2 id="org181eeac">How It Works</h2>
+<div class="outline-text-2" id="text-org181eeac">
+<p>
+CORS requests are automatically dispatched to the various registered HandlerMappings. They handle CORS preflight requests and intercept CORS simple and actual requests using a  <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/cors/CorsProcessor.html"><i>CorsProcessor</i></a>  implementation (DefaultCorsProcessor by default) to add the relevant CORS response headers (such as  Access-Control-Allow-Origin_).
+</p>
+
+<p>
+<a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html"><i>CorsConfiguration</i></a>  allows us to specify how the CORS requests should be processed, including allowed origins, headers, and methods, among others. We can provide it in various ways:
+</p>
+
+<ul class="org-ul">
+<li><a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/servlet/handler/AbstractHandlerMapping.html#setCorsConfiguration-java.util.Map-"><i><b>AbstractHandlerMapping#setCorsConfiguration()</b></i></a>  allows us to specify a  Map  with several CorsConfigurations mapped onto path patterns such as  /api/**_.</li>
+<li>Subclasses can provide their own CorsConfiguration  by overriding the  AbstractHandlerMapping#getCorsConfiguration(Object, HttpServletRequest)  method.</li>
+<li>Handlers can implement the  <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/cors/CorsConfigurationSource.html"><i><b>CorsConfigurationSource</b></i></a>  interface (like  ResourceHttpRequestHandler  does now) to provide a  CorsConfiguration  for each request.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0085800" class="outline-2">
+<h2 id="org0085800">Conclusion</h2>
+<div class="outline-text-2" id="text-org0085800">
+<p>
+In this article, we showed how Spring provides support for enabling CORS in our application.
+</p>
+
+<p>
+We started with the configuration of the controller. We saw that we only need to add the annotation @CrossOrigin to enable CORS to either one particular method or the entire controller.
+</p>
+
+<p>
+Also, we learned that in order to control the CORS configuration outside of the controllers, we can perform this smoothly in the configuration
+files using either JavaConfig or XML.
+</p>
+
+<p>
+The full source code for the examples is available <a href="https://github.com/eugenp/tutorials/tree/master/spring-boot-modules/spring-boot-runtime">over on GitHub</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 19:18<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

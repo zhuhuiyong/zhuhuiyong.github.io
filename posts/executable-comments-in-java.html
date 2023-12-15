@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Executable Comments in Java</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Executable Comments in Java</h1>
+
+<div id="outline-container-org176eff3" class="outline-2">
+<h2 id="org176eff3">原文地址</h2>
+<div class="outline-text-2" id="text-org176eff3">
+<p>
+<a href="https://www.baeldung.com/java-executable-comments">https://www.baeldung.com/java-executable-comments</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca86c1e" class="outline-2">
+<h2 id="orgca86c1e">Overview</h2>
+<div class="outline-text-2" id="text-orgca86c1e">
+<div class="preview" id="org555911f">
+<p>
+Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
+</p>
+
+<p>
+In this tutorial, we’ll explore cases where comments in our code can become executable. Or at least it may appear like they can.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org98763eb" class="outline-2">
+<h2 id="org98763eb">Comments</h2>
+<div class="outline-text-2" id="text-org98763eb">
+<p>
+Before we dive in, let’s revisit comments in Java. They are part of the Java syntax and come in two basic formats:
+</p>
+
+<ul class="org-ul">
+<li>Single-line comments</li>
+<li>Multiline comments</li>
+</ul>
+
+<p>
+The text from the “//” characters to the end of the line represents a single-line comment:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">This is a single-line comment.</span>
+</pre>
+</div>
+
+<p>
+Additionally, a multiple-line comment (also known as a multiline comment) starts with the “/*” and ends with the “*/” symbol. Everything in between is treated as a comment:
+</p>
+
+<p>
+  ,#+begin<sub>src</sub> java
+  <i>* This is a
+   ,* multiline
+   ,* comment.
+   ,*</i>
+#+end<sub>src</sub>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfb9ea88" class="outline-2">
+<h2 id="orgfb9ea88">Comments and Unicode</h2>
+<div class="outline-text-2" id="text-orgfb9ea88">
+<p>
+Now, let’s start with an example. The following code prints “Baeldung” in the standard output:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">\u000d System.out.println("Baeldung");</span>
+</pre>
+</div>
+
+<p>
+Because the line begins with the “//”, which represents the start of a single-line comment, we might conclude the “System.out.println(“Baeldung”);” statement is part of that comment as well.
+</p>
+
+<p>
+However, this isn’t accurate. It’s important to note Java doesn’t allow comment execution.
+</p>
+
+<p>
+With that in mind, let’s examine our example in detail and see the reasons why the code prints “Baeldung” in the console.
+</p>
+</div>
+<div id="outline-container-orgcd0beb1" class="outline-3">
+<h3 id="orgcd0beb1">Unicode Escapes</h3>
+<div class="outline-text-3" id="text-orgcd0beb1">
+<p>
+The code from the example isn’t treated as a comment because of the “\u000d” Unicode escape sequence we placed before it.
+</p>
+
+<p>
+All Java programs use the ASCII character set. However, due to the non-Latin characters, we can’t represent using ASCII codes, Java allows Unicode to appear in comments, identifiers, keywords, literals, and separators.
+</p>
+
+<p>
+Furthermore, to be able to use all non-ASCII characters in our code, we need to embed them through Unicode escape sequences. They start with a backslash (“\”) followed by the letter “u” which is then followed by a four-digit hexadecimal code of a specific character.
+</p>
+
+<p>
+Using this convention, the CR (or Carriage return) becomes “\u000d“.
+</p>
+
+<p>
+Additionally, the Unicode escape sequences are transformed into ASCII code using the lexical translation defined in the Java Language Specification.
+</p>
+
+<p>
+Moving forward, let’s take a closer look at how Java performs the lexical transformation.
+</p>
+</div>
+</div>
+<div id="outline-container-org23aaa96" class="outline-3">
+<h3 id="org23aaa96">Lexical Translation</h3>
+<div class="outline-text-3" id="text-org23aaa96">
+<p>
+When executing the lexical translation, the Unicode encoding takes precedence over any other encoding, even if it’s part of the comment. To put it differently, Java will first encode all Unicode escape sequences and then move forward with other translations.
+</p>
+
+<p>
+Simply put, during the transformation, the Unicode escape is translated into the Unicode character. Then, the result of the previous step is translated into the ASCII code.
+</p>
+
+<p>
+As a side effect, our code won’t compile if we put an invalid Unicode escape inside the comment. Java treats everything that starts with the “\u” as a Unicode escape.
+</p>
+
+<p>
+Thanks to this transformation, we can use Unicode escapes to include any Unicode characters using only ASCII characters. This way, ASCII-based programs and tools can still process the code written in Unicode.
+</p>
+
+<p>
+Now, back to our example. We used the Unicode escape sequence “\u000d“, which represents a new line.
+</p>
+
+<p>
+When we compile our code, the lexical translation will happen first. Therefore, the “\u000d” will translate to the new line. Since, by definition, a single-line comment ends at the end of the line, the code we put after the Unicode escape won’t be part of the comment anymore.
+</p>
+
+<p>
+As a result of the transformation, our code will appear in the new line:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">//</span>
+System.out.println<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"Baeldung"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc92b4f0" class="outline-3">
+<h3 id="orgc92b4f0">Unicode and IDEs</h3>
+<div class="outline-text-3" id="text-orgc92b4f0">
+<p>
+Nowadays, we often use an IDE as a development tool. Additionally, we frequently rely on it and expect it’ll warn us if something in our code seems suspicious.
+</p>
+
+<p>
+However, when it comes to IDEs and Unicode characters, depending on the IDE we’re using, it sometimes displays the code in the wrong way. It might not interpret Unicode escape sequences correctly and, thus, displays incorrect code highlighting.
+</p>
+
+<p>
+Since we can use Unicode escapes instead of ASCII characters, nothing prevents us from substituting other parts of the code with Unicode escapes:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">\u002f\u002f This is a comment
+\u0053ystem.out.println<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"Baeldung"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+Here, we replaced the “//” and the letter “S” with Unicode escapes. The code still prints “Baeldung” in the console.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0b7eaa4" class="outline-2">
+<h2 id="org0b7eaa4">Conclusion</h2>
+<div class="outline-text-2" id="text-org0b7eaa4">
+<p>
+In this tutorial, we learned how comments and Unicode escape sequences work together.
+</p>
+
+<p>
+To sum up, Java doesn’t allow executable comments. When using Unicode escapes in our code, Java translates them to ASCII before any other transformation.
+</p>
+
+<p>
+Being able to write Unicode characters is useful when we’d like to use non-Latin characters we can’t represent in any other way in our program. Although it’s perfectly legal to write an entire codebase using just Unicode escapes, we should avoid them and use them only when necessary.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 18:10<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

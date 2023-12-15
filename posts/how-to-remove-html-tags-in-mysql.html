@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何移除MySQL字段中的Html标签</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何移除MySQL字段中的Html标签</h1>
+<div class="preview" id="org620f6ab">
+<p>
+在处理文本数据时，我们经常会遇到需要清除HTML标签的情况，在MySQL中，我们可以使用正则表达式和一些字符串函数来实现这一目标。 本文将介绍如何使用MySQL清除HTML标签。
+</p>
+
+</div>
+<div id="outline-container-org8cbce06" class="outline-2">
+<h2 id="org8cbce06">MySQL 8</h2>
+<div class="outline-text-2" id="text-org8cbce06">
+<p>
+使用原生函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql"><span style="color: #4f97d7; font-weight: bold;">SELECT</span> REGEXP_REPLACE<span style="color: #4f97d7;">(</span>field, <span style="color: #2d9574;">'&lt;[^&gt;]*&gt;+'</span>, <span style="color: #2d9574;">''</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7; font-weight: bold;">FROM</span> <span style="color: #4f97d7; font-weight: bold;">table</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb49f191" class="outline-2">
+<h2 id="orgb49f191">MySQL 8以下版本</h2>
+<div class="outline-text-2" id="text-orgb49f191">
+<p>
+使用自定义函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql"><span style="color: #4f97d7; font-weight: bold;">DROP</span> <span style="color: #4f97d7; font-weight: bold;">FUNCTION</span> <span style="color: #bc6ec5; font-weight: bold;">IF</span> <span style="color: #4f97d7; font-weight: bold;">EXISTS</span> fnRemoveHtml;
+
+DELIMITER $$
+$$
+<span style="color: #4f97d7; font-weight: bold;">CREATE</span> <span style="color: #4f97d7; font-weight: bold;">DEFINER</span>=`root`@`%` <span style="color: #4f97d7; font-weight: bold;">FUNCTION</span> `fnRemoveHtml`<span style="color: #4f97d7;">(</span> Dirty text<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">0</span><span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7;">)</span> <span style="color: #4f97d7; font-weight: bold;">RETURNS</span> text CHARSET utf8
+<span style="color: #4f97d7; font-weight: bold;">BEGIN</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">-- &#36807;&#28388;HTML&#23383;&#31526;&#20018;</span>
+  <span style="color: #4f97d7; font-weight: bold;">DECLARE</span> iStart, iEnd, iLength <span style="color: #ce537a; font-weight: bold;">int</span>;
+    WHILE Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #4f97d7;">)</span> &gt; <span style="color: #a45bad;">0</span> <span style="color: #4f97d7; font-weight: bold;">And</span> Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&gt;'</span>, Dirty, Locate<span style="color: #bc6ec5;">(</span> <span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span> &gt; <span style="color: #a45bad;">0</span> DO
+      <span style="color: #4f97d7; font-weight: bold;">BEGIN</span>
+        <span style="color: #4f97d7; font-weight: bold;">SET</span> iStart = Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #4f97d7;">)</span>, iEnd = Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&gt;'</span>, Dirty, Locate<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>;
+        <span style="color: #4f97d7; font-weight: bold;">SET</span> iLength = <span style="color: #4f97d7;">(</span> iEnd - iStart<span style="color: #4f97d7;">)</span> + <span style="color: #a45bad;">1</span>;
+        IF iLength &gt; <span style="color: #a45bad;">0</span> <span style="color: #4f97d7; font-weight: bold;">THEN</span>
+          <span style="color: #4f97d7; font-weight: bold;">BEGIN</span>
+            <span style="color: #4f97d7; font-weight: bold;">SET</span> Dirty = <span style="color: #4f97d7; font-weight: bold;">Insert</span><span style="color: #4f97d7;">(</span> Dirty, iStart, iLength, <span style="color: #2d9574;">''</span><span style="color: #4f97d7;">)</span>;
+          <span style="color: #4f97d7; font-weight: bold;">END</span>;
+        <span style="color: #4f97d7; font-weight: bold;">END</span> IF;
+      <span style="color: #4f97d7; font-weight: bold;">END</span>;
+    <span style="color: #4f97d7; font-weight: bold;">END</span> WHILE;
+    <span style="color: #4f97d7; font-weight: bold;">RETURN</span> Dirty;
+<span style="color: #4f97d7; font-weight: bold;">END</span>$$
+DELIMITER ;
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 18:09<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

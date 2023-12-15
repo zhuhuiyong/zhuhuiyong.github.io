@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to Mock Environment Variables in Unit Tests</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">How to Mock Environment Variables in Unit Tests</h1>
+
+<div id="outline-container-org6ab4646" class="outline-2">
+<h2 id="org6ab4646">原文地址</h2>
+<div class="outline-text-2" id="text-org6ab4646">
+<p>
+<a href="https://www.baeldung.com/java-unit-testing-environment-variables">https://www.baeldung.com/java-unit-testing-environment-variables</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0629491" class="outline-2">
+<h2 id="org0629491">Overview</h2>
+<div class="outline-text-2" id="text-org0629491">
+<div class="preview" id="org6b0372c">
+<p>
+When we’re unit testing code that depends on environment variables, we may wish to provide specific values for them as part of our test implementation.
+</p>
+
+<p>
+Java doesn’t allow us to edit the environment variables, but there are workarounds we can use, and some libraries which can help us.
+</p>
+
+<p>
+In this tutorial we’ll look at the challenges of depending on environment variables in unit tests, how Java has made this even harder in recent versions, and the JUnit Pioneer, System Stubs, System Lambda and System Rules libraries. We’ll look at this for JUnit 4, JUnit 5 and TestNG.
+</p>
+
+</div>
+</div>
+</div>
+<div id="outline-container-org4a07b9e" class="outline-2">
+<h2 id="org4a07b9e">The Challenge of Changing Environment Variables</h2>
+<div class="outline-text-2" id="text-org4a07b9e">
+<p>
+In other languages, such as JavaScript, we can very easily modify the environment in a test:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">beforeEach<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">()</span> =&gt; <span style="color: #bc6ec5;">{</span>
+   <span style="color: #a45bad;">process</span>.<span style="color: #a45bad;">env</span>.MY_VARIABLE = <span style="color: #dc752f; background-color: #292b2e;">'</span>set<span style="color: #dc752f; background-color: #292b2e;">'</span>;
+<span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+Java is a lot more strict. In Java, the environment variable map is immutable. It’s an unmodifiable Map that is initialized when the JVM starts. While there are good reasons for this, we may still wish to control our environment at test time.
+</p>
+</div>
+<div id="outline-container-org61bfcfa" class="outline-3">
+<h3 id="org61bfcfa">Why the Environment Is Immutable</h3>
+<div class="outline-text-3" id="text-org61bfcfa">
+<p>
+With the normal execution of Java programs, it could be potentially chaotic if something as global as the runtime environment config could be modified. This is especially risky when multiple threads are involved. For example, one thread might be modifying the environment at the same time as another, launching a process with that environment, and any conflicting settings may interact in unexpected ways.
+</p>
+
+<p>
+The designers of Java have, therefore, kept the global values in the environment variables map safe. In contrast, system properties are easily changed at runtime.
+</p>
+</div>
+</div>
+<div id="outline-container-org6e61c2b" class="outline-3">
+<h3 id="org6e61c2b">Working Around the Unmodifiable Map</h3>
+<div class="outline-text-3" id="text-org6e61c2b">
+<p>
+There is a workaround for the immutable environment variables Map object. Despite its read only UnmodifiableMap type, we can break encapsulation and access an internal field using reflection:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #4f97d7;">&lt;</span>?<span style="color: #4f97d7;">&gt;</span> <span style="color: #7590db;">classOfMap</span> = System.getenv<span style="color: #4f97d7;">()</span>.getClass<span style="color: #4f97d7;">()</span>;
+<span style="color: #ce537a; font-weight: bold;">Field</span> <span style="color: #7590db;">field</span> = classOfMap.getDeclaredField<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"m"</span><span style="color: #4f97d7;">)</span>;
+field.setAccessible<span style="color: #4f97d7;">(</span><span style="color: #a45bad;">true</span><span style="color: #4f97d7;">)</span>;
+<span style="color: #ce537a; font-weight: bold;">Map</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">String</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #7590db;">writeableEnvironmentVariables</span> = <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Map</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">String</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">&gt;</span><span style="color: #4f97d7;">)</span>field.get<span style="color: #4f97d7;">(</span>System.getenv<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+<p>
+The field m inside the UnmodifiableMap wrapper object is a mutable Map that we can change:
+</p>
+
+<p>
+writeableEnvironmentVariables.put("baeldung", "has set an environment variable");
+assertThat(System.getenv("baeldung")).isEqualTo("has set an environment variable");
+</p>
+
+<p>
+In practice, on Windows, there’s an alternative implementation of ProcessEnvironment that also accounts for case insensitive environment variables, so libraries that use the above technique have to account for this too. However, in principle, this is how we can work around the immutable environment variables Map.
+</p>
+
+<p>
+After JDK 16, the module system became much more protective of the internals of the JDK, and using this reflective access has become more difficult.
+</p>
+</div>
+</div>
+<div id="outline-container-org258d70c" class="outline-3">
+<h3 id="org258d70c">When Reflective Access Doesn’t Work</h3>
+<div class="outline-text-3" id="text-org258d70c">
+<p>
+The Java module system has disabled reflective modification of its core internals by default since JDK 17. These are considered unsafe practices which could lead to runtime errors if the internals changed in the future.
+</p>
+
+<p>
+We may receive an error like this:
+</p>
+
+<p>
+Unable to make field private static final java.util.HashMap java.lang.ProcessEnvironment.theEnvironment accessible: 
+  module java.base does not "opens java.lang" to unnamed module @fdefd3f
+</p>
+
+<p>
+This is an indication that the Java module system is preventing the use of reflection. This can be fixed by adding some extra command line parameters to our test runner config in pom.xml to use &gt;–add-opens to permit this reflective access:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;org.apache.maven.plugins&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;maven-surefire-plugin&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+        &lt;<span style="color: #bc6ec5; font-weight: bold;">argLine</span>&gt;
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.lang=ALL-UNNAMED
+        &lt;/<span style="color: #bc6ec5; font-weight: bold;">argLine</span>&gt;
+    &lt;/<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+</pre>
+</div>
+<p>
+This workaround allows us to write code and use tools that break encapsulation via reflection. However, we may wish to avoid this, as the opening of these modules may allow for unsafe coding practices that work at test time but unexpectedly fail at runtime. We can instead choose tooling that doesn’t require this workaround.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd49cac" class="outline-3">
+<h3 id="orgcd49cac">Why We Need to Set Environment Variables Programmatically</h3>
+<div class="outline-text-3" id="text-orgcd49cac">
+<p>
+It’s possible for our unit tests to be run with environment variables set by the test runner. This may be our first preference if we have global configuration that applies across the entire test suite.
+</p>
+
+<p>
+We can achieve this by adding an environment variable to our surefire configuration in our pom.xml:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;org.apache.maven.plugins&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;maven-surefire-plugin&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+        &lt;<span style="color: #bc6ec5; font-weight: bold;">environmentVariables</span>&gt;
+            &lt;<span style="color: #bc6ec5; font-weight: bold;">SET_BY_SUREFIRE</span>&gt;YES&lt;/<span style="color: #bc6ec5; font-weight: bold;">SET_BY_SUREFIRE</span>&gt;
+        &lt;/<span style="color: #bc6ec5; font-weight: bold;">environmentVariables</span>&gt;
+    &lt;/<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+</pre>
+</div>
+<p>
+This variable is then visible to our tests:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">assertThat<span style="color: #4f97d7;">(</span>System.getenv<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"SET_BY_SUREFIRE"</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>.isEqualTo<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"YES"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+<p>
+However, we may have code that operates differently depending on differing environment variable settings. We might prefer to be able to test all variations of this behaviour, using different values of an environment variable in different test cases.
+</p>
+
+<p>
+Similarly, we may have values at test time that aren’t predictable at coding time. A good example of this is the port that we’re running a WireMock or test database in a docker container.
+</p>
+</div>
+</div>
+<div id="outline-container-orge2ebafd" class="outline-3">
+<h3 id="orge2ebafd">Getting the Right Help From Test Libraries</h3>
+<div class="outline-text-3" id="text-orge2ebafd">
+<p>
+There are several test libraries that can help us set environment variables at test time. Each has their own level of compatibility with different test frameworks, and JDK versions.
+</p>
+
+<p>
+We can choose the right library based on our preferred workflow, whether the environment variable’s value is known ahead of time, and which JDK version we’re planning to use.
+</p>
+
+<p>
+We should note that all of these libraries cover more than just environment variables. They all use the approach of capturing the current environment before they make changes and returning the environment back to how it was after the test is complete.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org14af5db" class="outline-2">
+<h2 id="org14af5db">Setting Environment Variables With JUnit Pioneer</h2>
+<div class="outline-text-2" id="text-org14af5db">
+<p>
+JUnit Pioneer is a set of extensions for JUnit 5. It offers an annotation-based way to set and clear environment variables.
+</p>
+
+<p>
+We can add it with the junit-pioneer dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;org.junit-pioneer&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;junit-pioneer&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;2.1.0&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org60920bf" class="outline-3">
+<h3 id="org60920bf">Using the SetEnvironmentVariable Annotation</h3>
+<div class="outline-text-3" id="text-org60920bf">
+<p>
+We can annotate a test class or method with the SetEnvironmentVariable annotation, and our test code operates with that value set in the environment:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SetEnvironmentVariable</span><span style="color: #4f97d7;">(</span>key = <span style="color: #2d9574;">"pioneer"</span>, value = <span style="color: #2d9574;">"is pioneering"</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariablesSetByJUnitPioneerUnitTest</span> <span style="color: #4f97d7;">{</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+We should note that the key and value must be known at compile time.
+</p>
+
+<p>
+Our test can then use the environment variable:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">variableCanBeRead</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    assertThat<span style="color: #bc6ec5;">(</span>System.getenv<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"pioneer"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>.isEqualTo<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"is pioneering"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+We can use the @SetEnvironmentVariable annotation multiple times to set multiple variables.
+</p>
+</div>
+</div>
+<div id="outline-container-orgac67c95" class="outline-3">
+<h3 id="orgac67c95">Clearing an Environment Variable</h3>
+<div class="outline-text-3" id="text-orgac67c95">
+<p>
+We may also wish to clear system-provided environment variables, or even some that were set at class level for some specific tests:
+</p>
+
+<p>
+@ClearEnvironmentVariable(key = "pioneer")
+@Test
+void givenEnvironmentVariableIsClear<sub>thenItIsNotSet</sub>() {
+    assertThat(System.getenv("pioneer")).isNull();
+}
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7a406c0" class="outline-3">
+<h3 id="org7a406c0">Limitations of JUnit Pioneer</h3>
+<div class="outline-text-3" id="text-org7a406c0">
+<p>
+JUnit Pioneer can only be used with JUnit 5. It uses reflection, so it requires a version of Java from 16 or below, or for the add-opens workaround to be employed.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaa72838" class="outline-2">
+<h2 id="orgaa72838">Setting Environment Variables With System Stubs</h2>
+<div class="outline-text-2" id="text-orgaa72838">
+<p>
+System Stubs has test support for JUnit 4, JUnit 5 and TestNG. Like its predecessor, System Lambda, it may also be used independently in the body of any test code in any framework. System Stubs is compatible with all versions of the JDK from 11 onwards.
+</p>
+</div>
+<div id="outline-container-orge3746bf" class="outline-3">
+<h3 id="orge3746bf">Setting Environment Variables in JUnit 5</h3>
+<div class="outline-text-3" id="text-orge3746bf">
+<p>
+For this we need the System Stubs JUnit 5 dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;uk.org.webcompere&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-stubs-jupiter&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;2.1.3&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+
+<p>
+First we need to add the extension to our test class:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@ExtendWith</span><span style="color: #4f97d7;">(</span>SystemStubsExtension.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariablesUnitTest</span> <span style="color: #4f97d7;">{</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+We can initialise an EnvironmentVariables stub object as a field of the test class with the environment variables we wish to use:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SystemStub</span>
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span> <span style="color: #7590db;">environment</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"MY VARIABLE"</span>, <span style="color: #2d9574;">"is set"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+<p>
+Notably, we must annotate the object with @SystemStub so the extension knows to work with it.
+</p>
+
+<p>
+The SystemStubsExtension then activates this alternative environment during a test, and clears it up afterwards. During the test, the EnvironmentVariables object can also be modified and calls to System.getenv() receive the latest configuration.
+</p>
+
+<p>
+Let’s also look at a more complex situation where we wish to set an environment variable with a value only known at test initialization time. In this case, as we’re going to provide a value in our beforeEach() method, we don’t need to create an instance of the object in our initializer list:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SystemStub</span>
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span> <span style="color: #7590db;">environmentVariables</span>;
+</pre>
+</div>
+<p>
+By the time JUnit calls our beforeEach(), the extension has created the object for us, and we can use it set the environment variables we need:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@BeforeEach</span>
+<span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">beforeEach</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    environmentVariables.set<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"systemstubs"</span>, <span style="color: #2d9574;">"creates stub objects"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+When our test is executed, the environment variables will be active:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">givenEnvironmentVariableHasBeenSet_thenCanReadIt</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    assertThat<span style="color: #bc6ec5;">(</span>System.getenv<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"systemstubs"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>.isEqualTo<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"creates stub objects"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+After the test method has completed, the environment variables return to the state they were in before modification.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd54894d" class="outline-3">
+<h3 id="orgd54894d">Setting Environment Variables in JUnit 4</h3>
+<div class="outline-text-3" id="text-orgd54894d">
+<p>
+For this we need the System Stubs JUnit 4 dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;uk.org.webcompere&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-stubs-junit4&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;2.1.3&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+<p>
+System Stubs provides a JUnit 4 rule. We add this as a field of our test class:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Rule</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariablesRule</span> <span style="color: #7590db;">environmentVariablesRule</span> =
+  <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariablesRule</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"system stubs"</span>, <span style="color: #2d9574;">"initializes variable"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+<p>
+Here we’ve initialized it with an environment variable. We can also call set() on the rule to modify the variables during our tests, or within our @Before method.
+</p>
+
+<p>
+Once the test is running, the environment variable is active:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">canReadVariable</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    assertThat<span style="color: #bc6ec5;">(</span>System.getenv<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"system stubs"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>.isEqualTo<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"initializes variable"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5bfb8b5" class="outline-3">
+<h3 id="org5bfb8b5">Setting Environment Variables in TestNG</h3>
+<div class="outline-text-3" id="text-org5bfb8b5">
+<p>
+For this we need the System Stubs TestNG dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;uk.org.webcompere&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-stubs-testng&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;2.1.3&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+<p>
+This provides a TestNG listener that works like the JUnit 5 solution above.
+</p>
+
+<p>
+We add the listener to our test class:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Listeners</span><span style="color: #4f97d7;">(</span>SystemStubsListener.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariablesTestNGUnitTest</span> <span style="color: #4f97d7;">{</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+Then we add an EnvironmentVariables field annotated with @SystemStub:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SystemStub</span>
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span> <span style="color: #7590db;">setEnvironment</span>;
+</pre>
+</div>
+<p>
+Then our beforeAll() method can initialise some variables:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@BeforeClass</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">beforeAll</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    setEnvironment.set<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"testng"</span>, <span style="color: #2d9574;">"has environment variables"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+And our test method can use them:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">givenEnvironmentVariableWasSet_thenItCanBeRead</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    assertThat<span style="color: #bc6ec5;">(</span>System.getenv<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"testng"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>.isEqualTo<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"has environment variables"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4ec4f0d" class="outline-3">
+<h3 id="org4ec4f0d">System Stubs Without a Test Framework</h3>
+<div class="outline-text-3" id="text-org4ec4f0d">
+<p>
+System Stubs was originally based on the codebase of System Lambda, which came with techniques that could only be used inside a single test method. This meant that the choice of test framework was completely open.
+</p>
+
+<p>
+System Stubs Core, therefore, can be used to set environment variables anywhere in a JUnit test method.
+</p>
+
+<p>
+First, let’s get the system-stubs-core dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;uk.org.webcompere&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-stubs-core&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;2.1.3&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+<p>
+Now, in one of our test methods, we can surround the test code with a construct that temporarily sets some environment variables. First we need to statically import from SystemStubs:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">import</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #a45bad;">uk</span>.<span style="color: #a45bad;">org</span>.<span style="color: #a45bad;">webcompere</span>.<span style="color: #a45bad;">systemstubs</span>.SystemStubs.<span style="color: #ce537a; font-weight: bold;">withEnvironmentVariables</span>;
+</pre>
+</div>
+<p>
+Then we can use the withEnvironmentVariables() method to wrap our test code:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">useEnvironmentVariables</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">Exception</span> <span style="color: #4f97d7;">{</span>
+    withEnvironmentVariables<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"system stubs"</span>, <span style="color: #2d9574;">"in test"</span><span style="color: #bc6ec5;">)</span>
+      .execute<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">()</span> -&gt; <span style="color: #2d9574;">{</span>
+          assertThat<span style="color: #67b11d;">(</span>System.getenv<span style="color: #b1951d;">(</span><span style="color: #2d9574;">"system stubs"</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>
+            .isEqualTo<span style="color: #67b11d;">(</span><span style="color: #2d9574;">"in test"</span><span style="color: #67b11d;">)</span>;
+      <span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+Here we can see that the assertThat() call is an operation on an environment that has the variable set in it. Outside of the closure called by execute(), the environment variables are unaffected.
+</p>
+
+<p>
+We should note that this technique requires our test to have throws Exception on our test method, since the execute() function has to cope with closures that may make calls to methods with checked exceptions.
+</p>
+
+<p>
+This technique also requires each test to set its own environment, and doesn’t work well if we’re trying to work with test objects with a lifecycle larger than a single test, for example a Spring Context.
+</p>
+
+<p>
+System Stubs allows each of its stub objects to be set up and torn down independently of a test framework. So, we could use the beforeAll() and afterAll() methods of a test class to manipulate our EnvironmentVariables object:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span> <span style="color: #7590db;">environmentVariables</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span><span style="color: #4f97d7;">()</span>;
+<span style="color: #a45bad;">@BeforeAll</span>
+<span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">beforeAll</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">Exception</span> <span style="color: #4f97d7;">{</span>
+    environmentVariables.set<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"system stubs"</span>, <span style="color: #2d9574;">"in test"</span><span style="color: #bc6ec5;">)</span>;
+    environmentVariables.setup<span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+<span style="color: #a45bad;">@AfterAll</span>
+<span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">afterAll</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">Exception</span> <span style="color: #4f97d7;">{</span>
+    environmentVariables.teardown<span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+The benefit of the test framework extensions, however, is that we can avoid this sort of boilerplate, as they execute these basics for us.
+</p>
+</div>
+</div>
+<div id="outline-container-org115944b" class="outline-3">
+<h3 id="org115944b">Limitations of System Stubs</h3>
+<div class="outline-text-3" id="text-org115944b">
+<p>
+The TestNG capability of System Stubs is only available in the version 2.1+ releases, which are limited to Java 11 onwards.
+</p>
+
+<p>
+In its version 2 release train, System Stubs deviated from the common reflection-based techniques described earlier. It now uses ByteBuddy to intercept environment variable calls. However, if a project uses a lower version of the JDK than 11, then there’s also no need to use these later versions.
+</p>
+
+<p>
+System Stubs version 1 provides compatibility with JDK 8 to JDK 16.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org137cb81" class="outline-2">
+<h2 id="org137cb81">System Rules and System Lambda</h2>
+<div class="outline-text-2" id="text-org137cb81">
+<p>
+One of the longest-standing test libraries for environment variables, System Rules provided a JUnit 4 solution to setting environment variables, and its author replaced it with System Lambda to provide a test-framework agnostic approach. They’re based on the same core techniques for substituting environment variables at test time.
+5.1. Set Environment Variables With System Rules
+</p>
+
+<p>
+First we need the system-rules dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;com.github.stefanbirkner&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-rules&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;1.19.0&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+
+<p>
+Then we add the rule to our JUnit 4 test class:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Rule</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span> <span style="color: #7590db;">environmentVariablesRule</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentVariables</span><span style="color: #4f97d7;">()</span>;
+</pre>
+</div>
+<p>
+We can set up the values in our @Before method:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Before</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">before</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    environmentVariablesRule.set<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"system rules"</span>, <span style="color: #2d9574;">"works"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+And access the correct environment in our test method:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">givenEnvironmentVariable_thenCanReadIt</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    assertThat<span style="color: #bc6ec5;">(</span>System.getenv<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"system rules"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>.isEqualTo<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"works"</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+The rule object – environmentVariablesRule – allows us to set environment variables immediately within the test method too.
+</p>
+</div>
+<div id="outline-container-org208c704" class="outline-3">
+<h3 id="org208c704">Set Environment Variables With System Lambda</h3>
+<div class="outline-text-3" id="text-org208c704">
+<p>
+For this we need the system-lambda dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;com.github.stefanbirkner&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;system-lambda&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;1.2.1&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;test&lt;/<span style="color: #bc6ec5; font-weight: bold;">scope</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">dependency</span>&gt;
+</pre>
+</div>
+<p>
+As already demonstrated in the System Stubs solution, we can put the code that depends on the environment within a closure in our test. For this we should statically import SystemLambda:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">import</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #a45bad;">com</span>.<span style="color: #a45bad;">github</span>.<span style="color: #a45bad;">stefanbirkner</span>.<span style="color: #a45bad;">systemlambda</span>.SystemLambda.<span style="color: #ce537a; font-weight: bold;">withEnvironmentVariable</span>;
+</pre>
+</div>
+<p>
+Then we can write the test:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Test</span>
+<span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">enviromentVariableIsSet</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">Exception</span> <span style="color: #4f97d7;">{</span>
+    withEnvironmentVariable<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"system lambda"</span>, <span style="color: #2d9574;">"in test"</span><span style="color: #bc6ec5;">)</span>
+      .execute<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">()</span> -&gt; <span style="color: #2d9574;">{</span>
+          assertThat<span style="color: #67b11d;">(</span>System.getenv<span style="color: #b1951d;">(</span><span style="color: #2d9574;">"system lambda"</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>
+            .isEqualTo<span style="color: #67b11d;">(</span><span style="color: #2d9574;">"in test"</span><span style="color: #67b11d;">)</span>;
+      <span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org907ae61" class="outline-3">
+<h3 id="org907ae61">Limitations of System Rules and System Lambda</h3>
+<div class="outline-text-3" id="text-org907ae61">
+<p>
+While these are both mature and broad libraries, they cannot be used for manipulating environment variables in JDK 17 and beyond.
+</p>
+
+<p>
+System Rules depends heavily on JUnit 4. We cannot use System Lambda for setting test-fixture wide environment variables, so it cannot help us with Spring context initialization.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org36eec38" class="outline-2">
+<h2 id="org36eec38">Avoid Mocking Environment Variables</h2>
+<div class="outline-text-2" id="text-org36eec38">
+<p>
+While we have discussed a number of ways to modify environment variables at test time, it may be worth considering whether this is necessary, or even beneficial.
+</p>
+</div>
+<div id="outline-container-orgf999fbc" class="outline-3">
+<h3 id="orgf999fbc">Maybe It Is Too Risky</h3>
+<div class="outline-text-3" id="text-orgf999fbc">
+<p>
+As we’ve seen with each of the solutions above, changing the environment variables at runtime is not straightforward. In cases where there is multi-threaded code, it can be even more tricky. If multiple test fixture are running in the same JVM in parallel, perhaps with JUnit 5’s concurrency features, then there is a risk that different tests may be trying to take control of the environment at the same time in a contradictory way.
+</p>
+
+<p>
+Though some of the testing libraries above may not crash when used simultaneously by multiple threads, it would be hard to predict how the environment variables might be set from one moment to the next. Even worse, it’s possible that one thread might capture another test’s temporary environment variables as though they were the correct state to leave the system in when the tests are all finished.
+</p>
+
+<p>
+As an example from another test library, when Mockito mocks static methods, it limits that to the current thread, since such mocking globals can break concurrent tests. As such, modifying environment variables encounters exactly the same risks. One test can affect the entire global state of the JVM and cause side effects elsewhere.
+</p>
+
+<p>
+Similarly, if we’re running code that we can only control through environment variables, it can be very difficult to test, and surely we could avoid that by design?
+</p>
+</div>
+</div>
+<div id="outline-container-orgb6dd9f1" class="outline-3">
+<h3 id="orgb6dd9f1">Use Dependency Injection</h3>
+<div class="outline-text-3" id="text-orgb6dd9f1">
+<p>
+It’s easier to test a system that receives all its inputs at construction, than one that pulls its inputs from system resources.
+</p>
+
+<p>
+Dependency injection containers such as Spring allow us to build objects that are much easier to test in isolation of the runtime.
+</p>
+
+<p>
+We should also note that Spring will allow us to use system properties in place of environment variables to set any of its property values. Each of the tools we’ve discussed in this article also supports setting and resetting system properties at test time.
+</p>
+</div>
+</div>
+<div id="outline-container-orge5365ae" class="outline-3">
+<h3 id="orge5365ae">Use an Abstraction</h3>
+<div class="outline-text-3" id="text-orge5365ae">
+<p>
+If a module must pull environment variables, perhaps it should not depend directly on System.getenv() but could instead use an environment variable reader interface:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@FunctionalInterface</span>
+<span style="color: #4f97d7; font-weight: bold;">interface</span> <span style="color: #ce537a; font-weight: bold;">GetEnv</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #bc6ec5; font-weight: bold;">get</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #7590db;">name</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+<p>
+The system code could then have an object of this injected via constructor:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">ReadsEnvironment</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">GetEnv</span> <span style="color: #7590db;">getEnv</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #bc6ec5; font-weight: bold;">ReadsEnvironment</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">GetEnv</span> <span style="color: #7590db;">getEnv</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.getEnv = getEnv;
+    <span style="color: #bc6ec5;">}</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #bc6ec5; font-weight: bold;">whatOs</span><span style="color: #bc6ec5;">()</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">return</span> getEnv.get<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"OS"</span><span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+While at runtime, we might instantiate it with System::getenv, at test time we could pass in our own alternative environment:
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">Map</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">String</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #7590db;">fakeEnv</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">HashMap</span><span style="color: #4f97d7;">&lt;&gt;()</span>;
+fakeEnv.put<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"OS"</span>, <span style="color: #2d9574;">"MacDowsNix"</span><span style="color: #4f97d7;">)</span>;
+<span style="color: #ce537a; font-weight: bold;">ReadsEnvironment</span> <span style="color: #7590db;">reader</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ReadsEnvironment</span><span style="color: #4f97d7;">(</span>fakeEnv::get<span style="color: #4f97d7;">)</span>;
+assertThat<span style="color: #4f97d7;">(</span>reader.whatOs<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span>.isEqualTo<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"MacDowsNix"</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+<p>
+However, these alternatives to environment variables may seem very heavy, and leave us wishing Java gave us the control we saw with the JavaScript example earlier. Similarly, we cannot control code written by others, that may depend on environment variables.
+</p>
+
+<p>
+Therefore, it seems inevitable that we may still encounter cases where we want to be able to control some environment variables dynamically at test time.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga79f68d" class="outline-2">
+<h2 id="orga79f68d">Conclusion</h2>
+<div class="outline-text-2" id="text-orga79f68d">
+<p>
+In this article we’ve looked at the options for setting environment variables at test time. We saw that this becomes more difficult to do when we need to be able to make those variables flexible at runtime, and available to JDK 17 and beyond.
+</p>
+
+<p>
+Then, we discussed whether we can avoid the issue altogether if we write our production code differently. We considered the risks associated with modifying the environment variables at test time, especially with concurrent tests.
+</p>
+
+<p>
+We also explored four of the most popular libraries for setting environment variables at test time: JUnit Pioneer, System Stubs, System Rules, and System Lambda. Each of these offers a different way to solve the problem, with differing compatibility across JDK versions and test frameworks.
+</p>
+
+<p>
+As always the example code for this article is available <a href="https://feeds.feedblitz.com/~/t/0/0/baeldung/~https://github.com/eugenp/tutorials/tree/master/testing-modules/testing-libraries-2">over on GitHub</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 18:07<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

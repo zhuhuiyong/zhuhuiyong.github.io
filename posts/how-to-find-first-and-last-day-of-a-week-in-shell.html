@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 10:33 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何在Linux Shell中获取本周的第一天和最后一天</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何在Linux Shell中获取本周的第一天和最后一天</h1>
+
+<div id="outline-container-org749bdc4" class="outline-2">
+<h2 id="org749bdc4">简介</h2>
+<div class="outline-text-2" id="text-org749bdc4">
+<div class="preview" id="org1ac68e2">
+<p>
+在Shell编程中，可以使用 <code>date</code> 命令获取本周的第一天和最后一天。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcc7953" class="outline-2">
+<h2 id="orgdcc7953">shell脚本</h2>
+<div class="outline-text-2" id="text-orgdcc7953">
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#19979;&#21608;&#19968;</span>
+<span style="color: #7590db;">nextmonday</span>=<span style="color: #bc6ec5;">`date -d "next monday" +%y%m%d`</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26412;&#21608;&#26368;&#21518;&#19968;&#22825;</span>
+<span style="color: #7590db;">lastdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date</span> -d <span style="color: #2d9574;">"${nextmonday} 3 days ago"</span> +%y%m%d<span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26412;&#21608;&#31532;&#19968;&#22825;</span>
+<span style="color: #7590db;">firstdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date</span> -d <span style="color: #2d9574;">"${nextmonday} 7 days ago"</span> +%y%m%d<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbdef4ba" class="outline-2">
+<h2 id="orgbdef4ba">更多</h2>
+<div class="outline-text-2" id="text-orgbdef4ba">
+<p>
+更多关于 <code>date</code> 命令的使用参考：
+</p>
+
+<p>
+<a href="https://www.gnu.org/software/coreutils/manual/html_node/Date-input-formats.html">https://www.gnu.org/software/coreutils/manual/html_node/Date-input-formats.html</a>
+</p>
+
+<p>
+<a href="https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html">https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-06 三 18:05<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

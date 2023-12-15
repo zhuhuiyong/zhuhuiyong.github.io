@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+	   xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	   xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	   xmlns:dc="http://purl.org/dc/elements/1.1/"
+	   xmlns:atom="http://www.w3.org/2005/Atom"
+	   xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	   xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	   xmlns:georss="http://www.georss.org/georss"
+     xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+     xmlns:media="http://search.yahoo.com/mrss/"><channel>
+  <title>Something</title>
+  <atom:link href="https://laozhuzhu.com/rss.xml" rel="self" type="application/rss+xml" />
+  <link>https://laozhuzhu.com</link>
+  <description><![CDATA[]]></description>
+  <language>en</language>
+  <pubDate>Fri, 15 Dec 2023 14:09:14 +0800</pubDate>
+  <lastBuildDate>Fri, 15 Dec 2023 14:09:14 +0800</lastBuildDate>
+  <generator>Emacs 27.1 Org-mode 9.6.5</generator>
+  <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
+  <image>
+    <url>https://orgmode.org/img/org-mode-unicorn-logo.png</url>
+    <title>Something</title>
+    <link>https://laozhuzhu.com</link>
+  </image>
+
+  <item>
+    <title>SpringBoot处理CORS跨域请求</title>
+    <link>https://laozhuzhu.com/posts/spring-cors.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">spring-cors.org</guid>
+    <pubDate>Wed, 06 Dec 2023 18:36:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
+    </p>
+
+    <p>
+    Often, the host that serves the JS (e.g. example.com) is different from the host that serves the data (e.g. api.example.com). In such a case, CORS enables cross-domain communication.
+    </p>
+
+    <p>
+    Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html">support</a> for CORS, offering an easy and powerful way of configuring it in any Spring or Spring Boot web application.
+    </p>
+
+    <p>
+    <a href="spring-cors.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>How to Mock Environment Variables in Unit Tests</title>
+    <link>https://laozhuzhu.com/posts/java-unit-testing-environment-variables.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">java-unit-testing-environment-variables.org</guid>
+    <pubDate>Thu, 23 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    When we’re unit testing code that depends on environment variables, we may wish to provide specific values for them as part of our test implementation.
+    </p>
+
+    <p>
+    Java doesn’t allow us to edit the environment variables, but there are workarounds we can use, and some libraries which can help us.
+    </p>
+
+    <p>
+    In this tutorial we’ll look at the challenges of depending on environment variables in unit tests, how Java has made this even harder in recent versions, and the JUnit Pioneer, System Stubs, System Lambda and System Rules libraries. We’ll look at this for JUnit 4, JUnit 5 and TestNG.
+    </p>
+
+    <p>
+    <a href="java-unit-testing-environment-variables.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>如何移除MySQL字段中的Html标签</title>
+    <link>https://laozhuzhu.com/posts/how-to-remove-html-tags-in-mysql.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-remove-html-tags-in-mysql.org</guid>
+    <pubDate>Fri, 10 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    在处理文本数据时，我们经常会遇到需要清除HTML标签的情况，在MySQL中，我们可以使用正则表达式和一些字符串函数来实现这一目标。 本文将介绍如何使用MySQL清除HTML标签。
+    </p>
+
+    <p>
+    <a href="how-to-remove-html-tags-in-mysql.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>查看Java .class文件版本号</title>
+    <link>https://laozhuzhu.com/posts/how-to-find-java-class-file-version.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-find-java-class-file-version.org</guid>
+    <pubDate>Thu, 30 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    本文将介绍如何查看.class文件和jar文件的Java发行版本。
+    </p>
+
+    <p>
+    <a href="how-to-find-java-class-file-version.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>如何在Linux Shell中获取本周的第一天和最后一天</title>
+    <link>https://laozhuzhu.com/posts/how-to-find-first-and-last-day-of-a-week-in-shell.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-find-first-and-last-day-of-a-week-in-shell.org</guid>
+    <pubDate>Mon, 27 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    在Shell编程中，可以使用 <code>date</code> 命令获取本周的第一天和最后一天。
+    </p>
+
+    <p>
+    <a href="how-to-find-first-and-last-day-of-a-week-in-shell.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>如何禁用F12浏览器开发者工具</title>
+    <link>https://laozhuzhu.com/posts/how-to-disable-f12-devtools-in-browser.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-disable-f12-devtools-in-browser.org</guid>
+    <pubDate>Fri, 10 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    当不想让自己的前端代码被用户调试时，需要使用户无法打开或使用浏览器的开发者工具。
+    </p>
+
+    <p>
+    使用如下JS脚本后，用户打开浏览器开发者工具时，将无限debugger，从而实现禁用效果。
+    </p>
+
+    <p>
+    <a href="how-to-disable-f12-devtools-in-browser.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>如何清理Linux系统日志</title>
+    <link>https://laozhuzhu.com/posts/how-to-clean-linux-system-journal-logs.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-clean-linux-system-journal-logs.org</guid>
+    <pubDate>Fri, 15 Dec 2023 10:20:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
+    </p>
+
+    <p>
+    systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log 中，由于日志是经历过压缩和格式化的二进制数据，所以在查看和定位的时候很迅速。
+    </p>
+
+    <p>
+    日志记录的问题是，随着时间的推移，它开始变得越来越大。如果你检查Linux中的磁盘空间，你会发现有时它需要几个GB的空间。
+    </p>
+
+    <p>
+    本文将介绍如何清理systemd日志，释放Linux系统上的磁盘空间。
+    </p>
+
+    <p>
+    <a href="how-to-clean-linux-system-journal-logs.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>Java反射：判断方法是Getter还是Setter</title>
+    <link>https://laozhuzhu.com/posts/how-to-check-method-is-get-or-set-in-java.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-check-method-is-get-or-set-in-java.org</guid>
+    <pubDate>Mon, 13 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    在使用反射（Reflection）过程中，常常需要获取Class的Getter或Setter，以下代码可以用来检查Method,是Getter还是Setter。
+    </p>
+
+    <p>
+    <a href="how-to-check-method-is-get-or-set-in-java.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>Executable Comments in Java</title>
+    <link>https://laozhuzhu.com/posts/executable-comments-in-java.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">executable-comments-in-java.org</guid>
+    <pubDate>Mon, 20 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
+    </p>
+
+    <p>
+    In this tutorial, we’ll explore cases where comments in our code can become executable. Or at least it may appear like they can.
+    </p>
+
+    <p>
+    <a href="executable-comments-in-java.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>ASCII Code - The extended ASCII table</title>
+    <link>https://laozhuzhu.com/posts/ASCIICode.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">ASCIICode.org</guid>
+    <pubDate>Fri, 10 Nov 2023 00:00:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    <b>ASCII</b>, stands for American Standard Code for Information Interchange.
+    It's a 7-bit character code where every single bit represents a unique
+    character. On this webpage you will find 8 bits, 256 characters, ASCII
+    table according to Windows-1252 (code page 1252) which is a superset of
+    ISO 8859-1 in terms of printable characters. In the range 128 to 159
+    (hex 80 to 9F), ISO/IEC 8859-1 has invisible control characters, while
+    Windows-1252 has writable characters. Windows-1252 is probably the
+    most-used 8-bit character encoding in the world.
+    </p>
+
+    <p>
+    <a href="ASCIICode.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+</channel>
+</rss>

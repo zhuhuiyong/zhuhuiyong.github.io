@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 14:09 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何清理Linux系统日志</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何清理Linux系统日志</h1>
+<div class="preview" id="org80e76a6">
+<p>
+systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
+</p>
+
+<p>
+systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log 中，由于日志是经历过压缩和格式化的二进制数据，所以在查看和定位的时候很迅速。
+</p>
+
+<p>
+日志记录的问题是，随着时间的推移，它开始变得越来越大。如果你检查Linux中的磁盘空间，你会发现有时它需要几个GB的空间。
+</p>
+
+<p>
+本文将介绍如何清理systemd日志，释放Linux系统上的磁盘空间。
+</p>
+
+</div>
+<div id="outline-container-org3ca9aa5" class="outline-2">
+<h2 id="org3ca9aa5">查看日志文件使用量</h2>
+<div class="outline-text-2" id="text-org3ca9aa5">
+<p>
+你可以使用以下任意一种方法检查日志文件大小。
+</p>
+
+<p>
+方法一：使用 <code>du</code> 命令
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">du -sh /var/log/journal/
+</pre>
+</div>
+
+<p>
+方法二：使用 <code>journalctl</code> 命令
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">journalctl --disk-usage
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org27b84d9" class="outline-2">
+<h2 id="org27b84d9">手动清理日志文件</h2>
+<div class="outline-text-2" id="text-org27b84d9">
+</div>
+<div id="outline-container-org44859d7" class="outline-3">
+<h3 id="org44859d7">清理 N 天前的日志</h3>
+<div class="outline-text-3" id="text-org44859d7">
+<p>
+以下命令将清理2天前的日志：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo journalctl --vacuum-time=<span style="color: #a45bad;">2d</span>
+</pre>
+</div>
+
+<p>
+命令中的 <code>d</code> 表示时间单位，你也可以指定其他时间单位：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">操作符</th>
+<th scope="col" class="org-left">单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">s</td>
+<td class="org-left">秒</td>
+</tr>
+
+<tr>
+<td class="org-left">m</td>
+<td class="org-left">分钟</td>
+</tr>
+
+<tr>
+<td class="org-left">h</td>
+<td class="org-left">小时</td>
+</tr>
+
+<tr>
+<td class="org-left">d</td>
+<td class="org-left">天</td>
+</tr>
+
+<tr>
+<td class="org-left">weeks</td>
+<td class="org-left">周</td>
+</tr>
+
+<tr>
+<td class="org-left">months</td>
+<td class="org-left">月</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-orga6fbf37" class="outline-3">
+<h3 id="orga6fbf37">限制日志文件大小</h3>
+<div class="outline-text-3" id="text-orga6fbf37">
+<p>
+使用以下命令可将日志文件大小限制到100M，它将清理日志文件直到低于100M：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo journalctl --vacuum-size=<span style="color: #a45bad;">100M</span>
+</pre>
+</div>
+
+<p>
+命令中的 <code>M</code> 表示大小单位，你也可以指定其他单位：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">操作符</th>
+<th scope="col" class="org-left">单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">G</td>
+<td class="org-left">GB</td>
+</tr>
+
+<tr>
+<td class="org-left">M</td>
+<td class="org-left">MB</td>
+</tr>
+
+<tr>
+<td class="org-left">K</td>
+<td class="org-left">KB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org229e698" class="outline-3">
+<h3 id="org229e698">限制日志文件数据</h3>
+<div class="outline-text-3" id="text-org229e698">
+<p>
+使用以下命令可将日志文件数据限制到5个：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">journalctl --vacuum-files=<span style="color: #a45bad;">5</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-15 五 14:08<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>
