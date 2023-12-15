@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-15 五 15:07 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何清除GitHub提交历史记录</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何清除GitHub提交历史记录</h1>
+<div class="preview" id="orgf102020">
+<p>
+GitHub是开发人员和团队管理、协作和跟踪工作的重要工具。但是，有时您可能需要删除提交历史记录，以清理存储库或删除敏感信息。
+</p>
+
+<p>
+本文将引导介绍如何使用Git命令从GitHub删除提交历史记录。
+</p>
+
+</div>
+
+<div id="outline-container-org67b70ba" class="outline-2">
+<h2 id="org67b70ba">彻底清除GitHub仓库中的提交历史记录</h2>
+<div class="outline-text-2" id="text-org67b70ba">
+<p>
+按照以下方法，可以彻底清除GitHub的提交历史记录。
+</p>
+
+<ol class="org-ol">
+<li><p>
+<b>备份仓库</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/username/repo-name.git backup-repo 
+</pre>
+</div>
+
+<p>
+使用以上命令，将Git仓库克隆到 <code>backup-repo</code> 目录中，注意替换其中的 <code>username</code> 和 <code>repo-name</code> 。
+</p></li>
+
+<li><p>
+<b>创建Orphan Branch</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git checkout --orphan cleaned-history 
+</pre>
+</div>
+
+<p>
+使用以上命令，将会创建一个名称为 <code>clean-history</code> 的Orphan分支。
+</p></li>
+
+<li><p>
+<b>添加文件到新分支和提交变更</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git add -A
+git commit -am <span style="color: #2d9574;">"the first commit"</span> 
+</pre>
+</div></li>
+
+<li><p>
+<b>删除旧分支</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git branch -D main
+</pre>
+</div>
+
+<p>
+使用以下命令，删除包含提交历史记录的旧分支main。
+</p></li>
+
+<li><p>
+<b>重命名新分支</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git branch -m main
+</pre>
+</div>
+
+<p>
+使用以上命令，可以将新分支 <code>cleaned-history</code> 重命名为 <code>main</code> ，其中main可以为你想要删除历史记录的旧分支名称。
+</p></li>
+
+<li><p>
+<b>推送至远程仓库</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git push -f origin main
+</pre>
+</div>
+
+<p>
+使用以上命令，将本地变更提交到远程仓库。
+</p>
+
+<p>
+注意，删除提交历史记录的操作是不可逆的。操作完毕后，注意通知其他人需要重新 <code>clone</code> 代码，以避免冲突。
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2023-12-15 五 15:07<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>
