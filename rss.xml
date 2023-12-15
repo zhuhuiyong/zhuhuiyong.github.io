@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Fri, 15 Dec 2023 15:07:41 +0800</pubDate>
-  <lastBuildDate>Fri, 15 Dec 2023 15:07:41 +0800</lastBuildDate>
+  <pubDate>Fri, 15 Dec 2023 15:10:40 +0800</pubDate>
+  <lastBuildDate>Fri, 15 Dec 2023 15:10:40 +0800</lastBuildDate>
   <generator>Emacs 27.1 Org-mode 9.6.5</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -158,7 +158,7 @@
     </p>
 
     <p>
-    本文将引导介绍如何使用Git命令从GitHub删除提交历史记录。
+    本文将介绍如何使用Git命令从GitHub删除提交历史记录。
     </p>
 
     <p>
