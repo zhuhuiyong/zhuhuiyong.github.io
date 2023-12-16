@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-15 五 10:33 -->
+<!-- 2023-12-16 六 22:08 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SpringBoot处理CORS跨域请求</title>
@@ -14,7 +14,7 @@
 <div id="preamble" class="status">
 <hr style="border-top: 1px solid black;">
 <div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h2> 
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
     <div>
         <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
         <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
@@ -26,19 +26,19 @@
 <div id="content" class="content">
 <h1 class="title">SpringBoot处理CORS跨域请求</h1>
 
-<div id="outline-container-org7691558" class="outline-2">
-<h2 id="org7691558">原文地址</h2>
-<div class="outline-text-2" id="text-org7691558">
+<div id="outline-container-org356a37f" class="outline-2">
+<h2 id="org356a37f">原文地址</h2>
+<div class="outline-text-2" id="text-org356a37f">
 <p>
 <a href="https://www.baeldung.com/spring-cors">https://www.baeldung.com/spring-cors</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org2711d58" class="outline-2">
-<h2 id="org2711d58">Overview</h2>
-<div class="outline-text-2" id="text-org2711d58">
-<div class="preview" id="org61d7e21">
+<div id="outline-container-orgaff0ae0" class="outline-2">
+<h2 id="orgaff0ae0">Overview</h2>
+<div class="outline-text-2" id="text-orgaff0ae0">
+<div class="preview" id="org5043ca0">
 <p>
 In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
 </p>
@@ -55,9 +55,9 @@ Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/s
 </div>
 </div>
 
-<div id="outline-container-orgb50ed7d" class="outline-2">
-<h2 id="orgb50ed7d">Controller Method CORS Configuration</h2>
-<div class="outline-text-2" id="text-orgb50ed7d">
+<div id="outline-container-org7527e2f" class="outline-2">
+<h2 id="org7527e2f">Controller Method CORS Configuration</h2>
+<div class="outline-text-2" id="text-org7527e2f">
 <p>
 <b>Enabling CORS is straightforward &#x2013; just add the annotation <code>@CrossOrigin</code>.</b>
 </p>
@@ -67,9 +67,9 @@ We can implement this in several different ways.
 </p>
 </div>
 
-<div id="outline-container-org83fa214" class="outline-3">
-<h3 id="org83fa214">@CrossOrigin on a @RequestMapping Annotated Handler Method</h3>
-<div class="outline-text-3" id="text-org83fa214">
+<div id="outline-container-org05c8f43" class="outline-3">
+<h3 id="org05c8f43">@CrossOrigin on a @RequestMapping Annotated Handler Method</h3>
+<div class="outline-text-3" id="text-org05c8f43">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@RestController</span>
 <span style="color: #a45bad;">@RequestMapping</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"/account"</span><span style="color: #4f97d7;">)</span>
@@ -101,9 +101,9 @@ can see that we didn't set any configuration for the <code>@CrossOrigin</code> a
 </div>
 </div>
 
-<div id="outline-container-org24fdb34" class="outline-3">
-<h3 id="org24fdb34">@CrossOrigin on the Controller</h3>
-<div class="outline-text-3" id="text-org24fdb34">
+<div id="outline-container-orgcc23301" class="outline-3">
+<h3 id="orgcc23301">@CrossOrigin on the Controller</h3>
+<div class="outline-text-3" id="text-orgcc23301">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>origins = <span style="color: #2d9574;">"http://example.com"</span>, maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
 <span style="color: #a45bad;">@RestController</span>
@@ -128,9 +128,9 @@ This time, we added <code>@CrossOrigin</code> on the class level. So, both <code
 </div>
 </div>
 
-<div id="outline-container-org834201c" class="outline-3">
-<h3 id="org834201c">@CrossOrigin on Controller and Handler Method</h3>
-<div class="outline-text-3" id="text-org834201c">
+<div id="outline-container-org9d7e006" class="outline-3">
+<h3 id="org9d7e006">@CrossOrigin on Controller and Handler Method</h3>
+<div class="outline-text-3" id="text-org9d7e006">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
 <span style="color: #a45bad;">@RestController</span>
@@ -157,9 +157,9 @@ Spring will combine attributes from both annotations to create a merged CORS con
 </div>
 </div>
 
-<div id="outline-container-org1ad6238" class="outline-2">
-<h2 id="org1ad6238">Global CORS Configuration</h2>
-<div class="outline-text-2" id="text-org1ad6238">
+<div id="outline-container-org81a8dbf" class="outline-2">
+<h2 id="org81a8dbf">Global CORS Configuration</h2>
+<div class="outline-text-2" id="text-org81a8dbf">
 <p>
 As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of our controllers. This is similar to using a <code>Filter</code> based solution but can be declared within Spring MVC and combined with a fine-grained <code>@CrossOrigin</code> configuration.
 </p>
@@ -169,9 +169,9 @@ By default, all origins and GET, HEAD, and POST methods are allowed.
 </p>
 </div>
 
-<div id="outline-container-orgfdb03fd" class="outline-3">
-<h3 id="orgfdb03fd">JavaConfig</h3>
-<div class="outline-text-3" id="text-orgfdb03fd">
+<div id="outline-container-orgee3e7a0" class="outline-3">
+<h3 id="orgee3e7a0">JavaConfig</h3>
+<div class="outline-text-3" id="text-orgee3e7a0">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@Configuration</span>
 <span style="color: #a45bad;">@EnableWebMvc</span>
@@ -202,9 +202,9 @@ It is worth noting that since version 2.4.0, Spring Boot introduced <code>allowe
 </div>
 </div>
 
-<div id="outline-container-org75bd94d" class="outline-3">
-<h3 id="org75bd94d">XML Namespace</h3>
-<div class="outline-text-3" id="text-org75bd94d">
+<div id="outline-container-org31108f3" class="outline-3">
+<h3 id="org31108f3">XML Namespace</h3>
+<div class="outline-text-3" id="text-org31108f3">
 <p>
 This minimal XML configuration enables CORS on a /** path pattern with the same default properties as the JavaConfig one:
 </p>
@@ -239,9 +239,9 @@ It's also possible to declare several CORS mappings with customized properties:
 </div>
 </div>
 
-<div id="outline-container-org9e2dc5a" class="outline-2">
-<h2 id="org9e2dc5a">CORS With Spring Security</h2>
-<div class="outline-text-2" id="text-org9e2dc5a">
+<div id="outline-container-orgaaa8a73" class="outline-2">
+<h2 id="orgaaa8a73">CORS With Spring Security</h2>
+<div class="outline-text-2" id="text-orgaaa8a73">
 <p>
 If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That's because CORS needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC.
 </p>
@@ -295,9 +295,9 @@ Here, we create a  CorsConfiguration  instance using the default constructor a
 </div>
 </div>
 
-<div id="outline-container-org181eeac" class="outline-2">
-<h2 id="org181eeac">How It Works</h2>
-<div class="outline-text-2" id="text-org181eeac">
+<div id="outline-container-org2221765" class="outline-2">
+<h2 id="org2221765">How It Works</h2>
+<div class="outline-text-2" id="text-org2221765">
 <p>
 CORS requests are automatically dispatched to the various registered HandlerMappings. They handle CORS preflight requests and intercept CORS simple and actual requests using a  <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/cors/CorsProcessor.html"><i>CorsProcessor</i></a>  implementation (DefaultCorsProcessor by default) to add the relevant CORS response headers (such as  Access-Control-Allow-Origin_).
 </p>
@@ -314,9 +314,9 @@ CORS requests are automatically dispatched to the various registered HandlerMap
 </div>
 </div>
 
-<div id="outline-container-org0085800" class="outline-2">
-<h2 id="org0085800">Conclusion</h2>
-<div class="outline-text-2" id="text-org0085800">
+<div id="outline-container-org75ee454" class="outline-2">
+<h2 id="org75ee454">Conclusion</h2>
+<div class="outline-text-2" id="text-org75ee454">
 <p>
 In this article, we showed how Spring provides support for enabling CORS in our application.
 </p>
