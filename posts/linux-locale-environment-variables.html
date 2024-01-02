@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-01-02 二 20:49 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux区域设置（locale）</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Linux区域设置（locale）</h1>
+
+<div id="outline-container-orgf288a81" class="outline-2">
+<h2 id="orgf288a81">简介</h2>
+<div class="outline-text-2" id="text-orgf288a81">
+<div class="preview" id="org5c5c5de">
+<p>
+区域设置是一组环境变量，用于定义Linux系统上应用程序和shell会话的语言、国家/地区和字符编码设置（或任何其他特殊变体首选项）。
+</p>
+
+<p>
+区域设置会影响时间/日期格式、一周的第一天、数字、货币和许多其他根据您在Linux系统上设置的语言或地区/国家格式化的值。
+</p>
+
+<p>
+在本文中，我们将展示如何查看当前安装的系统区域设置，以及如何在Linux中设置系统的区域设置。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a9b0f2" class="outline-2">
+<h2 id="org5a9b0f2">区域设置（locale）分类</h2>
+<div class="outline-text-2" id="text-org5a9b0f2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">分类</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">LC_TYPE</td>
+<td class="org-left">语言符号</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_NUMERIC</td>
+<td class="org-left">数字</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_COLLATE</td>
+<td class="org-left">比较和排序</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_TIME</td>
+<td class="org-left">时间</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_MONETARY</td>
+<td class="org-left">货币</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_MESSAGES</td>
+<td class="org-left">信息</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_NAME</td>
+<td class="org-left">姓名书写方式</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_ADDRESS</td>
+<td class="org-left">地址</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_TELEPHONE</td>
+<td class="org-left">电话号码</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_MEASUREMENT</td>
+<td class="org-left">度量衡</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_PAPER</td>
+<td class="org-left">纸张尺寸</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_IDENTIFICATION</td>
+<td class="org-left">自身包含信息的概述</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgcc47dec" class="outline-2">
+<h2 id="orgcc47dec">区域设置（locale）优先级</h2>
+<div class="outline-text-2" id="text-orgcc47dec">
+<ul class="org-ul">
+<li>LANGUAGE</li>
+<li>LC_ALL</li>
+<li>LC_xxx</li>
+<li>LANG</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga535d7f" class="outline-2">
+<h2 id="orga535d7f">如何查看区域设置信息(locale)</h2>
+<div class="outline-text-2" id="text-orga535d7f">
+<p>
+要查看有关当前的区域设置信息，请使用 <code>locale</code> 或 <code>localectl</code> 命令。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ locale
+
+<span style="color: #7590db;">LANG</span>=en_US.UTF-8
+<span style="color: #7590db;">LANGUAGE</span>=en_US:en
+<span style="color: #7590db;">LC_CTYPE</span>=<span style="color: #2d9574;">"en_US.UTF-8"</span>
+<span style="color: #7590db;">LC_NUMERIC</span>=zh_CN.UTF-8
+<span style="color: #7590db;">LC_TIME</span>=zh_CN.UTF-8
+<span style="color: #7590db;">LC_COLLATE</span>=<span style="color: #2d9574;">"en_US.UTF-8"</span>
+<span style="color: #7590db;">LC_MONETARY</span>=zh_CN.UTF-8
+<span style="color: #7590db;">LC_MESSAGES</span>=<span style="color: #2d9574;">"en_US.UTF-8"</span>
+<span style="color: #7590db;">LC_PAPER</span>=en_US.UTF-8
+<span style="color: #7590db;">LC_NAME</span>=en_US.UTF-8
+<span style="color: #7590db;">LC_ADDRESS</span>=en_US.UTF-8
+<span style="color: #7590db;">LC_TELEPHONE</span>=en_US.UTF-8
+<span style="color: #7590db;">LC_MEASUREMENT</span>=zh_CN.UTF-8
+<span style="color: #7590db;">LC_IDENTIFICATION</span>=en_US.UTF-8
+<span style="color: #7590db;">LC_ALL</span>=
+
+$ localectl status
+
+System Locale: <span style="color: #7590db;">LANG</span>=en_US.UTF-8
+      <span style="color: #7590db;">LANGUAGE</span>=en_US
+      VC Keymap: n/a
+      X11 Layout: us
+      X11 Model: pc105
+</pre>
+</div>
+
+<p>
+使用 <code>locale -k</code> 命令，可以查看有关区域设置的更多信息，例如存储时间和日期格式的LC_TIME。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ locale -k LC_TIME
+<span style="color: #7590db;">abday</span>=<span style="color: #2d9574;">"&#26085;;&#19968;;&#20108;;&#19977;;&#22235;;&#20116;;&#20845;"</span>
+<span style="color: #7590db;">day</span>=<span style="color: #2d9574;">"&#26143;&#26399;&#26085;;&#26143;&#26399;&#19968;;&#26143;&#26399;&#20108;;&#26143;&#26399;&#19977;;&#26143;&#26399;&#22235;;&#26143;&#26399;&#20116;;&#26143;&#26399;&#20845;"</span>
+<span style="color: #7590db;">abmon</span>=<span style="color: #2d9574;">"1&#26376;;2&#26376;;3&#26376;;4&#26376;;5&#26376;;6&#26376;;7&#26376;;8&#26376;;9&#26376;;10&#26376;;11&#26376;;12&#26376;"</span>
+<span style="color: #7590db;">mon</span>=<span style="color: #2d9574;">"&#19968;&#26376;;&#20108;&#26376;;&#19977;&#26376;;&#22235;&#26376;;&#20116;&#26376;;&#20845;&#26376;;&#19971;&#26376;;&#20843;&#26376;;&#20061;&#26376;;&#21313;&#26376;;&#21313;&#19968;&#26376;;&#21313;&#20108;&#26376;"</span>
+<span style="color: #7590db;">am_pm</span>=<span style="color: #2d9574;">"&#19978;&#21320;;&#19979;&#21320;"</span>
+<span style="color: #7590db;">d_t_fmt</span>=<span style="color: #2d9574;">"%Y&#24180;%m&#26376;%d&#26085; %A %H&#26102;%M&#20998;%S&#31186;"</span>
+<span style="color: #7590db;">d_fmt</span>=<span style="color: #2d9574;">"%Y&#24180;%m&#26376;%d&#26085;"</span>
+<span style="color: #7590db;">t_fmt</span>=<span style="color: #2d9574;">"%H&#26102;%M&#20998;%S&#31186;"</span>
+<span style="color: #7590db;">t_fmt_ampm</span>=<span style="color: #2d9574;">"%p %I&#26102;%M&#20998;%S&#31186;"</span>
+
+....
+</pre>
+</div>
+
+<p>
+要显示所有可用区域设置的列表，请使用以下命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">locale -a
+C
+C.utf8
+en_AG
+en_AG.utf8
+en_AU.utf8
+en_BW.utf8
+
+...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org666b935" class="outline-2">
+<h2 id="org666b935">如何设置区域设置（locale）</h2>
+<div class="outline-text-2" id="text-org666b935">
+<p>
+如果要更改或设置区域设置，请使用 <code>update-locale</code> 命令。
+<code>LANG</code> 变量允许您设置整个系统的locale。以下命令将 <code>LANG</code> 设置为 <code>en_IN.UTF-8</code> 并删除 <code>LANGUAGE</code> 的定义。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo update-locale <span style="color: #7590db;">LANG</span>=<span style="color: #7590db;">LANG</span>=en_IN.UTF-8 LANGUAGE
+&#25110;&#32773;
+$ sudo localectl set-locale <span style="color: #7590db;">LANG</span>=en_IN.UTF-8
+</pre>
+</div>
+
+<p>
+要配置特定的locale，请编辑相应的变量。例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo update-locale <span style="color: #7590db;">LC_TIME</span>=en_IN.UTF-8
+&#25110;&#32773;
+$ sudo localectl set-locale <span style="color: #7590db;">LC_TIME</span>=en_IN.UTF-8
+</pre>
+</div>
+
+<p>
+在以下文件中可以找到全局区域设置：
+</p>
+
+<ul class="org-ul">
+<li>/etc/default/locale – Ubuntu/Debian</li>
+<li>/etc/locale.conf – CentOS/RHEL</li>
+</ul>
+
+<p>
+要为单个用户设置全局区域设置，只需打开~/.bash_profile文件并添加以下行即可。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #7590db;">LANG</span>=<span style="color: #2d9574;">"en_IN.utf8"</span>
+<span style="color: #4f97d7;">export</span> LANG
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 LaoZhuZhu.COM<br>
+    Last updated 2024-01-02 二 20:49<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>
