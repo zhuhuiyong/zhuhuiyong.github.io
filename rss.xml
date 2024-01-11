@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Tue, 02 Jan 2024 20:51:38 +0800</pubDate>
-  <lastBuildDate>Tue, 02 Jan 2024 20:51:38 +0800</lastBuildDate>
+  <pubDate>Thu, 11 Jan 2024 10:44:50 +0800</pubDate>
+  <lastBuildDate>Thu, 11 Jan 2024 10:44:50 +0800</lastBuildDate>
   <generator>Emacs 27.1 Org-mode 9.6.5</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -234,6 +234,31 @@
 
     <p>
     <a href="how-to-check-method-is-get-or-set-in-java.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>Linux下如何修改路由表优先级</title>
+    <link>https://laozhuzhu.com/posts/how-to-change-route-priority-on-linux.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-change-route-priority-on-linux.org</guid>
+    <pubDate>Thu, 11 Jan 2024 09:47:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
+    </p>
+
+    <p>
+    个别情况下，您也许需要修改路由优先级，比如，在使用 <code>UxPlay</code> 将iOS设备投屏到Linux时，如果VPN路由优先级高，则会导致投屏失败，此时，需要将WIFI路由优先级调高即可解决投屏失败问题。
+    </p>
+
+    <p>
+    本文将介绍如何查看和修改路由优先级。
+    </p>
+
+    <p>
+    <a href="how-to-change-route-priority-on-linux.html">(Read more)</a>
     </p>
     ]]></description>
   </item>

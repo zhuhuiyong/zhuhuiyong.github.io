@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-01-02 二 20:51 -->
+<!-- 2024-01-11 四 10:44 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Something</title>
@@ -31,13 +31,29 @@
 </div>
 
 
-<div id="outline-container-orgbd2294a" class="outline-2">
-<h2 id="orgbd2294a">最新文章</h2>
-<div class="outline-text-2" id="text-orgbd2294a">
+<div id="outline-container-org47ef85d" class="outline-2">
+<h2 id="org47ef85d">最新文章</h2>
+<div class="outline-text-2" id="text-org47ef85d">
 </div>
-<div id="outline-container-org4068bd3" class="outline-3">
-<h3 id="org4068bd3"><a href="posts/linux-locale-environment-variables.html">[2024-01-02] Linux区域设置（locale）</a></h3>
-<div class="outline-text-3" id="text-org4068bd3">
+<div id="outline-container-orgdcd40d0" class="outline-3">
+<h3 id="orgdcd40d0"><a href="posts/how-to-change-route-priority-on-linux.html">[2024-01-11] Linux下如何修改路由表优先级</a></h3>
+<div class="outline-text-3" id="text-orgdcd40d0">
+<p>
+在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
+</p>
+
+<p>
+个别情况下，您也许需要修改路由优先级，比如，在使用 <code>UxPlay</code> 将iOS设备投屏到Linux时，如果VPN路由优先级高，则会导致投屏失败，此时，需要将WIFI路由优先级调高即可解决投屏失败问题。
+</p>
+
+<p>
+本文将介绍如何查看和修改路由优先级。
+</p>
+</div>
+</div>
+<div id="outline-container-orgbd89cde" class="outline-3">
+<h3 id="orgbd89cde"><a href="posts/linux-locale-environment-variables.html">[2024-01-02] Linux区域设置（locale）</a></h3>
+<div class="outline-text-3" id="text-orgbd89cde">
 <p>
 区域设置是一组环境变量，用于定义Linux系统上应用程序和shell会话的语言、国家/地区和字符编码设置（或任何其他特殊变体首选项）。
 </p>
@@ -51,9 +67,9 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org7ba07b0" class="outline-3">
-<h3 id="org7ba07b0"><a href="posts/how-to-delete-commit-history-in-github.html">[2023-12-15] 如何清除GitHub提交历史记录</a></h3>
-<div class="outline-text-3" id="text-org7ba07b0">
+<div id="outline-container-orgd2cbf0d" class="outline-3">
+<h3 id="orgd2cbf0d"><a href="posts/how-to-delete-commit-history-in-github.html">[2023-12-15] 如何清除GitHub提交历史记录</a></h3>
+<div class="outline-text-3" id="text-orgd2cbf0d">
 <p>
 GitHub是开发人员和团队管理、协作和跟踪工作的重要工具。但是，有时您可能需要删除提交历史记录，以清理存储库或删除敏感信息。
 </p>
@@ -63,9 +79,9 @@ GitHub是开发人员和团队管理、协作和跟踪工作的重要工具。�
 </p>
 </div>
 </div>
-<div id="outline-container-org7fbe8ca" class="outline-3">
-<h3 id="org7fbe8ca"><a href="posts/how-to-clean-linux-system-journal-logs.html">[2023-12-15] 如何清理Linux系统日志</a></h3>
-<div class="outline-text-3" id="text-org7fbe8ca">
+<div id="outline-container-org67345c9" class="outline-3">
+<h3 id="org67345c9"><a href="posts/how-to-clean-linux-system-journal-logs.html">[2023-12-15] 如何清理Linux系统日志</a></h3>
+<div class="outline-text-3" id="text-org67345c9">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -83,27 +99,11 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 </div>
 </div>
-<div id="outline-container-org1a70a23" class="outline-3">
-<h3 id="org1a70a23"><a href="posts/spring-cors.html">[2023-12-06] SpringBoot处理CORS跨域请求</a></h3>
-<div class="outline-text-3" id="text-org1a70a23">
-<p>
-In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
-</p>
-
-<p>
-Often, the host that serves the JS (e.g. example.com) is different from the host that serves the data (e.g. api.example.com). In such a case, CORS enables cross-domain communication.
-</p>
-
-<p>
-Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html">support</a> for CORS, offering an easy and powerful way of configuring it in any Spring or Spring Boot web application.
-</p>
-</div>
-</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 LaoZhuZhu.COM<br>
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2024-01-02 二 20:17<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
 </div>
