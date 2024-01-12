@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-01-11 四 10:48 -->
+<!-- 2024-01-12 五 17:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux下如何修改路由表优先级</title>
@@ -9,6 +9,15 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script>
+ var _hmt = _hmt || [];
+ (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+ })();
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -26,10 +35,10 @@
 <div id="content" class="content">
 <h1 class="title">Linux下如何修改路由表优先级</h1>
 
-<div id="outline-container-orgd3fa59c" class="outline-2">
-<h2 id="orgd3fa59c">简介</h2>
-<div class="outline-text-2" id="text-orgd3fa59c">
-<div class="preview" id="org40a487a">
+<div id="outline-container-org8428916" class="outline-2">
+<h2 id="org8428916">简介</h2>
+<div class="outline-text-2" id="text-org8428916">
+<div class="preview" id="org408c8a1">
 <p>
 在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
 </p>
@@ -46,18 +55,18 @@
 </div>
 </div>
 
-<div id="outline-container-org3ac45eb" class="outline-2">
-<h2 id="org3ac45eb">路由优先级</h2>
-<div class="outline-text-2" id="text-org3ac45eb">
+<div id="outline-container-orgd7f4e00" class="outline-2">
+<h2 id="orgd7f4e00">路由优先级</h2>
+<div class="outline-text-2" id="text-orgd7f4e00">
 <p>
 如果您有两条路由用于完全相同的目的地（例如，这两条路由都适用于192.168.1.0/24），则会根据其 <code>metric</code> 参数进行比较： <code>metric</code> 值越小，优先级越高。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org5db33c3" class="outline-2">
-<h2 id="org5db33c3">查看路由优先级</h2>
-<div class="outline-text-2" id="text-org5db33c3">
+<div id="outline-container-org9353673" class="outline-2">
+<h2 id="org9353673">查看路由优先级</h2>
+<div class="outline-text-2" id="text-org9353673">
 <p>
 可以使用以下命令，查看路由优先级。
 </p>
@@ -88,9 +97,9 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 </div>
 </div>
 
-<div id="outline-container-org89f0073" class="outline-2">
-<h2 id="org89f0073">修改路由优先级</h2>
-<div class="outline-text-2" id="text-org89f0073">
+<div id="outline-container-orgc34d48c" class="outline-2">
+<h2 id="orgc34d48c">修改路由优先级</h2>
+<div class="outline-text-2" id="text-orgc34d48c">
 <p>
 可以使用以下命令，修改路由优先级。
 </p>

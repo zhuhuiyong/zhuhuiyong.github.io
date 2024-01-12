@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-01-11 四 10:40 -->
+<!-- 2024-01-12 五 17:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>How to Mock Environment Variables in Unit Tests</title>
@@ -9,6 +9,15 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script>
+ var _hmt = _hmt || [];
+ (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+ })();
+</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -26,19 +35,19 @@
 <div id="content" class="content">
 <h1 class="title">How to Mock Environment Variables in Unit Tests</h1>
 
-<div id="outline-container-org02bcb2b" class="outline-2">
-<h2 id="org02bcb2b">原文地址</h2>
-<div class="outline-text-2" id="text-org02bcb2b">
+<div id="outline-container-orgd514fe1" class="outline-2">
+<h2 id="orgd514fe1">原文地址</h2>
+<div class="outline-text-2" id="text-orgd514fe1">
 <p>
 <a href="https://www.baeldung.com/java-unit-testing-environment-variables">https://www.baeldung.com/java-unit-testing-environment-variables</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgec08295" class="outline-2">
-<h2 id="orgec08295">Overview</h2>
-<div class="outline-text-2" id="text-orgec08295">
-<div class="preview" id="orga177cdb">
+<div id="outline-container-org9447c12" class="outline-2">
+<h2 id="org9447c12">Overview</h2>
+<div class="outline-text-2" id="text-org9447c12">
+<div class="preview" id="orgec69378">
 <p>
 When we’re unit testing code that depends on environment variables, we may wish to provide specific values for them as part of our test implementation.
 </p>
@@ -54,9 +63,9 @@ In this tutorial we’ll look at the challenges of depending on environment vari
 </div>
 </div>
 </div>
-<div id="outline-container-org5b282af" class="outline-2">
-<h2 id="org5b282af">The Challenge of Changing Environment Variables</h2>
-<div class="outline-text-2" id="text-org5b282af">
+<div id="outline-container-org41202d2" class="outline-2">
+<h2 id="org41202d2">The Challenge of Changing Environment Variables</h2>
+<div class="outline-text-2" id="text-org41202d2">
 <p>
 In other languages, such as JavaScript, we can very easily modify the environment in a test:
 </p>
@@ -71,9 +80,9 @@ In other languages, such as JavaScript, we can very easily modify the environmen
 Java is a lot more strict. In Java, the environment variable map is immutable. It’s an unmodifiable Map that is initialized when the JVM starts. While there are good reasons for this, we may still wish to control our environment at test time.
 </p>
 </div>
-<div id="outline-container-org4b9fcd2" class="outline-3">
-<h3 id="org4b9fcd2">Why the Environment Is Immutable</h3>
-<div class="outline-text-3" id="text-org4b9fcd2">
+<div id="outline-container-org57711a0" class="outline-3">
+<h3 id="org57711a0">Why the Environment Is Immutable</h3>
+<div class="outline-text-3" id="text-org57711a0">
 <p>
 With the normal execution of Java programs, it could be potentially chaotic if something as global as the runtime environment config could be modified. This is especially risky when multiple threads are involved. For example, one thread might be modifying the environment at the same time as another, launching a process with that environment, and any conflicting settings may interact in unexpected ways.
 </p>
@@ -83,9 +92,9 @@ The designers of Java have, therefore, kept the global values in the environment
 </p>
 </div>
 </div>
-<div id="outline-container-orgf9e2e3e" class="outline-3">
-<h3 id="orgf9e2e3e">Working Around the Unmodifiable Map</h3>
-<div class="outline-text-3" id="text-orgf9e2e3e">
+<div id="outline-container-org300ab37" class="outline-3">
+<h3 id="org300ab37">Working Around the Unmodifiable Map</h3>
+<div class="outline-text-3" id="text-org300ab37">
 <p>
 There is a workaround for the immutable environment variables Map object. Despite its read only UnmodifiableMap type, we can break encapsulation and access an internal field using reflection:
 </p>
@@ -114,9 +123,9 @@ After JDK 16, the module system became much more protective of the internals of 
 </p>
 </div>
 </div>
-<div id="outline-container-org1eedb13" class="outline-3">
-<h3 id="org1eedb13">When Reflective Access Doesn’t Work</h3>
-<div class="outline-text-3" id="text-org1eedb13">
+<div id="outline-container-orgf818b93" class="outline-3">
+<h3 id="orgf818b93">When Reflective Access Doesn’t Work</h3>
+<div class="outline-text-3" id="text-orgf818b93">
 <p>
 The Java module system has disabled reflective modification of its core internals by default since JDK 17. These are considered unsafe practices which could lead to runtime errors if the internals changed in the future.
 </p>
@@ -152,9 +161,9 @@ This workaround allows us to write code and use tools that break encapsulation v
 </p>
 </div>
 </div>
-<div id="outline-container-org2a06151" class="outline-3">
-<h3 id="org2a06151">Why We Need to Set Environment Variables Programmatically</h3>
-<div class="outline-text-3" id="text-org2a06151">
+<div id="outline-container-org29c9ac6" class="outline-3">
+<h3 id="org29c9ac6">Why We Need to Set Environment Variables Programmatically</h3>
+<div class="outline-text-3" id="text-org29c9ac6">
 <p>
 It’s possible for our unit tests to be run with environment variables set by the test runner. This may be our first preference if we have global configuration that applies across the entire test suite.
 </p>
@@ -190,9 +199,9 @@ Similarly, we may have values at test time that aren’t predictable at coding t
 </p>
 </div>
 </div>
-<div id="outline-container-org8a0aaba" class="outline-3">
-<h3 id="org8a0aaba">Getting the Right Help From Test Libraries</h3>
-<div class="outline-text-3" id="text-org8a0aaba">
+<div id="outline-container-orgc9ec32e" class="outline-3">
+<h3 id="orgc9ec32e">Getting the Right Help From Test Libraries</h3>
+<div class="outline-text-3" id="text-orgc9ec32e">
 <p>
 There are several test libraries that can help us set environment variables at test time. Each has their own level of compatibility with different test frameworks, and JDK versions.
 </p>
@@ -207,9 +216,9 @@ We should note that all of these libraries cover more than just environment vari
 </div>
 </div>
 </div>
-<div id="outline-container-org7a47d79" class="outline-2">
-<h2 id="org7a47d79">Setting Environment Variables With JUnit Pioneer</h2>
-<div class="outline-text-2" id="text-org7a47d79">
+<div id="outline-container-orgdd508a0" class="outline-2">
+<h2 id="orgdd508a0">Setting Environment Variables With JUnit Pioneer</h2>
+<div class="outline-text-2" id="text-orgdd508a0">
 <p>
 JUnit Pioneer is a set of extensions for JUnit 5. It offers an annotation-based way to set and clear environment variables.
 </p>
@@ -228,9 +237,9 @@ We can add it with the junit-pioneer dependency:
 </div>
 </div>
 
-<div id="outline-container-org55cd754" class="outline-3">
-<h3 id="org55cd754">Using the SetEnvironmentVariable Annotation</h3>
-<div class="outline-text-3" id="text-org55cd754">
+<div id="outline-container-org25b1902" class="outline-3">
+<h3 id="org25b1902">Using the SetEnvironmentVariable Annotation</h3>
+<div class="outline-text-3" id="text-org25b1902">
 <p>
 We can annotate a test class or method with the SetEnvironmentVariable annotation, and our test code operates with that value set in the environment:
 </p>
@@ -260,9 +269,9 @@ We can use the @SetEnvironmentVariable annotation multiple times to set multiple
 </p>
 </div>
 </div>
-<div id="outline-container-orgcc28064" class="outline-3">
-<h3 id="orgcc28064">Clearing an Environment Variable</h3>
-<div class="outline-text-3" id="text-orgcc28064">
+<div id="outline-container-orgc9196a9" class="outline-3">
+<h3 id="orgc9196a9">Clearing an Environment Variable</h3>
+<div class="outline-text-3" id="text-orgc9196a9">
 <p>
 We may also wish to clear system-provided environment variables, or even some that were set at class level for some specific tests:
 </p>
@@ -277,25 +286,25 @@ void givenEnvironmentVariableIsClear<sub>thenItIsNotSet</sub>() {
 </div>
 </div>
 
-<div id="outline-container-org9bce6eb" class="outline-3">
-<h3 id="org9bce6eb">Limitations of JUnit Pioneer</h3>
-<div class="outline-text-3" id="text-org9bce6eb">
+<div id="outline-container-org5d6c8b6" class="outline-3">
+<h3 id="org5d6c8b6">Limitations of JUnit Pioneer</h3>
+<div class="outline-text-3" id="text-org5d6c8b6">
 <p>
 JUnit Pioneer can only be used with JUnit 5. It uses reflection, so it requires a version of Java from 16 or below, or for the add-opens workaround to be employed.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org775fdfb" class="outline-2">
-<h2 id="org775fdfb">Setting Environment Variables With System Stubs</h2>
-<div class="outline-text-2" id="text-org775fdfb">
+<div id="outline-container-org2028f4d" class="outline-2">
+<h2 id="org2028f4d">Setting Environment Variables With System Stubs</h2>
+<div class="outline-text-2" id="text-org2028f4d">
 <p>
 System Stubs has test support for JUnit 4, JUnit 5 and TestNG. Like its predecessor, System Lambda, it may also be used independently in the body of any test code in any framework. System Stubs is compatible with all versions of the JDK from 11 onwards.
 </p>
 </div>
-<div id="outline-container-orgde156c2" class="outline-3">
-<h3 id="orgde156c2">Setting Environment Variables in JUnit 5</h3>
-<div class="outline-text-3" id="text-orgde156c2">
+<div id="outline-container-orgf205d2e" class="outline-3">
+<h3 id="orgf205d2e">Setting Environment Variables in JUnit 5</h3>
+<div class="outline-text-3" id="text-orgf205d2e">
 <p>
 For this we need the System Stubs JUnit 5 dependency:
 </p>
@@ -367,9 +376,9 @@ After the test method has completed, the environment variables return to the sta
 </p>
 </div>
 </div>
-<div id="outline-container-orgd94abb8" class="outline-3">
-<h3 id="orgd94abb8">Setting Environment Variables in JUnit 4</h3>
-<div class="outline-text-3" id="text-orgd94abb8">
+<div id="outline-container-org156925c" class="outline-3">
+<h3 id="org156925c">Setting Environment Variables in JUnit 4</h3>
+<div class="outline-text-3" id="text-org156925c">
 <p>
 For this we need the System Stubs JUnit 4 dependency:
 </p>
@@ -407,9 +416,9 @@ Once the test is running, the environment variable is active:
 </div>
 </div>
 </div>
-<div id="outline-container-org2354af8" class="outline-3">
-<h3 id="org2354af8">Setting Environment Variables in TestNG</h3>
-<div class="outline-text-3" id="text-org2354af8">
+<div id="outline-container-org812e54a" class="outline-3">
+<h3 id="org812e54a">Setting Environment Variables in TestNG</h3>
+<div class="outline-text-3" id="text-org812e54a">
 <p>
 For this we need the System Stubs TestNG dependency:
 </p>
@@ -465,9 +474,9 @@ And our test method can use them:
 </div>
 </div>
 </div>
-<div id="outline-container-orgb43c01b" class="outline-3">
-<h3 id="orgb43c01b">System Stubs Without a Test Framework</h3>
-<div class="outline-text-3" id="text-orgb43c01b">
+<div id="outline-container-orge43c8c9" class="outline-3">
+<h3 id="orge43c8c9">System Stubs Without a Test Framework</h3>
+<div class="outline-text-3" id="text-orge43c8c9">
 <p>
 System Stubs was originally based on the codebase of System Lambda, which came with techniques that could only be used inside a single test method. This meant that the choice of test framework was completely open.
 </p>
@@ -542,9 +551,9 @@ The benefit of the test framework extensions, however, is that we can avoid this
 </p>
 </div>
 </div>
-<div id="outline-container-org48b84dc" class="outline-3">
-<h3 id="org48b84dc">Limitations of System Stubs</h3>
-<div class="outline-text-3" id="text-org48b84dc">
+<div id="outline-container-org8866926" class="outline-3">
+<h3 id="org8866926">Limitations of System Stubs</h3>
+<div class="outline-text-3" id="text-org8866926">
 <p>
 The TestNG capability of System Stubs is only available in the version 2.1+ releases, which are limited to Java 11 onwards.
 </p>
@@ -559,9 +568,9 @@ System Stubs version 1 provides compatibility with JDK 8 to JDK 16.
 </div>
 </div>
 </div>
-<div id="outline-container-orgdd9868e" class="outline-2">
-<h2 id="orgdd9868e">System Rules and System Lambda</h2>
-<div class="outline-text-2" id="text-orgdd9868e">
+<div id="outline-container-orgaf6317b" class="outline-2">
+<h2 id="orgaf6317b">System Rules and System Lambda</h2>
+<div class="outline-text-2" id="text-orgaf6317b">
 <p>
 One of the longest-standing test libraries for environment variables, System Rules provided a JUnit 4 solution to setting environment variables, and its author replaced it with System Lambda to provide a test-framework agnostic approach. They’re based on the same core techniques for substituting environment variables at test time.
 5.1. Set Environment Variables With System Rules
@@ -612,9 +621,9 @@ And access the correct environment in our test method:
 The rule object – environmentVariablesRule – allows us to set environment variables immediately within the test method too.
 </p>
 </div>
-<div id="outline-container-orgd78e362" class="outline-3">
-<h3 id="orgd78e362">Set Environment Variables With System Lambda</h3>
-<div class="outline-text-3" id="text-orgd78e362">
+<div id="outline-container-org4389911" class="outline-3">
+<h3 id="org4389911">Set Environment Variables With System Lambda</h3>
+<div class="outline-text-3" id="text-org4389911">
 <p>
 For this we need the system-lambda dependency:
 </p>
@@ -651,9 +660,9 @@ Then we can write the test:
 </div>
 </div>
 
-<div id="outline-container-orgdb0bc84" class="outline-3">
-<h3 id="orgdb0bc84">Limitations of System Rules and System Lambda</h3>
-<div class="outline-text-3" id="text-orgdb0bc84">
+<div id="outline-container-org7db2b23" class="outline-3">
+<h3 id="org7db2b23">Limitations of System Rules and System Lambda</h3>
+<div class="outline-text-3" id="text-org7db2b23">
 <p>
 While these are both mature and broad libraries, they cannot be used for manipulating environment variables in JDK 17 and beyond.
 </p>
@@ -664,16 +673,16 @@ System Rules depends heavily on JUnit 4. We cannot use System Lambda for setting
 </div>
 </div>
 </div>
-<div id="outline-container-org7f9b8ea" class="outline-2">
-<h2 id="org7f9b8ea">Avoid Mocking Environment Variables</h2>
-<div class="outline-text-2" id="text-org7f9b8ea">
+<div id="outline-container-orga555a4a" class="outline-2">
+<h2 id="orga555a4a">Avoid Mocking Environment Variables</h2>
+<div class="outline-text-2" id="text-orga555a4a">
 <p>
 While we have discussed a number of ways to modify environment variables at test time, it may be worth considering whether this is necessary, or even beneficial.
 </p>
 </div>
-<div id="outline-container-org914b0a9" class="outline-3">
-<h3 id="org914b0a9">Maybe It Is Too Risky</h3>
-<div class="outline-text-3" id="text-org914b0a9">
+<div id="outline-container-org2dffa26" class="outline-3">
+<h3 id="org2dffa26">Maybe It Is Too Risky</h3>
+<div class="outline-text-3" id="text-org2dffa26">
 <p>
 As we’ve seen with each of the solutions above, changing the environment variables at runtime is not straightforward. In cases where there is multi-threaded code, it can be even more tricky. If multiple test fixture are running in the same JVM in parallel, perhaps with JUnit 5’s concurrency features, then there is a risk that different tests may be trying to take control of the environment at the same time in a contradictory way.
 </p>
@@ -691,9 +700,9 @@ Similarly, if we’re running code that we can only control through environment 
 </p>
 </div>
 </div>
-<div id="outline-container-org4e5ed00" class="outline-3">
-<h3 id="org4e5ed00">Use Dependency Injection</h3>
-<div class="outline-text-3" id="text-org4e5ed00">
+<div id="outline-container-orge895b5b" class="outline-3">
+<h3 id="orge895b5b">Use Dependency Injection</h3>
+<div class="outline-text-3" id="text-orge895b5b">
 <p>
 It’s easier to test a system that receives all its inputs at construction, than one that pulls its inputs from system resources.
 </p>
@@ -707,9 +716,9 @@ We should also note that Spring will allow us to use system properties in place 
 </p>
 </div>
 </div>
-<div id="outline-container-org1e9f0d4" class="outline-3">
-<h3 id="org1e9f0d4">Use an Abstraction</h3>
-<div class="outline-text-3" id="text-org1e9f0d4">
+<div id="outline-container-orgd3bdac3" class="outline-3">
+<h3 id="orgd3bdac3">Use an Abstraction</h3>
+<div class="outline-text-3" id="text-orgd3bdac3">
 <p>
 If a module must pull environment variables, perhaps it should not depend directly on System.getenv() but could instead use an environment variable reader interface:
 </p>
@@ -757,9 +766,9 @@ Therefore, it seems inevitable that we may still encounter cases where we want t
 </div>
 </div>
 </div>
-<div id="outline-container-orgebe67fd" class="outline-2">
-<h2 id="orgebe67fd">Conclusion</h2>
-<div class="outline-text-2" id="text-orgebe67fd">
+<div id="outline-container-orgeae5b8b" class="outline-2">
+<h2 id="orgeae5b8b">Conclusion</h2>
+<div class="outline-text-2" id="text-orgeae5b8b">
 <p>
 In this article we’ve looked at the options for setting environment variables at test time. We saw that this becomes more difficult to do when we need to be able to make those variables flexible at runtime, and available to JDK 17 and beyond.
 </p>
