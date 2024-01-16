@@ -35,7 +35,7 @@ $(function(){
         },
         pageSize: 20,
         callback: function(data, pagination) {
-            console.log(data);
+            // console.log(data);
             let dataContainer = $('#content2');
             // template method of yourself
             var html = template(data);
