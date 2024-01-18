@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-01-17 三 20:18 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux中如何实现大文件分卷压缩和合并解压</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script>
+ var _hmt = _hmt || [];
+ (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+ })();
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Linux中如何实现大文件分卷压缩和合并解压</h1>
+
+<div id="outline-container-org6ad56e2" class="outline-2">
+<h2 id="org6ad56e2">简介</h2>
+<div class="outline-text-2" id="text-org6ad56e2">
+<div class="preview" id="orgc4ef457">
+<p>
+个别时候，当我们想上传文件时，可能因为文件太大，网速太慢等原因，导致上传失败。此时，我们必须将大文件分割成一些小文件，以便上传。
+</p>
+
+<p>
+本文将介绍在Linux中，如何通过以下几种方法实现大文件的分卷压缩和合并解压：
+</p>
+
+<p>
+方法一：tar
+</p>
+
+<p>
+方法二：zip
+</p>
+
+<p>
+方法三：7z
+</p>
+
+</div>
+
+<p>
+为方便演示，我们先使用以下命令，创建1个100M的文本大文件：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">$ mkdir ./example-dir
+$ base64 /dev/urandom | head -c <span style="color: #a45bad;">100M</span> &gt; ./example-dir/demo.txt
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org15c246e" class="outline-2">
+<h2 id="org15c246e">方法一：tar</h2>
+<div class="outline-text-2" id="text-org15c246e">
+</div>
+<div id="outline-container-org4d86a3a" class="outline-3">
+<h3 id="org4d86a3a">分卷压缩</h3>
+<div class="outline-text-3" id="text-org4d86a3a">
+<p>
+以下示例中，我们使用 <code>tar</code> 和 <code>split</code> 命令，将example-dir目录下的大文件，压缩并分割成了50M大小。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ tar -zcf - ./example-dir/ | split -b <span style="color: #a45bad;">50m</span> -d -  demo.tar.gz.
+</pre>
+</div>
+
+<p>
+检查压缩后的文件。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ ls
+demo.tar.gz.00  demo.tar.gz.01  example-dir
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org630a3b1" class="outline-3">
+<h3 id="org630a3b1">合并解压</h3>
+<div class="outline-text-3" id="text-org630a3b1">
+<div class="org-src-container">
+<pre class="src src-shell">$ mkdir -p demo &amp;&amp; cat demo.tar.gz.* | tar -xzv -C demo
+./example-dir/
+./example-dir/demo.txt
+</pre>
+</div>
+
+<p>
+检查解压后的文件。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ tree ./demo
+./demo
+&#9492;&#9472;&#9472; example-dir
+    &#9492;&#9472;&#9472; demo.txt
+
+<span style="color: #a45bad;">1</span> directory, <span style="color: #a45bad;">1</span> file
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org443b147" class="outline-2">
+<h2 id="org443b147">方法二：zip</h2>
+<div class="outline-text-2" id="text-org443b147">
+</div>
+<div id="outline-container-org1fe533e" class="outline-3">
+<h3 id="org1fe533e">分卷压缩</h3>
+<div class="outline-text-3" id="text-org1fe533e">
+<p>
+我们将使用zip命令的-s（splitsize）选项，实现分卷压缩。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ zip -r -s <span style="color: #a45bad;">50m</span> demo.zip ./example-dir/
+adding: example-dir/ <span style="color: #4f97d7;">(</span>stored <span style="color: #a45bad;">0%</span><span style="color: #4f97d7;">)</span>
+adding: example-dir/demo.txt <span style="color: #4f97d7;">(</span>deflated <span style="color: #a45bad;">24%</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<p>
+以上示例中，我们将example-dir目录下的大文件，压缩并分割成了50M大小。处理完毕后的文件名如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ ls 
+demo.z01  demo.zip
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5e27305" class="outline-3">
+<h3 id="org5e27305">合并解压</h3>
+<div class="outline-text-3" id="text-org5e27305">
+<p>
+要打开zip压缩包，需要用到 <code>unzip</code> 命令。如果你未安装 <code>unzip</code> ，可以通过以下命令进行安装：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo apt install -y unzip
+</pre>
+</div>
+
+<p>
+首先，我们需要使用 <code>zip</code> ，以下命令将分割后的小压缩包合并到一个压缩包中。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ zip -F demo.zip --out single-archive.zip
+Fix archive <span style="color: #4f97d7;">(</span>-F<span style="color: #4f97d7;">)</span> - assume mostly intact archive
+ copying: example-dir/
+ copying: example-dir/demo.txt
+</pre>
+</div>
+
+<p>
+现在，我们可以使用 <code>unzip</code> 命令打开压缩包了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ unzip single-archive.zip -d demo
+Archive:  single-archive.zip
+   creating: demo/example-dir/
+  inflating: demo/example-dir/demo.txt
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5e7e018" class="outline-2">
+<h2 id="org5e7e018">方法三：7z</h2>
+<div class="outline-text-2" id="text-org5e7e018">
+<p>
+可以使用以下命令，安装7z。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo apt install -y p7zip-full
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgbb16e4f" class="outline-3">
+<h3 id="orgbb16e4f">分卷压缩</h3>
+<div class="outline-text-3" id="text-orgbb16e4f">
+<p>
+7z使用起来更加简单，只需要指定压缩文件的大小、压缩文件名和要压缩哪些文件就可以了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #a45bad;">7z</span> -r -v50M a demo.7z ./example-dir/
+
+<span style="color: #a45bad;">7-Zip</span> <span style="color: #4f97d7;">[</span><span style="color: #a45bad;">64</span><span style="color: #4f97d7;">]</span> <span style="color: #a45bad;">16.02</span> : Copyright <span style="color: #4f97d7;">(</span>c<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">1999-2016</span> Igor Pavlov : <span style="color: #a45bad;">2016-05-21</span>
+p7zip Version <span style="color: #a45bad;">16.02</span> <span style="color: #4f97d7;">(</span><span style="color: #7590db;">locale</span>=en_US.UTF-8,<span style="color: #7590db;">Utf16</span>=on,<span style="color: #7590db;">HugeFiles</span>=on,64 bits,8 CPUs Intel<span style="color: #bc6ec5;">(</span>R<span style="color: #bc6ec5;">)</span> Core<span style="color: #bc6ec5;">(</span>TM<span style="color: #bc6ec5;">)</span> i7-8550U CPU @ <span style="color: #a45bad;">1.80GHz</span> <span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">806EA</span><span style="color: #bc6ec5;">)</span>,ASM,AES-NI<span style="color: #4f97d7;">)</span>
+
+Scanning the drive:
+<span style="color: #a45bad;">1</span> folder, <span style="color: #a45bad;">1</span> file, <span style="color: #a45bad;">104857600</span> bytes <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">100</span> MiB<span style="color: #4f97d7;">)</span>
+
+Creating archive: demo.7z
+
+Items to compress: <span style="color: #a45bad;">2</span>
+
+
+Files read from disk: <span style="color: #a45bad;">1</span>
+Archive size: <span style="color: #a45bad;">80614459</span> bytes <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">77</span> MiB<span style="color: #4f97d7;">)</span>
+Everything is Ok
+</pre>
+</div>
+
+<p>
+检查压缩后的文件。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ ls
+demo.7z.001  demo.7z.002  example-dir
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e32519" class="outline-3">
+<h3 id="org2e32519">合并解压</h3>
+<div class="outline-text-3" id="text-org2e32519">
+<p>
+要解压7z文件，只需要指定第1个压缩包就可以了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #a45bad;">7z</span> x -odemo demo.7z.001
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-01-17 三 20:18<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>

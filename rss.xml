@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Tue, 16 Jan 2024 09:48:33 +0800</pubDate>
-  <lastBuildDate>Tue, 16 Jan 2024 09:48:33 +0800</lastBuildDate>
+  <pubDate>Wed, 17 Jan 2024 20:18:34 +0800</pubDate>
+  <lastBuildDate>Wed, 17 Jan 2024 20:18:34 +0800</lastBuildDate>
   <generator>Emacs 27.1 Org-mode 9.6.5</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -188,6 +188,39 @@
 
     <p>
     <a href="how-to-delete-commit-history-in-github.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>Linux中如何实现大文件分卷压缩和合并解压</title>
+    <link>https://laozhuzhu.com/posts/how-to-compress-and-split-files-in-linux.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-compress-and-split-files-in-linux.org</guid>
+    <pubDate>Wed, 17 Jan 2024 15:25:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    个别时候，当我们想上传文件时，可能因为文件太大，网速太慢等原因，导致上传失败。此时，我们必须将大文件分割成一些小文件，以便上传。
+    </p>
+
+    <p>
+    本文将介绍在Linux中，如何通过以下几种方法实现大文件的分卷压缩和合并解压：
+    </p>
+
+    <p>
+    方法一：tar
+    </p>
+
+    <p>
+    方法二：zip
+    </p>
+
+    <p>
+    方法三：7z
+    </p>
+
+    <p>
+    <a href="how-to-compress-and-split-files-in-linux.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
