@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-01-12 五 17:01 -->
+<!-- 2024-01-29 一 12:02 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux下如何修改路由表优先级</title>
@@ -38,7 +38,7 @@
 <div id="outline-container-org8428916" class="outline-2">
 <h2 id="org8428916">简介</h2>
 <div class="outline-text-2" id="text-org8428916">
-<div class="preview" id="org408c8a1">
+<div class="preview" id="orgde001aa">
 <p>
 在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
 </p>
@@ -62,11 +62,10 @@
 如果您有两条路由用于完全相同的目的地（例如，这两条路由都适用于192.168.1.0/24），则会根据其 <code>metric</code> 参数进行比较： <code>metric</code> 值越小，优先级越高。
 </p>
 </div>
-</div>
 
-<div id="outline-container-org9353673" class="outline-2">
-<h2 id="org9353673">查看路由优先级</h2>
-<div class="outline-text-2" id="text-org9353673">
+<div id="outline-container-orgdd565b6" class="outline-3">
+<h3 id="orgdd565b6">查看路由优先级</h3>
+<div class="outline-text-3" id="text-orgdd565b6">
 <p>
 可以使用以下命令，查看路由优先级。
 </p>
@@ -96,10 +95,15 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 </div>
 </div>
 </div>
+</div>
 
 <div id="outline-container-orgc34d48c" class="outline-2">
 <h2 id="orgc34d48c">修改路由优先级</h2>
 <div class="outline-text-2" id="text-orgc34d48c">
+</div>
+<div id="outline-container-orge379d87" class="outline-3">
+<h3 id="orge379d87">临时修改方法</h3>
+<div class="outline-text-3" id="text-orge379d87">
 <p>
 可以使用以下命令，修改路由优先级。
 </p>
@@ -124,11 +128,71 @@ $ sudo ip route add default via y.y.y.y dev wlp3s0 metric <span style="color: #a
 </div>
 </div>
 </div>
+
+<div id="outline-container-org3e93599" class="outline-3">
+<h3 id="org3e93599">永久修改方法</h3>
+<div class="outline-text-3" id="text-org3e93599">
+</div>
+<div id="outline-container-org9c68e79" class="outline-4">
+<h4 id="org9c68e79">检查当前网络连接的管理方式</h4>
+<div class="outline-text-4" id="text-org9c68e79">
+<p>
+如果使用 <code>nmcli</code> 命令有类似如下的输出结果，就表示你的系统当前使用的是Network Manager。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ nmcli device
+DEVICE           TYPE      STATE                   CONNECTION
+wlp3s0           wifi      connected               huawei01
+br-d7775af86076  bridge    connected <span style="color: #4f97d7;">(</span>externally<span style="color: #4f97d7;">)</span>  br-d7775af86076
+docker0          bridge    connected <span style="color: #4f97d7;">(</span>externally<span style="color: #4f97d7;">)</span>  docker0
+...
+</pre>
+</div>
+
+<p>
+从上述命令的输出结果可以看到，当前系统使用 <code>WIFI</code> ，连接到了无线热点 <code>huawei01</code> ，
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd397c0" class="outline-4">
+<h4 id="orgcd397c0">使用nmcli</h4>
+<div class="outline-text-4" id="text-orgcd397c0">
+<p>
+执行以下命令，可以将当前连接的 <code>metrics</code> 修改为 <code>10</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo nmcli connection modify <span style="color: #2d9574;">'huawei01'</span> ipv4.route-metric <span style="color: #a45bad;">10</span>
+</pre>
+</div>
+
+<p>
+执行以下命令，保存。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo nmcli connection up <span style="color: #2d9574;">'huawei01'</span>
+Connection successfully activated <span style="color: #4f97d7;">(</span>D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/29<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<p>
+现在，此连接的 <code>metrics</code> 应该已经被我们设置为 <code>10</code> 了，你可以按照“<a href="#orgdd565b6">查看路由优先级</a>”章节的描述，检查下我们的修改是否生效了。
+</p>
+
+<p>
+重启电脑后，此设置依旧有效。
+</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
-    Last updated 2024-01-11 四 10:48<br>
+    Last updated 2024-01-29 一 12:02<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
 </div>
 </div>
