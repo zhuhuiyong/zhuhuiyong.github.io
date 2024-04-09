@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Mon, 29 Jan 2024 12:02:31 +0800</pubDate>
-  <lastBuildDate>Mon, 29 Jan 2024 12:02:31 +0800</lastBuildDate>
+  <pubDate>Tue, 09 Apr 2024 09:15:37 +0800</pubDate>
+  <lastBuildDate>Tue, 09 Apr 2024 09:15:37 +0800</lastBuildDate>
   <generator>Emacs 27.1 Org-mode 9.6.5</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -45,6 +45,27 @@
 
     <p>
     <a href="spring-cors.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>不同编程语言实现方式：时间戳（Timestamp）</title>
+    <link>https://laozhuzhu.com/posts/multiple-code-impl-timestamp.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">multiple-code-impl-timestamp.org</guid>
+    <pubDate>Tue, 09 Apr 2024 09:11:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
+    </p>
+
+    <p>
+    时间戳的主要目的在于通过一定的技术手段，对数据产生的时间进行认证，从而验证这段数据在产生后是否经过篡改。所以时间戳服务的提供者必须证明服务中使用的时间源是可信的，所提供的时间戳服务是安全的。
+    </p>
+
+    <p>
+    <a href="multiple-code-impl-timestamp.html">(Read more)</a>
     </p>
     ]]></description>
   </item>

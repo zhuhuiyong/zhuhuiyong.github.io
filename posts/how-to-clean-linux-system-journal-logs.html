@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-01-12 五 17:01 -->
+<!-- 2024-04-09 二 09:14 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何清理Linux系统日志</title>
@@ -34,7 +34,7 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">如何清理Linux系统日志</h1>
-<div class="preview" id="orgbc0ef74">
+<div class="preview" id="org2e018c0">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -52,9 +52,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 
 </div>
-<div id="outline-container-org24e435e" class="outline-2">
-<h2 id="org24e435e">查看日志文件使用量</h2>
-<div class="outline-text-2" id="text-org24e435e">
+<div id="outline-container-orgf69941e" class="outline-2">
+<h2 id="orgf69941e">查看日志文件使用量</h2>
+<div class="outline-text-2" id="text-orgf69941e">
 <p>
 你可以使用以下任意一种方法检查日志文件大小。
 </p>
@@ -79,13 +79,13 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-orgaa2147d" class="outline-2">
-<h2 id="orgaa2147d">手动清理日志文件</h2>
-<div class="outline-text-2" id="text-orgaa2147d">
+<div id="outline-container-org7276c58" class="outline-2">
+<h2 id="org7276c58">手动清理日志文件</h2>
+<div class="outline-text-2" id="text-org7276c58">
 </div>
-<div id="outline-container-org4f80420" class="outline-3">
-<h3 id="org4f80420">清理 N 天前的日志</h3>
-<div class="outline-text-3" id="text-org4f80420">
+<div id="outline-container-org0930fcb" class="outline-3">
+<h3 id="org0930fcb">清理 N 天前的日志</h3>
+<div class="outline-text-3" id="text-org0930fcb">
 <p>
 以下命令将清理2天前的日志：
 </p>
@@ -149,9 +149,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 
 
-<div id="outline-container-org686e456" class="outline-3">
-<h3 id="org686e456">限制日志文件大小</h3>
-<div class="outline-text-3" id="text-org686e456">
+<div id="outline-container-org3c4c449" class="outline-3">
+<h3 id="org3c4c449">限制日志文件大小</h3>
+<div class="outline-text-3" id="text-org3c4c449">
 <p>
 使用以下命令可将日志文件大小限制到100M，它将清理日志文件直到低于100M：
 </p>
@@ -199,9 +199,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-org03374c2" class="outline-3">
-<h3 id="org03374c2">限制日志文件数据</h3>
-<div class="outline-text-3" id="text-org03374c2">
+<div id="outline-container-orge5f4186" class="outline-3">
+<h3 id="orge5f4186">限制日志文件数据</h3>
+<div class="outline-text-3" id="text-orge5f4186">
 <p>
 使用以下命令可将日志文件数据限制到5个：
 </p>

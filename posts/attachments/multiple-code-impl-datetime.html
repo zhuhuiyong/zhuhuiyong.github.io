@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-04-09 二 09:14 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>不同编程语言实现方式：时间戳（Timestamp）</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script>
+ var _hmt = _hmt || [];
+ (function() {
+     var hm = document.createElement("script");
+     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
+     var s = document.getElementsByTagName("script")[0]; 
+     s.parentNode.insertBefore(hm, s);
+ })();
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">不同编程语言实现方式：时间戳（Timestamp）</h1>
+
+<div id="outline-container-org3c4a469" class="outline-2">
+<h2 id="org3c4a469">时间戳（Timestamp）</h2>
+<div class="outline-text-2" id="text-org3c4a469">
+</div>
+<div id="outline-container-org95d584b" class="outline-3">
+<h3 id="org95d584b">什么是时间戳</h3>
+<div class="outline-text-3" id="text-org95d584b">
+<div class="preview" id="org28c048a">
+<p>
+时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
+</p>
+
+<p>
+时间戳的主要目的在于通过一定的技术手段，对数据产生的时间进行认证，从而验证这段数据在产生后是否经过篡改。所以时间戳服务的提供者必须证明服务中使用的时间源是可信的，所提供的时间戳服务是安全的。
+</p>
+
+</div>
+</div>
+</div>
+<div id="outline-container-org7a1c827" class="outline-3">
+<h3 id="org7a1c827">获取时间戳</h3>
+<div class="outline-text-3" id="text-org7a1c827">
+</div>
+<div id="outline-container-org73d79f0" class="outline-4">
+<h4 id="org73d79f0">Java</h4>
+<div class="outline-text-4" id="text-org73d79f0">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">pure java</span>
+System.currentTimeMillis<span style="color: #4f97d7;">()</span> / <span style="color: #a45bad;">1000</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">joda java</span>
+DateTime.now<span style="color: #4f97d7;">()</span>.getMillis<span style="color: #4f97d7;">()</span> / <span style="color: #a45bad;">1000</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">java &gt;= 8</span>
+Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="color: #4f97d7;">()</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0275d65" class="outline-4">
+<h4 id="org0275d65">JavaScript</h4>
+<div class="outline-text-4" id="text-org0275d65">
+<div class="org-src-container">
+<pre class="src src-javascript">Math.round<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Date</span><span style="color: #bc6ec5;">()</span> / <span style="color: #a45bad;">1000</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcdc6368" class="outline-4">
+<h4 id="orgcdc6368">Shell</h4>
+<div class="outline-text-4" id="text-orgcdc6368">
+<div class="org-src-container">
+<pre class="src src-shell">date +%s
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ce2f91" class="outline-4">
+<h4 id="org1ce2f91">MySQL</h4>
+<div class="outline-text-4" id="text-org1ce2f91">
+<div class="org-src-container">
+<pre class="src src-mysql">SELECT unix_timestamp(now())
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-04-09 二 09:10<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+</div>
+</div>
+</body>
+</html>
