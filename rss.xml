@@ -14,15 +14,32 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Tue, 09 Apr 2024 12:43:14 +0800</pubDate>
-  <lastBuildDate>Tue, 09 Apr 2024 12:43:14 +0800</lastBuildDate>
-  <generator>Emacs 27.1 Org-mode 9.6.5</generator>
+  <pubDate>Sun, 09 Jun 2024 14:15:26 +0800</pubDate>
+  <lastBuildDate>Sun, 09 Jun 2024 14:15:26 +0800</lastBuildDate>
+  <generator>Emacs 29.3 Org-mode 9.6.15</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
     <url>https://orgmode.org/img/org-mode-unicorn-logo.png</url>
     <title>Something</title>
     <link>https://laozhuzhu.com</link>
   </image>
+
+  <item>
+    <title>UML:类图</title>
+    <link>https://laozhuzhu.com/posts/uml-class-diagrams.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">uml-class-diagrams.org</guid>
+    <pubDate>Sun, 09 Jun 2024 14:04:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    类图（Class Diagram）是描述类、接口、协同以及他们之间关系的图，用来显示系统中这些概念的静态结构。类图也是其它图的基础，我们可以在类图的基础上，使用状态图、协作图、组件图和配置图等。
+    </p>
+
+    <p>
+    <a href="uml-class-diagrams.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
 
   <item>
     <title>SpringBoot处理CORS跨域请求</title>
@@ -54,7 +71,7 @@
     <link>https://laozhuzhu.com/posts/multiple-code-impl-timestamp.html</link>
     <author>Laozhuzhu.COM (zhuhy)</author>
     <guid isPermaLink="false">multiple-code-impl-timestamp.org</guid>
-    <pubDate>Tue, 09 Apr 2024 09:11:00 +0800</pubDate>
+    <pubDate>Tue, 09 Apr 2024 12:42:00 +0800</pubDate>
 
     <description><![CDATA[<p>
     时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 09:14 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux区域设置（locale）</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -35,10 +26,10 @@
 <div id="content" class="content">
 <h1 class="title">Linux区域设置（locale）</h1>
 
-<div id="outline-container-org970cd4a" class="outline-2">
-<h2 id="org970cd4a">简介</h2>
-<div class="outline-text-2" id="text-org970cd4a">
-<div class="preview" id="org3a86270">
+<div id="outline-container-org567c9d7" class="outline-2">
+<h2 id="org567c9d7">简介</h2>
+<div class="outline-text-2" id="text-org567c9d7">
+<div class="preview" id="org806ebce">
 <p>
 区域设置是一组环境变量，用于定义Linux系统上应用程序和shell会话的语言、国家/地区和字符编码设置（或任何其他特殊变体首选项）。
 </p>
@@ -55,9 +46,9 @@
 </div>
 </div>
 
-<div id="outline-container-org46c0a87" class="outline-2">
-<h2 id="org46c0a87">区域设置（locale）分类</h2>
-<div class="outline-text-2" id="text-org46c0a87">
+<div id="outline-container-org86f8019" class="outline-2">
+<h2 id="org86f8019">区域设置（locale）分类</h2>
+<div class="outline-text-2" id="text-org86f8019">
 <table>
 
 
@@ -137,9 +128,9 @@
 </div>
 </div>
 
-<div id="outline-container-org79670e9" class="outline-2">
-<h2 id="org79670e9">区域设置（locale）优先级</h2>
-<div class="outline-text-2" id="text-org79670e9">
+<div id="outline-container-org9294491" class="outline-2">
+<h2 id="org9294491">区域设置（locale）优先级</h2>
+<div class="outline-text-2" id="text-org9294491">
 <ul class="org-ul">
 <li>LANGUAGE</li>
 <li>LC_ALL</li>
@@ -149,9 +140,9 @@
 </div>
 </div>
 
-<div id="outline-container-org4ccf902" class="outline-2">
-<h2 id="org4ccf902">如何查看区域设置信息(locale)</h2>
-<div class="outline-text-2" id="text-org4ccf902">
+<div id="outline-container-org5d4e6b7" class="outline-2">
+<h2 id="org5d4e6b7">如何查看区域设置信息(locale)</h2>
+<div class="outline-text-2" id="text-org5d4e6b7">
 <p>
 要查看有关当前的区域设置信息，请使用 <code>locale</code> 或 <code>localectl</code> 命令。
 </p>
@@ -224,9 +215,9 @@ en_BW.utf8
 </div>
 </div>
 
-<div id="outline-container-orgc0a06a4" class="outline-2">
-<h2 id="orgc0a06a4">如何设置区域设置（locale）</h2>
-<div class="outline-text-2" id="text-orgc0a06a4">
+<div id="outline-container-org06c3b85" class="outline-2">
+<h2 id="org06c3b85">如何设置区域设置（locale）</h2>
+<div class="outline-text-2" id="text-org06c3b85">
 <p>
 如果要更改或设置区域设置，请使用 <code>update-locale</code> 命令。
 <code>LANG</code> 变量允许您设置整个系统的locale。以下命令将 <code>LANG</code> 设置为 <code>en_IN.UTF-8</code> 并删除 <code>LANGUAGE</code> 的定义。
@@ -275,7 +266,7 @@ $ sudo localectl set-locale <span style="color: #7590db;">LC_TIME</span>=en_IN.U
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2024-01-02 二 20:49<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

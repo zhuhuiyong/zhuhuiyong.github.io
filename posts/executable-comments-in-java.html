@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 09:14 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Executable Comments in Java</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 <script>
   window.MathJax = {
     tex: {
@@ -67,19 +58,19 @@
 <div id="content" class="content">
 <h1 class="title">Executable Comments in Java</h1>
 
-<div id="outline-container-org2672c78" class="outline-2">
-<h2 id="org2672c78">原文地址</h2>
-<div class="outline-text-2" id="text-org2672c78">
+<div id="outline-container-org6dba85c" class="outline-2">
+<h2 id="org6dba85c">原文地址</h2>
+<div class="outline-text-2" id="text-org6dba85c">
 <p>
 <a href="https://www.baeldung.com/java-executable-comments">https://www.baeldung.com/java-executable-comments</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgce7a0b8" class="outline-2">
-<h2 id="orgce7a0b8">Overview</h2>
-<div class="outline-text-2" id="text-orgce7a0b8">
-<div class="preview" id="org1b5a947">
+<div id="outline-container-orgd5f3274" class="outline-2">
+<h2 id="orgd5f3274">Overview</h2>
+<div class="outline-text-2" id="text-orgd5f3274">
+<div class="preview" id="org25421d2">
 <p>
 Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
 </p>
@@ -92,9 +83,9 @@ In this tutorial, we’ll explore cases where comments in our code can become ex
 </div>
 </div>
 
-<div id="outline-container-org4556945" class="outline-2">
-<h2 id="org4556945">Comments</h2>
-<div class="outline-text-2" id="text-org4556945">
+<div id="outline-container-orgfa1a3df" class="outline-2">
+<h2 id="orgfa1a3df">Comments</h2>
+<div class="outline-text-2" id="text-orgfa1a3df">
 <p>
 Before we dive in, let’s revisit comments in Java. They are part of the Java syntax and come in two basic formats:
 </p>
@@ -128,9 +119,9 @@ Additionally, a multiple-line comment (also known as a multiline comment) starts
 </div>
 </div>
 
-<div id="outline-container-org6cea089" class="outline-2">
-<h2 id="org6cea089">Comments and Unicode</h2>
-<div class="outline-text-2" id="text-org6cea089">
+<div id="outline-container-org1766bb4" class="outline-2">
+<h2 id="org1766bb4">Comments and Unicode</h2>
+<div class="outline-text-2" id="text-org1766bb4">
 <p>
 Now, let’s start with an example. The following code prints “Baeldung” in the standard output:
 </p>
@@ -152,9 +143,9 @@ However, this isn’t accurate. It’s important to note Java doesn’t allow co
 With that in mind, let’s examine our example in detail and see the reasons why the code prints “Baeldung” in the console.
 </p>
 </div>
-<div id="outline-container-orgb386a79" class="outline-3">
-<h3 id="orgb386a79">Unicode Escapes</h3>
-<div class="outline-text-3" id="text-orgb386a79">
+<div id="outline-container-orgf23bcff" class="outline-3">
+<h3 id="orgf23bcff">Unicode Escapes</h3>
+<div class="outline-text-3" id="text-orgf23bcff">
 <p>
 The code from the example isn’t treated as a comment because of the “\u000d” Unicode escape sequence we placed before it.
 </p>
@@ -180,9 +171,9 @@ Moving forward, let’s take a closer look at how Java performs the lexical tran
 </p>
 </div>
 </div>
-<div id="outline-container-orge017d9a" class="outline-3">
-<h3 id="orge017d9a">Lexical Translation</h3>
-<div class="outline-text-3" id="text-orge017d9a">
+<div id="outline-container-orgc50e4bf" class="outline-3">
+<h3 id="orgc50e4bf">Lexical Translation</h3>
+<div class="outline-text-3" id="text-orgc50e4bf">
 <p>
 When executing the lexical translation, the Unicode encoding takes precedence over any other encoding, even if it’s part of the comment. To put it differently, Java will first encode all Unicode escape sequences and then move forward with other translations.
 </p>
@@ -219,9 +210,9 @@ System.out.println<span style="color: #4f97d7;">(</span><span style="color: #2d9
 </div>
 </div>
 
-<div id="outline-container-org53cb4c3" class="outline-3">
-<h3 id="org53cb4c3">Unicode and IDEs</h3>
-<div class="outline-text-3" id="text-org53cb4c3">
+<div id="outline-container-org0276b46" class="outline-3">
+<h3 id="org0276b46">Unicode and IDEs</h3>
+<div class="outline-text-3" id="text-org0276b46">
 <p>
 Nowadays, we often use an IDE as a development tool. Additionally, we frequently rely on it and expect it’ll warn us if something in our code seems suspicious.
 </p>
@@ -246,9 +237,9 @@ Here, we replaced the “//” and the letter “S” with Unicode escapes. The 
 </div>
 </div>
 </div>
-<div id="outline-container-org016e405" class="outline-2">
-<h2 id="org016e405">Conclusion</h2>
-<div class="outline-text-2" id="text-org016e405">
+<div id="outline-container-orgaa392ad" class="outline-2">
+<h2 id="orgaa392ad">Conclusion</h2>
+<div class="outline-text-2" id="text-orgaa392ad">
 <p>
 In this tutorial, we learned how comments and Unicode escape sequences work together.
 </p>
@@ -267,7 +258,7 @@ Being able to write Unicode characters is useful when we’d like to use non-Lat
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:10<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 09:14 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何清理Linux系统日志</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -34,7 +25,7 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">如何清理Linux系统日志</h1>
-<div class="preview" id="org2e018c0">
+<div class="preview" id="org4efa5de">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -52,9 +43,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 
 </div>
-<div id="outline-container-orgf69941e" class="outline-2">
-<h2 id="orgf69941e">查看日志文件使用量</h2>
-<div class="outline-text-2" id="text-orgf69941e">
+<div id="outline-container-org3a03eb4" class="outline-2">
+<h2 id="org3a03eb4">查看日志文件使用量</h2>
+<div class="outline-text-2" id="text-org3a03eb4">
 <p>
 你可以使用以下任意一种方法检查日志文件大小。
 </p>
@@ -79,13 +70,13 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-org7276c58" class="outline-2">
-<h2 id="org7276c58">手动清理日志文件</h2>
-<div class="outline-text-2" id="text-org7276c58">
+<div id="outline-container-orgfd71627" class="outline-2">
+<h2 id="orgfd71627">手动清理日志文件</h2>
+<div class="outline-text-2" id="text-orgfd71627">
 </div>
-<div id="outline-container-org0930fcb" class="outline-3">
-<h3 id="org0930fcb">清理 N 天前的日志</h3>
-<div class="outline-text-3" id="text-org0930fcb">
+<div id="outline-container-org27023ae" class="outline-3">
+<h3 id="org27023ae">清理 N 天前的日志</h3>
+<div class="outline-text-3" id="text-org27023ae">
 <p>
 以下命令将清理2天前的日志：
 </p>
@@ -149,9 +140,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 
 
-<div id="outline-container-org3c4c449" class="outline-3">
-<h3 id="org3c4c449">限制日志文件大小</h3>
-<div class="outline-text-3" id="text-org3c4c449">
+<div id="outline-container-org525ce8d" class="outline-3">
+<h3 id="org525ce8d">限制日志文件大小</h3>
+<div class="outline-text-3" id="text-org525ce8d">
 <p>
 使用以下命令可将日志文件大小限制到100M，它将清理日志文件直到低于100M：
 </p>
@@ -199,9 +190,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-orge5f4186" class="outline-3">
-<h3 id="orge5f4186">限制日志文件数据</h3>
-<div class="outline-text-3" id="text-orge5f4186">
+<div id="outline-container-orgb633304" class="outline-3">
+<h3 id="orgb633304">限制日志文件数据</h3>
+<div class="outline-text-3" id="text-orgb633304">
 <p>
 使用以下命令可将日志文件数据限制到5个：
 </p>
@@ -218,7 +209,7 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2023-12-15 五 14:08<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

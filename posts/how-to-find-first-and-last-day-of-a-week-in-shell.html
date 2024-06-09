@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 09:14 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何在Linux Shell中获取本周的第一天和最后一天</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -35,10 +26,10 @@
 <div id="content" class="content">
 <h1 class="title">如何在Linux Shell中获取本周的第一天和最后一天</h1>
 
-<div id="outline-container-org92493a9" class="outline-2">
-<h2 id="org92493a9">简介</h2>
-<div class="outline-text-2" id="text-org92493a9">
-<div class="preview" id="org04b34dc">
+<div id="outline-container-org8a231ca" class="outline-2">
+<h2 id="org8a231ca">简介</h2>
+<div class="outline-text-2" id="text-org8a231ca">
+<div class="preview" id="org422db14">
 <p>
 在Shell编程中，可以使用 <code>date</code> 命令获取本周的第一天和最后一天。
 </p>
@@ -47,24 +38,24 @@
 </div>
 </div>
 
-<div id="outline-container-orgb7b56cc" class="outline-2">
-<h2 id="orgb7b56cc">shell脚本</h2>
-<div class="outline-text-2" id="text-orgb7b56cc">
+<div id="outline-container-org6c84dbe" class="outline-2">
+<h2 id="org6c84dbe">shell脚本</h2>
+<div class="outline-text-2" id="text-org6c84dbe">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#19979;&#21608;&#19968;</span>
 <span style="color: #7590db;">nextmonday</span>=<span style="color: #bc6ec5;">`date -d "next monday" +%y%m%d`</span>
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26412;&#21608;&#26368;&#21518;&#19968;&#22825;</span>
-<span style="color: #7590db;">lastdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date</span> -d <span style="color: #2d9574;">"${nextmonday} 3 days ago"</span> +%y%m%d<span style="color: #4f97d7;">)</span>
+<span style="color: #7590db;">lastdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date -d "${nextmonday} 3 days ago" +%y%m%d</span><span style="color: #4f97d7;">)</span>
 <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#26412;&#21608;&#31532;&#19968;&#22825;</span>
-<span style="color: #7590db;">firstdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date</span> -d <span style="color: #2d9574;">"${nextmonday} 7 days ago"</span> +%y%m%d<span style="color: #4f97d7;">)</span>
+<span style="color: #7590db;">firstdateofweek</span>=$<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">date -d "${nextmonday} 7 days ago" +%y%m%d</span><span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7d6be85" class="outline-2">
-<h2 id="org7d6be85">更多</h2>
-<div class="outline-text-2" id="text-org7d6be85">
+<div id="outline-container-orgba7866b" class="outline-2">
+<h2 id="orgba7866b">更多</h2>
+<div class="outline-text-2" id="text-orgba7866b">
 <p>
 更多关于 <code>date</code> 命令的使用参考：
 </p>
@@ -83,7 +74,7 @@
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:05<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

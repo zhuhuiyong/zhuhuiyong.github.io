@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 12:43 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>不同编程语言实现方式：时间戳（Timestamp）</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -35,10 +26,10 @@
 <div id="content" class="content">
 <h1 class="title">不同编程语言实现方式：时间戳（Timestamp）</h1>
 
-<div id="outline-container-org39f7051" class="outline-2">
-<h2 id="org39f7051">什么是时间戳</h2>
-<div class="outline-text-2" id="text-org39f7051">
-<div class="preview" id="org34ddd3b">
+<div id="outline-container-org74ffccf" class="outline-2">
+<h2 id="org74ffccf">什么是时间戳</h2>
+<div class="outline-text-2" id="text-org74ffccf">
+<div class="preview" id="org5241282">
 <p>
 时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
 </p>
@@ -51,13 +42,13 @@
 </div>
 </div>
 
-<div id="outline-container-org3d31704" class="outline-2">
-<h2 id="org3d31704">获取当前时间戳</h2>
-<div class="outline-text-2" id="text-org3d31704">
+<div id="outline-container-org65678b1" class="outline-2">
+<h2 id="org65678b1">获取当前时间戳</h2>
+<div class="outline-text-2" id="text-org65678b1">
 </div>
-<div id="outline-container-orgc09bf2f" class="outline-3">
-<h3 id="orgc09bf2f">Java</h3>
-<div class="outline-text-3" id="text-orgc09bf2f">
+<div id="outline-container-org97bcb9e" class="outline-3">
+<h3 id="org97bcb9e">Java</h3>
+<div class="outline-text-3" id="text-org97bcb9e">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">pure java</span>
 System.currentTimeMillis<span style="color: #4f97d7;">()</span> / <span style="color: #a45bad;">1000</span>
@@ -72,9 +63,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-orgc10628d" class="outline-3">
-<h3 id="orgc10628d">JavaScript</h3>
-<div class="outline-text-3" id="text-orgc10628d">
+<div id="outline-container-org3001e0d" class="outline-3">
+<h3 id="org3001e0d">JavaScript</h3>
+<div class="outline-text-3" id="text-org3001e0d">
 <div class="org-src-container">
 <pre class="src src-javascript">Math.round<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Date</span><span style="color: #bc6ec5;">()</span> / <span style="color: #a45bad;">1000</span><span style="color: #4f97d7;">)</span>
 </pre>
@@ -82,9 +73,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-org85e96d0" class="outline-3">
-<h3 id="org85e96d0">Shell</h3>
-<div class="outline-text-3" id="text-org85e96d0">
+<div id="outline-container-org6d422f5" class="outline-3">
+<h3 id="org6d422f5">Shell</h3>
+<div class="outline-text-3" id="text-org6d422f5">
 <div class="org-src-container">
 <pre class="src src-shell">date +%s
 </pre>
@@ -92,9 +83,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-org9003a67" class="outline-3">
-<h3 id="org9003a67">MySQL</h3>
-<div class="outline-text-3" id="text-org9003a67">
+<div id="outline-container-org8d8a3a9" class="outline-3">
+<h3 id="org8d8a3a9">MySQL</h3>
+<div class="outline-text-3" id="text-org8d8a3a9">
 <div class="org-src-container">
 <pre class="src src-sql"><span style="color: #4f97d7; font-weight: bold;">SELECT</span> unix_timestamp<span style="color: #4f97d7;">(</span>now<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span>
 </pre>
@@ -107,7 +98,7 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2024-04-09 二 12:42<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

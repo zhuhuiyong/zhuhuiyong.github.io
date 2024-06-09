@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-06-09 日 14:11 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UML:类图</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">UML:类图</h1>
+
+<div id="outline-container-orgb723151" class="outline-2">
+<h2 id="orgb723151">定义</h2>
+<div class="outline-text-2" id="text-orgb723151">
+<div class="PREVIEW" id="org73251d4">
+<p>
+类图（Class Diagram）是描述类、接口、协同以及他们之间关系的图，用来显示系统中这些概念的静态结构。类图也是其它图的基础，我们可以在类图的基础上，使用状态图、协作图、组件图和配置图等。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2ee5f53" class="outline-2">
+<h2 id="org2ee5f53">作用</h2>
+<div class="outline-text-2" id="text-org2ee5f53">
+<p>
+类图（Class Diagram）的的作用，通常表现在以下几个方面：
+</p>
+
+<ol class="org-ol">
+<li>显示系统结构。</li>
+<li>展示对象之间的关系。</li>
+<li>支持代码生成。</li>
+<li>显示设计决策和支持系统重构。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org77f58e7" class="outline-2">
+<h2 id="org77f58e7">构成</h2>
+<div class="outline-text-2" id="text-org77f58e7">
+<p>
+在UML中，使用矩形描述类。下图展示了类图的三种不同表示形式。
+</p>
+
+
+<div id="org07ff162" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609105633_uml-class.png" alt="20240609105633_uml-class.png">
+</p>
+</div>
+
+
+<p>
+一个类通常由名称（Name）、属性（Attribute）和操作（Operation/Methods）构成。
+</p>
+
+<ul class="org-ul">
+<li>名称（Name）：位于矩形的顶部，必需。通常用粗体表示，抽象类名称用斜体字粗体，接口则需在上方加上 <code>&lt;&lt;interface&gt;&gt;</code> 。</li>
+
+<li>属性（Attribute）：位于矩形的中部，非必需。以 <code>可见性 属性名:类型</code> 的形式表示。</li>
+
+<li>操作（Operation/Methods）：位于矩形的底部，非必需。以 <code>方法名(参数列表):返回类型</code> 的形式表示。</li>
+</ul>
+
+
+<p>
+可见性（Visibility）用于控制该类或属性被类的外部成员的可访问性。主要有以下四种情况：
+</p>
+
+<ul class="org-ul">
+<li>+：公有（Public），其它类可以访问。</li>
+<li>-：私有（Private），不能被其它类访问（默认为私有）。</li>
+<li>#：保护（Protected），只能被本类及其派生类访问。</li>
+<li>~：包内可见(Package)，可以被本包中的其它类访问。</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgda4f0e7" class="outline-2">
+<h2 id="orgda4f0e7">关系（Relationship）</h2>
+<div class="outline-text-2" id="text-orgda4f0e7">
+</div>
+<div id="outline-container-org5dac8fe" class="outline-3">
+<h3 id="org5dac8fe">泛化关系（Inheritance / Generalization）</h3>
+<div class="outline-text-3" id="text-org5dac8fe">
+<p>
+泛化关系其实就是父子类之间的继承关系，表示一般与特殊的关系，指定子类如何特殊化父类的特征和行为。
+</p>
+
+<p>
+在UML类图中，用带空心三角箭头的实线来表示泛化关系，箭头从子类指向父类。
+</p>
+
+
+
+<div id="org4f00b25" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609010747_uml-generalization.png" alt="20240609010747_uml-generalization.png">
+</p>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">abstract</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Shape</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Square</span> <span style="color: #4f97d7; font-weight: bold;">extends</span> <span style="color: #ce537a; font-weight: bold;">Shape</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Triangle</span> <span style="color: #4f97d7; font-weight: bold;">extends</span> <span style="color: #ce537a; font-weight: bold;">Shape</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Rectangle</span> <span style="color: #4f97d7; font-weight: bold;">extends</span> <span style="color: #ce537a; font-weight: bold;">Shape</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4548c2e" class="outline-3">
+<h3 id="org4548c2e">实现关系（Realization）</h3>
+<div class="outline-text-3" id="text-org4548c2e">
+<p>
+实现关系就是接口和实现类之间的关系。类实现了接口中的抽象方法。
+</p>
+
+<p>
+在UML类图中，用带空心三角箭头的虚线来表示实现关系，箭头从实现类指向接口。
+</p>
+
+
+
+<div id="orgc5dd2da" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609004616_uml-realization.png" alt="20240609004616_uml-realization.png">
+</p>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">interface</span> <span style="color: #ce537a; font-weight: bold;">IDrawable</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">draw</span><span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Shape</span> <span style="color: #4f97d7; font-weight: bold;">implements</span> <span style="color: #ce537a; font-weight: bold;">IDrawable</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">draw</span><span style="color: #bc6ec5;">(){</span>
+        ...
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcc01bf0" class="outline-3">
+<h3 id="orgcc01bf0">关联关系（Association）</h3>
+<div class="outline-text-3" id="text-orgcc01bf0">
+<p>
+关联关系是用一条直线表示的，它描述不同类的对象之间的结构关系。
+关联关系一般用来定义对象之间静态的、天然的结构， 通常与运行状态无关，一般由常识等因素决定的。
+</p>
+
+
+<div id="org284dfa5" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609135402_uml-association.png" alt="20240609135402_uml-association.png">
+</p>
+</div>
+
+<p>
+上图展示了 <code>Professor</code> 和 <code>Book</code> 之间的关联关系 <code>Wrote</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Professor</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Book</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">books</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setBooks</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Book</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">books</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.books = books;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Book</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Professor</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">authors</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setAuthor</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Professor</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">authors</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.authors = authors;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+关联关系涉及以下几个概念：
+</p>
+
+<ul class="org-ul">
+<li>可导航性（Navigability）</li>
+<li>多重性（Multiplicity）</li>
+</ul>
+</div>
+
+<div id="outline-container-orgbad47d2" class="outline-4">
+<h4 id="orgbad47d2">可导航性 （Navigability）</h4>
+<div class="outline-text-4" id="text-orgbad47d2">
+<ul class="org-ul">
+<li>导航端的箭头表示导航方向。</li>
+<li>导航端的差号表示不可导航。</li>
+<li>未标记箭头或差号的导航端，表示可导航。</li>
+</ul>
+
+<p>
+下图展示了关联关系可导航性的不同示例：
+</p>
+
+
+<div id="org4d8f908" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609115816_uml-navigability.png" alt="20240609115816_uml-navigability.png">
+</p>
+</div>
+
+<ul class="org-ul">
+<li>第1张图：A 可导航至 B，同时 B 也可导航至A 。</li>
+<li>第2张图：C、D 互相不可导航 。</li>
+<li>第3张图：箭头一般出现在单向的导航性关联中，E、F 未明确指定导航，表示互相可导航 。</li>
+<li>第4张图：G 可导航至 H , 但是 H 不可导航至 G 。</li>
+<li>第5张图：I 可导航至 J ，但是 J 不可导航至 I 。</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">A</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">B</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">b</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setB</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">B</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">b</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.b = b;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">B</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">A</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">a</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setA</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">A</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">a</span><span style="color: #bc6ec5;">){</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.a = a;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">C</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">D</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">E</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">F</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">f</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setF</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">F</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">f</span><span style="color: #bc6ec5;">){</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.f = f;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">F</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">E</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">e</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setE</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">E</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">e</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.e = e;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">G</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">H</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">h</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setG</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">H</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">h</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.h = h;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">H</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">I</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">J</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">j</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">setG</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">J</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">j</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.j = j;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">J</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4311e2a" class="outline-4">
+<h4 id="org4311e2a">多重性（Multiplicity）</h4>
+<div class="outline-text-4" id="text-org4311e2a">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">表示方法</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">1..1</td>
+<td class="org-left">表示另一个类的一个对象只与该类的一个对象有关系</td>
+</tr>
+
+<tr>
+<td class="org-left">0..*</td>
+<td class="org-left">表示另一个类的一个对象与该类的零个或多个对象有关系</td>
+</tr>
+
+<tr>
+<td class="org-left">1..*</td>
+<td class="org-left">表示另一个类的一个对象与该类的一个或多个对象有关系</td>
+</tr>
+
+<tr>
+<td class="org-left">0..1</td>
+<td class="org-left">表示另一个类的一个对象没有或只与该类的一个对象有关系</td>
+</tr>
+
+<tr>
+<td class="org-left">m..n</td>
+<td class="org-left">表示另一个类的一个对象与该类的最少m,最多n个对象有关系</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+参见“可导航性”示例图。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org71808c5" class="outline-3">
+<h3 id="org71808c5">聚合关系（Aggregation）</h3>
+<div class="outline-text-3" id="text-org71808c5">
+<p>
+聚合关系是关联关系的一种，表示一种弱的“拥有”关系，即 <code>has-a</code> 的关系，体现的是A对象可以包含B对象，但B对象不是A对象的一部分。
+</p>
+
+<p>
+在UML类图中，用带空心菱形的实线来表示聚合关系，菱形指向整体。
+</p>
+
+<p>
+与组合关系不同的是，整体和部分不是强依赖的，成员也可以脱离整体而存在，即使整体不存在了，部分仍然存在。例如， 部门撤销了，人员不会消失，他们依然存在。
+</p>
+
+
+<div id="orgf44eee6" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609005253_uml-aggregation.png" alt="20240609005253_uml-aggregation.png">
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Department</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Staff</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaa31849" class="outline-3">
+<h3 id="orgaa31849">组合关系（Composition）</h3>
+<div class="outline-text-3" id="text-orgaa31849">
+<p>
+组合关系也是关联关系的一种，是一种比聚合关系还要强的关系：
+</p>
+<ul class="org-ul">
+<li>它是整体和部分（Whole/Part）之间的关系，部分对象不能脱离整体对象而单独存在。</li>
+<li>部分对象只能属于一个整体对象。</li>
+<li>整体对象删除时，部分对象也随之删除。</li>
+</ul>
+
+<p>
+在UML类图中，用带实心菱形的实线来表示组合关系，菱形指向整体。
+</p>
+
+
+
+<div id="org23b1fbe" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609003147_uml-composition.png" alt="20240609003147_uml-composition.png">
+</p>
+</div>
+
+<p>
+目录可以包含多个文件，同时一个文件只能属于一个目录。如果目录被删除，那么它所包含的文件也会同时被删除。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Folder</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">File</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">files</span>;
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">File</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">Folder</span> <span style="color: #7590db;">parent</span>;
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ab7fd9" class="outline-3">
+<h3 id="org6ab7fd9">依赖关系（Dependency）</h3>
+<div class="outline-text-3" id="text-org6ab7fd9">
+<p>
+依赖关系是一种使用关系，表示某个类依赖于另外一个类，通常表现为，某个类的方法的参数使用了另外一个类的对象。
+</p>
+
+<p>
+在UML类图中，依赖关系用带箭头的虚线表示，箭头从使用类指向被依赖的类。
+</p>
+
+<p>
+在最终代码中，依赖关系体现为类构造方法及类方法的传入参数，箭头的指向为调用关系。
+</p>
+
+
+<div id="orgb33d6dd" class="figure">
+<p><img src="attachments/pictures/2024/06/20240609010111_uml-dependency.png" alt="20240609010111_uml-dependency.png">
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">UserController</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">IUserService</span> <span style="color: #7590db;">userService</span>;
+    <span style="color: #4f97d7; font-weight: bold;">public</span> UserController<span style="color: #bc6ec5;">(</span>IUserService userService<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">this</span>.userService = userService;
+    <span style="color: #bc6ec5;">}</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">interface</span> <span style="color: #ce537a; font-weight: bold;">IUserService</span> <span style="color: #4f97d7;">{</span>
+    ...
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3bb6f3" class="outline-2">
+<h2 id="orgd3bb6f3">参考资料</h2>
+<div class="outline-text-2" id="text-orgd3bb6f3">
+<p>
+<a href="https://www.omg.org/spec/UML/2.5/PDF">https://www.omg.org/spec/UML/2.5/PDF</a>
+</p>
+
+<p>
+<a href="https://sparxsystems.com/resources/tutorials/uml2/class-diagram.html">https://sparxsystems.com/resources/tutorials/uml2/class-diagram.html</a>
+</p>
+
+<p>
+<a href="https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-class-diagram-tutorial/">https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-class-diagram-tutorial/</a>
+</p>
+
+<p>
+<a href="https://www.uml-diagrams.org/class-diagrams-overview.html">https://www.uml-diagrams.org/class-diagrams-overview.html</a>
+</p>
+
+<p>
+<a href="https://www.uml-diagrams.org/association.html">https://www.uml-diagrams.org/association.html</a>
+</p>
+
+<p>
+<a href="https://www.uml-diagrams.org/dependency.html">https://www.uml-diagrams.org/dependency.html</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-06-09 日 14:04<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>

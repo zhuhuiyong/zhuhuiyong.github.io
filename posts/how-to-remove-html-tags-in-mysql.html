@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-04-09 二 09:14 -->
+<!-- 2024-06-09 日 14:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何移除MySQL字段中的Html标签</title>
@@ -9,15 +9,6 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
-<script>
- var _hmt = _hmt || [];
- (function() {
-     var hm = document.createElement("script");
-     hm.src = "https://hm.baidu.com/hm.js?d30fea3bae05ddbf9aa2113c10fa5a55";
-     var s = document.getElementsByTagName("script")[0]; 
-     s.parentNode.insertBefore(hm, s);
- })();
-</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -34,15 +25,15 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">如何移除MySQL字段中的Html标签</h1>
-<div class="preview" id="orgd9d071b">
+<div class="preview" id="org450304b">
 <p>
 在处理文本数据时，我们经常会遇到需要清除HTML标签的情况，在MySQL中，我们可以使用正则表达式和一些字符串函数来实现这一目标。 本文将介绍如何使用MySQL清除HTML标签。
 </p>
 
 </div>
-<div id="outline-container-org72f6d1c" class="outline-2">
-<h2 id="org72f6d1c">MySQL 8</h2>
-<div class="outline-text-2" id="text-org72f6d1c">
+<div id="outline-container-orgac05f6a" class="outline-2">
+<h2 id="orgac05f6a">MySQL 8</h2>
+<div class="outline-text-2" id="text-orgac05f6a">
 <p>
 使用原生函数。
 </p>
@@ -54,9 +45,9 @@
 </div>
 </div>
 
-<div id="outline-container-org18f11fc" class="outline-2">
-<h2 id="org18f11fc">MySQL 8以下版本</h2>
-<div class="outline-text-2" id="text-org18f11fc">
+<div id="outline-container-org2feeff4" class="outline-2">
+<h2 id="org2feeff4">MySQL 8以下版本</h2>
+<div class="outline-text-2" id="text-org2feeff4">
 <p>
 使用自定义函数。
 </p>
@@ -68,7 +59,7 @@ DELIMITER $$
 $$
 <span style="color: #4f97d7; font-weight: bold;">CREATE</span> <span style="color: #4f97d7; font-weight: bold;">DEFINER</span>=`root`@`%` <span style="color: #4f97d7; font-weight: bold;">FUNCTION</span> `fnRemoveHtml`<span style="color: #4f97d7;">(</span> Dirty text<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">0</span><span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7;">)</span> <span style="color: #4f97d7; font-weight: bold;">RETURNS</span> text CHARSET utf8
 <span style="color: #4f97d7; font-weight: bold;">BEGIN</span>
-  <span style="color: #2aa1ae; background-color: #292e34;">-- &#36807;&#28388;HTML&#23383;&#31526;&#20018;</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">-- </span><span style="color: #2aa1ae; background-color: #292e34;">&#36807;&#28388;HTML&#23383;&#31526;&#20018;</span>
   <span style="color: #4f97d7; font-weight: bold;">DECLARE</span> iStart, iEnd, iLength <span style="color: #ce537a; font-weight: bold;">int</span>;
     WHILE Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #4f97d7;">)</span> &gt; <span style="color: #a45bad;">0</span> <span style="color: #4f97d7; font-weight: bold;">And</span> Locate<span style="color: #4f97d7;">(</span> <span style="color: #2d9574;">'&gt;'</span>, Dirty, Locate<span style="color: #bc6ec5;">(</span> <span style="color: #2d9574;">'&lt;'</span>, Dirty <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span> &gt; <span style="color: #a45bad;">0</span> DO
       <span style="color: #4f97d7; font-weight: bold;">BEGIN</span>
@@ -93,7 +84,7 @@ DELIMITER ;
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:09<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 27.1 (<a href="https://orgmode.org">Org</a> mode 9.6.5).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>
