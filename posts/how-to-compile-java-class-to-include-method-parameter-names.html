@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-06-21 Fri 10:32 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何在编译Java时保留方法参数名</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何在编译Java时保留方法参数名</h1>
+<div class="PREVIEW" id="orga371279">
+<p>
+在Java 8之前的版本，代码编译为class文件后，方法参数的类型是固定的，但参数名称却丢失了，参数名会变成arg0、arg1&#x2026;.。而现在，在Java8开始可以在class文件中保留参数名，这就给反射带来了极大的遍历。
+如果需要保留方法参数名，在编译时，可以启用 <code>-parameters</code> 选项，默认情况下此选项是关闭的。
+</p>
+
+<p>
+本文将介绍编译Java源代码时，如何在maven, eclipse, idea中启用 <code>parameters</code> 选项。
+</p>
+
+</div>
+<p>
+示例
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">import</span> <span style="color: #a45bad;">java</span>.<span style="color: #a45bad;">lang</span>.<span style="color: #a45bad;">reflect</span>.<span style="color: #ce537a; font-weight: bold;">Method</span>;
+<span style="color: #4f97d7; font-weight: bold;">import</span> <span style="color: #a45bad;">java</span>.<span style="color: #a45bad;">lang</span>.<span style="color: #a45bad;">reflect</span>.<span style="color: #ce537a; font-weight: bold;">Parameter</span>;
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">Task</span> <span style="color: #4f97d7;">{</span>
+
+  <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">execute</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">int</span> <span style="color: #7590db;">num</span>, <span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #7590db;">message</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+  <span style="color: #bc6ec5;">}</span>
+
+  <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">main</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #2d9574;">[]</span> <span style="color: #7590db;">args</span><span style="color: #bc6ec5;">)</span> <span style="color: #4f97d7; font-weight: bold;">throws</span> <span style="color: #ce537a; font-weight: bold;">NoSuchMethodException</span> <span style="color: #bc6ec5;">{</span>
+      <span style="color: #ce537a; font-weight: bold;">Method</span> <span style="color: #7590db;">m</span> = Task.<span style="color: #4f97d7; font-weight: bold;">class</span>.getDeclaredMethod<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"execute"</span>, <span style="color: #ce537a; font-weight: bold;">int</span>.<span style="color: #4f97d7; font-weight: bold;">class</span>, String.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span>;
+      <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">Parameter</span> <span style="color: #7590db;">p</span> : m.getParameters<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+          System.out.printf<span style="color: #67b11d;">(</span><span style="color: #2d9574;">"name: %s, type: %s%n"</span>, p.getName<span style="color: #b1951d;">()</span>, p.getType<span style="color: #b1951d;">()</span><span style="color: #67b11d;">)</span>;
+      <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+未开启 <code>-parameters</code> 选项时，编译并运行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ javac Task.java 
+$ java Task
+name: arg0, type: int
+name: arg1, type: class java.lang.String
+</pre>
+</div>
+
+<p>
+开启 <code>-parameters</code> 选项时，编译并运行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ javac -parameters Task.java 
+$ java Task
+name: num, type: int
+name: message, type: class java.lang.String
+</pre>
+</div>
+
+<div id="outline-container-org660ae98" class="outline-2">
+<h2 id="org660ae98">Maven设置</h2>
+<div class="outline-text-2" id="text-org660ae98">
+<div class="org-src-container">
+<pre class="src src-xml">.............
+&lt;<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;org.apache.maven.plugins&lt;/<span style="color: #bc6ec5; font-weight: bold;">groupId</span>&gt;
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;maven-compiler-plugin&lt;/<span style="color: #bc6ec5; font-weight: bold;">artifactId</span>&gt;
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;3.7.0&lt;/<span style="color: #bc6ec5; font-weight: bold;">version</span>&gt;
+  &lt;<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">source</span>&gt;10&lt;/<span style="color: #bc6ec5; font-weight: bold;">source</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">target</span>&gt;10&lt;/<span style="color: #bc6ec5; font-weight: bold;">target</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">encoding</span>&gt;UTF-8&lt;/<span style="color: #bc6ec5; font-weight: bold;">encoding</span>&gt;
+    &lt;<span style="color: #bc6ec5; font-weight: bold;">compilerArgs</span>&gt;
+      &lt;<span style="color: #bc6ec5; font-weight: bold;">arg</span>&gt;-parameters&lt;/<span style="color: #bc6ec5; font-weight: bold;">arg</span>&gt;
+    &lt;/<span style="color: #bc6ec5; font-weight: bold;">compilerArgs</span>&gt;
+  &lt;/<span style="color: #bc6ec5; font-weight: bold;">configuration</span>&gt;
+&lt;/<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
+..........
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org016dfc8" class="outline-2">
+<h2 id="org016dfc8">Eclipse设置</h2>
+<div class="outline-text-2" id="text-org016dfc8">
+<p>
+<code>Preferences</code> -&gt; <code>java</code> -&gt; <code>Compiler</code> 下勾选 <code>Store information about method parameters</code> 选项。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfbba35e" class="outline-2">
+<h2 id="orgfbba35e">Idea设置</h2>
+<div class="outline-text-2" id="text-orgfbba35e">
+<p>
+<code>File</code> -&gt; <code>Settings</code> -&gt; <code>Build,Execution,Deployment</code> -&gt; <code>Java Compiler</code> 下的 <code>Additional command line parameters</code> 选项中添加 <code>-parameters</code> 。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-06-21 Fri 10:31<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>

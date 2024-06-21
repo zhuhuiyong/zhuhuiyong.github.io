@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Sun, 09 Jun 2024 14:15:26 +0800</pubDate>
-  <lastBuildDate>Sun, 09 Jun 2024 14:15:26 +0800</lastBuildDate>
+  <pubDate>Fri, 21 Jun 2024 10:32:07 +0800</pubDate>
+  <lastBuildDate>Fri, 21 Jun 2024 10:32:07 +0800</lastBuildDate>
   <generator>Emacs 29.3 Org-mode 9.6.15</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -259,6 +259,28 @@
 
     <p>
     <a href="how-to-compress-and-split-files-in-linux.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+
+  <item>
+    <title>如何在编译Java时保留方法参数名</title>
+    <link>https://laozhuzhu.com/posts/how-to-compile-java-class-to-include-method-parameter-names.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-compile-java-class-to-include-method-parameter-names.org</guid>
+    <pubDate>Fri, 21 Jun 2024 10:31:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    在Java 8之前的版本，代码编译为class文件后，方法参数的类型是固定的，但参数名称却丢失了，参数名会变成arg0、arg1....。而现在，在Java8开始可以在class文件中保留参数名，这就给反射带来了极大的遍历。
+    如果需要保留方法参数名，在编译时，可以启用 <code>-parameters</code> 选项，默认情况下此选项是关闭的。
+    </p>
+
+    <p>
+    本文将介绍编译Java源代码时，如何在maven, eclipse, idea中启用 <code>parameters</code> 选项。
+    </p>
+
+    <p>
+    <a href="how-to-compile-java-class-to-include-method-parameter-names.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
