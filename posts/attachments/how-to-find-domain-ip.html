@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-07-04 Thu 09:12 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux系统中查找域名IP地址的方法</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Linux系统中查找域名IP地址的方法</h1>
+
+<div id="outline-container-org3a3a111" class="outline-2">
+<h2 id="org3a3a111">简介</h2>
+<div class="outline-text-2" id="text-org3a3a111">
+<div class="PREVIEW" id="orgc6b1821">
+<p>
+在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
+</p>
+
+<ul class="org-ul">
+<li>dig 命令：它是一个用于查询 DNS 名称服务器的灵活命令行工具。</li>
+<li>host 命令：它是用于执行 DNS 查询的简单程序。</li>
+<li>nslookup 命令：它用于查询互联网域名服务器。</li>
+<li>ping 命令：它用于向网络主机发送 ICMP ECHO<sub>REQUEST</sub> 数据包。</li>
+<li>wget命令：它是一个从网络上下载文件的工具。</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div id="outline-container-org998a22e" class="outline-2">
+<h2 id="org998a22e">方法一：dig</h2>
+<div class="outline-text-2" id="text-org998a22e">
+<div class="org-src-container">
+<pre class="src src-shell">$ dig bing.com
+
+; &lt;&lt;&gt;&gt; DiG <span style="color: #a45bad;">9.18.24-0ubuntu0.22.04.1-Ubuntu</span> &lt;&lt;&gt;&gt; bing.com
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: <span style="color: #a45bad;">55989</span>
+<span style="color: #2d9574;">;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1</span>
+
+<span style="color: #2d9574;">;; OPT PSEUDOSECTION:</span>
+<span style="color: #2d9574;">; EDNS: version: 0, flags:; udp: 65494</span>
+<span style="color: #2d9574;">;; QUESTION SECTION:</span>
+<span style="color: #2d9574;">;bing.com.      IN  A</span>
+
+<span style="color: #2d9574;">;; ANSWER SECTION:</span>
+<span style="color: #2d9574;">bing.com.   1643  IN  A 13.107.21.200</span>
+<span style="color: #2d9574;">bing.com.   1643  IN  A 204.79.197.200</span>
+
+<span style="color: #2d9574;">;; Query time: 40 msec</span>
+<span style="color: #2d9574;">;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)</span>
+<span style="color: #2d9574;">;; WHEN: Thu Jul 04 09:05:08 CST 2024</span>
+<span style="color: #2d9574;">;; MSG SIZE  rcvd: 69</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org431262e" class="outline-2">
+<h2 id="org431262e">方法二：host</h2>
+<div class="outline-text-2" id="text-org431262e">
+<div class="org-src-container">
+<pre class="src src-shell">$ host bing.com
+bing.com has address <span style="color: #a45bad;">13.107.21.200</span>
+bing.com has address <span style="color: #a45bad;">204.79.197.200</span>
+bing.com has IPv6 address <span style="color: #a45bad;">2620:1ec:c11::200</span>
+bing.com mail is handled by <span style="color: #a45bad;">10</span> bing-com.mail.protection.outlook.com.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org70e914d" class="outline-2">
+<h2 id="org70e914d">方法三：nslookup</h2>
+<div class="outline-text-2" id="text-org70e914d">
+<div class="org-src-container">
+<pre class="src src-shell">~$ nslookup bing.com
+Server:   <span style="color: #a45bad;">127.0.0.53</span>
+Address:  <span style="color: #a45bad;">127.0.0.53#53</span>
+
+Non-authoritative answer:
+Name: bing.com
+Address: <span style="color: #a45bad;">13.107.21.200</span>
+Name: bing.com
+Address: <span style="color: #a45bad;">204.79.197.200</span>
+Name: bing.com
+Address: <span style="color: #a45bad;">2620:1ec:c11::200</span>
+
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga40d52c" class="outline-2">
+<h2 id="orga40d52c">方法四：ping</h2>
+<div class="outline-text-2" id="text-orga40d52c">
+<div class="org-src-container">
+<pre class="src src-shell">$ ping bing.com -c <span style="color: #a45bad;">1</span>
+PING bing.com <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">204.79.197.200</span><span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">56</span><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">84</span><span style="color: #4f97d7;">)</span> bytes of data.
+<span style="color: #a45bad;">64</span> bytes from a-0001.a-msedge.net <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">204.79.197.200</span><span style="color: #4f97d7;">)</span>: <span style="color: #7590db;">icmp_seq</span>=<span style="color: #a45bad;">1</span> <span style="color: #7590db;">ttl</span>=<span style="color: #a45bad;">112</span> <span style="color: #7590db;">time</span>=<span style="color: #a45bad;">78.4</span> ms
+
+--- bing.com ping statistics ---
+<span style="color: #a45bad;">1</span> packets transmitted, <span style="color: #a45bad;">1</span> received, <span style="color: #a45bad;">0%</span> packet loss, time <span style="color: #a45bad;">0ms</span>
+rtt min/avg/max/mdev = <span style="color: #a45bad;">78.368/78.368/78.368/0.000</span> ms
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23abfd5" class="outline-2">
+<h2 id="org23abfd5">方法五：wget</h2>
+<div class="outline-text-2" id="text-org23abfd5">
+<div class="org-src-container">
+<pre class="src src-shell">$ wget --spider bing.com
+Spider mode enabled. Check if remote file exists.
+--2024-07-04 <span style="color: #a45bad;">09:08:44--</span>  http://bing.com/
+Resolving bing.com <span style="color: #4f97d7;">(</span>bing.com<span style="color: #4f97d7;">)</span>... <span style="color: #a45bad;">204.79.197.200,</span> <span style="color: #a45bad;">13.107.21.200,</span> <span style="color: #a45bad;">2620:1ec:c11::200</span>
+Connecting to bing.com <span style="color: #4f97d7;">(</span>bing.com<span style="color: #4f97d7;">)</span>|<span style="color: #a45bad;">204.79.197.200</span>|:80... connected.
+HTTP request sent, awaiting response... <span style="color: #a45bad;">301</span> Moved Permanently
+Location: http://cn.bing.com/ <span style="color: #4f97d7;">[</span>following<span style="color: #4f97d7;">]</span>
+Spider mode enabled. Check if remote file exists.
+--2024-07-04 <span style="color: #a45bad;">09:08:44--</span>  http://cn.bing.com/
+Resolving cn.bing.com <span style="color: #4f97d7;">(</span>cn.bing.com<span style="color: #4f97d7;">)</span>... <span style="color: #a45bad;">202.89.233.101,</span> <span style="color: #a45bad;">202.89.233.100</span>
+Connecting to cn.bing.com <span style="color: #4f97d7;">(</span>cn.bing.com<span style="color: #4f97d7;">)</span>|<span style="color: #a45bad;">202.89.233.101</span>|:80... connected.
+HTTP request sent, awaiting response... <span style="color: #a45bad;">200</span> OK
+Length: <span style="color: #a45bad;">9243</span> <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">9.0K</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">[</span>text/html<span style="color: #4f97d7;">]</span>
+Remote file exists and could contain further links,
+but recursion is disabled -- not retrieving.
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-07-04 Thu 09:11<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>

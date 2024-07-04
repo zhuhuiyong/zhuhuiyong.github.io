@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-06-21 Fri 10:32 -->
+<!-- 2024-07-04 Thu 09:25 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Something</title>
@@ -31,13 +31,41 @@
 </div>
 
 
-<div id="outline-container-orgd3442a6" class="outline-2">
-<h2 id="orgd3442a6">最新文章</h2>
-<div class="outline-text-2" id="text-orgd3442a6">
+<div id="outline-container-orge90fe63" class="outline-2">
+<h2 id="orge90fe63">最新文章</h2>
+<div class="outline-text-2" id="text-orge90fe63">
 </div>
-<div id="outline-container-org469406a" class="outline-3">
-<h3 id="org469406a"><a href="posts/how-to-compile-java-class-to-include-method-parameter-names.html">[2024-06-21] 如何在编译Java时保留方法参数名</a></h3>
-<div class="outline-text-3" id="text-org469406a">
+<div id="outline-container-orgce40503" class="outline-3">
+<h3 id="orgce40503"><a href="posts/how-to-find-domain-ip.html">[2024-07-04] Linux系统中查找域名IP地址的方法</a></h3>
+<div class="outline-text-3" id="text-orgce40503">
+<p>
+在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
+</p>
+
+<p>
+方法一： <code>dig</code>  命令。
+</p>
+
+<p>
+方法二： <code>host</code> 命令。
+</p>
+
+<p>
+方法三： <code>nslookup</code> 命令。
+</p>
+
+<p>
+方法四： <code>ping</code> 命令。
+</p>
+
+<p>
+方法五： <code>wget</code> 命令。
+</p>
+</div>
+</div>
+<div id="outline-container-org8b78982" class="outline-3">
+<h3 id="org8b78982"><a href="posts/how-to-compile-java-class-to-include-method-parameter-names.html">[2024-06-21] 如何在编译Java时保留方法参数名</a></h3>
+<div class="outline-text-3" id="text-org8b78982">
 <p>
 在Java 8之前的版本，代码编译为class文件后，方法参数的类型是固定的，但参数名称却丢失了，参数名会变成arg0、arg1&#x2026;.。而现在，在Java8开始可以在class文件中保留参数名，这就给反射带来了极大的遍历。
 如果需要保留方法参数名，在编译时，可以启用 <code>-parameters</code> 选项，默认情况下此选项是关闭的。
@@ -48,17 +76,17 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org8dca076" class="outline-3">
-<h3 id="org8dca076"><a href="posts/uml-class-diagrams.html">[2024-06-09] UML:类图</a></h3>
-<div class="outline-text-3" id="text-org8dca076">
+<div id="outline-container-org745bb4a" class="outline-3">
+<h3 id="org745bb4a"><a href="posts/uml-class-diagrams.html">[2024-06-09] UML:类图</a></h3>
+<div class="outline-text-3" id="text-org745bb4a">
 <p>
 类图（Class Diagram）是描述类、接口、协同以及他们之间关系的图，用来显示系统中这些概念的静态结构。类图也是其它图的基础，我们可以在类图的基础上，使用状态图、协作图、组件图和配置图等。
 </p>
 </div>
 </div>
-<div id="outline-container-org7ed068e" class="outline-3">
-<h3 id="org7ed068e"><a href="posts/multiple-code-impl-timestamp.html">[2024-04-09] 不同编程语言实现方式：时间戳（Timestamp）</a></h3>
-<div class="outline-text-3" id="text-org7ed068e">
+<div id="outline-container-orgdf6de40" class="outline-3">
+<h3 id="orgdf6de40"><a href="posts/multiple-code-impl-timestamp.html">[2024-04-09] 不同编程语言实现方式：时间戳（Timestamp）</a></h3>
+<div class="outline-text-3" id="text-orgdf6de40">
 <p>
 时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
 </p>
@@ -68,37 +96,9 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgb270a25" class="outline-3">
-<h3 id="orgb270a25"><a href="posts/how-to-compress-and-split-files-in-linux.html">[2024-01-17] Linux中如何实现大文件分卷压缩和合并解压</a></h3>
-<div class="outline-text-3" id="text-orgb270a25">
-<p>
-个别时候，当我们想上传文件时，可能因为文件太大，网速太慢等原因，导致上传失败。此时，我们必须将大文件分割成一些小文件，以便上传。
-</p>
-
-<p>
-本文将介绍在Linux中，如何通过以下几种方法实现大文件的分卷压缩和合并解压：
-</p>
-
-<p>
-方法一：tar
-</p>
-
-<p>
-方法二：zip
-</p>
-
-<p>
-方法三：7z
-</p>
-</div>
-</div>
-<div id="outline-container-org2b6b955" class="outline-3">
-<h3 id="org2b6b955"><a href="posts/how-to-change-route-priority-on-linux.html">[2024-01-11] Linux下如何修改路由表优先级</a></h3>
-<div class="outline-text-3" id="text-org2b6b955">
-<p>
-在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
-</p>
-
+<div id="outline-container-org94e8f4c" class="outline-3">
+<h3 id="org94e8f4c"><a href="posts/how-to-compress-and-split-files-in-linux.html">[2024-01-17] Linux中如何实现大文件分卷压缩和合并解压</a></h3>
+<div class="outline-text-3" id="text-org94e8f4c">
 <p>
 [<a href="posts.html">查看更多文章</a>]
 </p>
@@ -110,7 +110,7 @@
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2024-01-12 Fri 16:57<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

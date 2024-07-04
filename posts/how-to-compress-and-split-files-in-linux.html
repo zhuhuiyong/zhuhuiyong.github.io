@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-06-13 四 09:26 -->
+<!-- 2024-07-04 Thu 09:20 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux中如何实现大文件分卷压缩和合并解压</title>
@@ -26,10 +26,10 @@
 <div id="content" class="content">
 <h1 class="title">Linux中如何实现大文件分卷压缩和合并解压</h1>
 
-<div id="outline-container-orga21346d" class="outline-2">
-<h2 id="orga21346d">简介</h2>
-<div class="outline-text-2" id="text-orga21346d">
-<div class="preview" id="org69908a0">
+<div id="outline-container-org92461dc" class="outline-2">
+<h2 id="org92461dc">简介</h2>
+<div class="outline-text-2" id="text-org92461dc">
+<div class="preview" id="orga282776">
 <p>
 个别时候，当我们想上传文件时，可能因为文件太大，网速太慢等原因，导致上传失败。此时，我们必须将大文件分割成一些小文件，以便上传。
 </p>
@@ -63,13 +63,13 @@ $ base64 /dev/urandom | head -c <span style="color: #a45bad;">100M</span> &gt; .
 </div>
 </div>
 
-<div id="outline-container-org1224825" class="outline-2">
-<h2 id="org1224825">方法一：tar</h2>
-<div class="outline-text-2" id="text-org1224825">
+<div id="outline-container-org93ea0e5" class="outline-2">
+<h2 id="org93ea0e5">方法一：tar</h2>
+<div class="outline-text-2" id="text-org93ea0e5">
 </div>
-<div id="outline-container-org0931c4f" class="outline-3">
-<h3 id="org0931c4f">分卷压缩</h3>
-<div class="outline-text-3" id="text-org0931c4f">
+<div id="outline-container-orgd9b0c1a" class="outline-3">
+<h3 id="orgd9b0c1a">分卷压缩</h3>
+<div class="outline-text-3" id="text-orgd9b0c1a">
 <p>
 以下示例中，我们使用 <code>tar</code> 和 <code>split</code> 命令，将example-dir目录下的大文件，压缩并分割成了50M大小。
 </p>
@@ -91,9 +91,9 @@ demo.tar.gz.00  demo.tar.gz.01  example-dir
 </div>
 </div>
 
-<div id="outline-container-orge8767ae" class="outline-3">
-<h3 id="orge8767ae">合并解压</h3>
-<div class="outline-text-3" id="text-orge8767ae">
+<div id="outline-container-org7fc9640" class="outline-3">
+<h3 id="org7fc9640">合并解压</h3>
+<div class="outline-text-3" id="text-org7fc9640">
 <div class="org-src-container">
 <pre class="src src-shell">$ mkdir -p demo &amp;&amp; cat demo.tar.gz.* | tar -xzv -C demo
 ./example-dir/
@@ -118,13 +118,13 @@ demo.tar.gz.00  demo.tar.gz.01  example-dir
 </div>
 </div>
 
-<div id="outline-container-orge1da093" class="outline-2">
-<h2 id="orge1da093">方法二：zip</h2>
-<div class="outline-text-2" id="text-orge1da093">
+<div id="outline-container-org865b126" class="outline-2">
+<h2 id="org865b126">方法二：zip</h2>
+<div class="outline-text-2" id="text-org865b126">
 </div>
-<div id="outline-container-org9fc661f" class="outline-3">
-<h3 id="org9fc661f">分卷压缩</h3>
-<div class="outline-text-3" id="text-org9fc661f">
+<div id="outline-container-org55a1713" class="outline-3">
+<h3 id="org55a1713">分卷压缩</h3>
+<div class="outline-text-3" id="text-org55a1713">
 <p>
 我们将使用zip命令的-s（splitsize）选项，实现分卷压缩。
 </p>
@@ -148,9 +148,9 @@ demo.z01  demo.zip
 </div>
 </div>
 
-<div id="outline-container-org8fb93ba" class="outline-3">
-<h3 id="org8fb93ba">合并解压</h3>
-<div class="outline-text-3" id="text-org8fb93ba">
+<div id="outline-container-org2e96760" class="outline-3">
+<h3 id="org2e96760">合并解压</h3>
+<div class="outline-text-3" id="text-org2e96760">
 <p>
 要打开zip压缩包，需要用到 <code>unzip</code> 命令。如果你未安装 <code>unzip</code> ，可以通过以下命令进行安装：
 </p>
@@ -187,9 +187,9 @@ Archive:  single-archive.zip
 </div>
 </div>
 
-<div id="outline-container-org8406635" class="outline-2">
-<h2 id="org8406635">方法三：7z</h2>
-<div class="outline-text-2" id="text-org8406635">
+<div id="outline-container-orgd5e9024" class="outline-2">
+<h2 id="orgd5e9024">方法三：7z</h2>
+<div class="outline-text-2" id="text-orgd5e9024">
 <p>
 可以使用以下命令，安装7z。
 </p>
@@ -200,9 +200,9 @@ Archive:  single-archive.zip
 </div>
 </div>
 
-<div id="outline-container-org02a37a2" class="outline-3">
-<h3 id="org02a37a2">分卷压缩</h3>
-<div class="outline-text-3" id="text-org02a37a2">
+<div id="outline-container-orgf3b9abd" class="outline-3">
+<h3 id="orgf3b9abd">分卷压缩</h3>
+<div class="outline-text-3" id="text-orgf3b9abd">
 <p>
 7z使用起来更加简单，只需要指定压缩文件的大小、压缩文件名和要压缩哪些文件就可以了。
 </p>
@@ -239,9 +239,9 @@ demo.7z.001  demo.7z.002  example-dir
 </div>
 </div>
 
-<div id="outline-container-org58971b7" class="outline-3">
-<h3 id="org58971b7">合并解压</h3>
-<div class="outline-text-3" id="text-org58971b7">
+<div id="outline-container-orgecb4464" class="outline-3">
+<h3 id="orgecb4464">合并解压</h3>
+<div class="outline-text-3" id="text-orgecb4464">
 <p>
 要解压7z文件，只需要指定第1个压缩包就可以了。
 </p>
@@ -257,8 +257,8 @@ demo.7z.001  demo.7z.002  example-dir
 <div id="postamble" class="status">
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
-    Last updated 2024-01-17 三 20:18<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+    Last updated 2024-01-17 Wed 20:18<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>

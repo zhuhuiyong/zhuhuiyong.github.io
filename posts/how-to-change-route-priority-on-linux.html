@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-06-13 四 09:26 -->
+<!-- 2024-07-04 Thu 09:20 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux下如何修改路由表优先级</title>
@@ -26,10 +26,10 @@
 <div id="content" class="content">
 <h1 class="title">Linux下如何修改路由表优先级</h1>
 
-<div id="outline-container-orga6176ad" class="outline-2">
-<h2 id="orga6176ad">简介</h2>
-<div class="outline-text-2" id="text-orga6176ad">
-<div class="preview" id="org704d529">
+<div id="outline-container-org7bddb1d" class="outline-2">
+<h2 id="org7bddb1d">简介</h2>
+<div class="outline-text-2" id="text-org7bddb1d">
+<div class="preview" id="org0b510dc">
 <p>
 在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
 </p>
@@ -46,17 +46,17 @@
 </div>
 </div>
 
-<div id="outline-container-org49e8147" class="outline-2">
-<h2 id="org49e8147">路由优先级</h2>
-<div class="outline-text-2" id="text-org49e8147">
+<div id="outline-container-orgcff349a" class="outline-2">
+<h2 id="orgcff349a">路由优先级</h2>
+<div class="outline-text-2" id="text-orgcff349a">
 <p>
 如果您有两条路由用于完全相同的目的地（例如，这两条路由都适用于192.168.1.0/24），则会根据其 <code>metric</code> 参数进行比较： <code>metric</code> 值越小，优先级越高。
 </p>
 </div>
 
-<div id="outline-container-org526476e" class="outline-3">
-<h3 id="org526476e">查看路由优先级</h3>
-<div class="outline-text-3" id="text-org526476e">
+<div id="outline-container-org9771d26" class="outline-3">
+<h3 id="org9771d26">查看路由优先级</h3>
+<div class="outline-text-3" id="text-org9771d26">
 <p>
 可以使用以下命令，查看路由优先级。
 </p>
@@ -88,13 +88,13 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 </div>
 </div>
 
-<div id="outline-container-org4d618d7" class="outline-2">
-<h2 id="org4d618d7">修改路由优先级</h2>
-<div class="outline-text-2" id="text-org4d618d7">
+<div id="outline-container-org58c86e5" class="outline-2">
+<h2 id="org58c86e5">修改路由优先级</h2>
+<div class="outline-text-2" id="text-org58c86e5">
 </div>
-<div id="outline-container-orgca07ead" class="outline-3">
-<h3 id="orgca07ead">临时修改方法</h3>
-<div class="outline-text-3" id="text-orgca07ead">
+<div id="outline-container-orgac91f2c" class="outline-3">
+<h3 id="orgac91f2c">临时修改方法</h3>
+<div class="outline-text-3" id="text-orgac91f2c">
 <p>
 可以使用以下命令，修改路由优先级。
 </p>
@@ -120,13 +120,13 @@ $ sudo ip route add default via y.y.y.y dev wlp3s0 metric <span style="color: #a
 </div>
 </div>
 
-<div id="outline-container-orgad953c9" class="outline-3">
-<h3 id="orgad953c9">永久修改方法</h3>
-<div class="outline-text-3" id="text-orgad953c9">
+<div id="outline-container-org4fa1428" class="outline-3">
+<h3 id="org4fa1428">永久修改方法</h3>
+<div class="outline-text-3" id="text-org4fa1428">
 </div>
-<div id="outline-container-orgb6db13d" class="outline-4">
-<h4 id="orgb6db13d">检查当前网络连接的管理方式</h4>
-<div class="outline-text-4" id="text-orgb6db13d">
+<div id="outline-container-org0be39b6" class="outline-4">
+<h4 id="org0be39b6">检查当前网络连接的管理方式</h4>
+<div class="outline-text-4" id="text-org0be39b6">
 <p>
 如果使用 <code>nmcli</code> 命令有类似如下的输出结果，就表示你的系统当前使用的是Network Manager。
 </p>
@@ -146,9 +146,9 @@ docker0          bridge    connected <span style="color: #4f97d7;">(</span>exter
 </p>
 </div>
 </div>
-<div id="outline-container-orgbd9f35d" class="outline-4">
-<h4 id="orgbd9f35d">使用nmcli</h4>
-<div class="outline-text-4" id="text-orgbd9f35d">
+<div id="outline-container-orgd53d54f" class="outline-4">
+<h4 id="orgd53d54f">使用nmcli</h4>
+<div class="outline-text-4" id="text-orgd53d54f">
 <p>
 执行以下命令，可以将当前连接的 <code>metrics</code> 修改为 <code>10</code> 。
 </p>
@@ -169,7 +169,7 @@ Connection successfully activated <span style="color: #4f97d7;">(</span>D-Bus ac
 </div>
 
 <p>
-现在，此连接的 <code>metrics</code> 应该已经被我们设置为 <code>10</code> 了，你可以按照“<a href="#org526476e">查看路由优先级</a>”章节的描述，检查下我们的修改是否生效了。
+现在，此连接的 <code>metrics</code> 应该已经被我们设置为 <code>10</code> 了，你可以按照“<a href="#org9771d26">查看路由优先级</a>”章节的描述，检查下我们的修改是否生效了。
 </p>
 
 <p>
@@ -183,8 +183,8 @@ Connection successfully activated <span style="color: #4f97d7;">(</span>D-Bus ac
 <div id="postamble" class="status">
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
-    Last updated 2024-01-29 一 12:02<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+    Last updated 2024-01-29 Mon 12:02<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
 </body>
