@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-07-04 Thu 09:20 -->
+<!-- 2024-07-12 Fri 09:08 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何清理Linux系统日志</title>
@@ -9,6 +9,8 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -25,7 +27,7 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">如何清理Linux系统日志</h1>
-<div class="preview" id="orgea735ec">
+<div class="preview" id="org52ba671">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -43,9 +45,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 
 </div>
-<div id="outline-container-orgf44760e" class="outline-2">
-<h2 id="orgf44760e">查看日志文件使用量</h2>
-<div class="outline-text-2" id="text-orgf44760e">
+<div id="outline-container-org4846063" class="outline-2">
+<h2 id="org4846063">查看日志文件使用量</h2>
+<div class="outline-text-2" id="text-org4846063">
 <p>
 你可以使用以下任意一种方法检查日志文件大小。
 </p>
@@ -70,13 +72,13 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-orgeeece7b" class="outline-2">
-<h2 id="orgeeece7b">手动清理日志文件</h2>
-<div class="outline-text-2" id="text-orgeeece7b">
+<div id="outline-container-org7962287" class="outline-2">
+<h2 id="org7962287">手动清理日志文件</h2>
+<div class="outline-text-2" id="text-org7962287">
 </div>
-<div id="outline-container-org927e536" class="outline-3">
-<h3 id="org927e536">清理 N 天前的日志</h3>
-<div class="outline-text-3" id="text-org927e536">
+<div id="outline-container-org69c3942" class="outline-3">
+<h3 id="org69c3942">清理 N 天前的日志</h3>
+<div class="outline-text-3" id="text-org69c3942">
 <p>
 以下命令将清理2天前的日志：
 </p>
@@ -140,9 +142,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 
 
-<div id="outline-container-orgb98d9e4" class="outline-3">
-<h3 id="orgb98d9e4">限制日志文件大小</h3>
-<div class="outline-text-3" id="text-orgb98d9e4">
+<div id="outline-container-orgc2d6322" class="outline-3">
+<h3 id="orgc2d6322">限制日志文件大小</h3>
+<div class="outline-text-3" id="text-orgc2d6322">
 <p>
 使用以下命令可将日志文件大小限制到100M，它将清理日志文件直到低于100M：
 </p>
@@ -190,9 +192,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 
-<div id="outline-container-org1950758" class="outline-3">
-<h3 id="org1950758">限制日志文件数据</h3>
-<div class="outline-text-3" id="text-org1950758">
+<div id="outline-container-org551bbf0" class="outline-3">
+<h3 id="org551bbf0">限制日志文件数据</h3>
+<div class="outline-text-3" id="text-org551bbf0">
 <p>
 使用以下命令可将日志文件数据限制到5个：
 </p>

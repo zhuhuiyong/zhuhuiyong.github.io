@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-07-04 Thu 09:20 -->
+<!-- 2024-07-12 Fri 09:08 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>不同编程语言实现方式：时间戳（Timestamp）</title>
@@ -9,6 +9,8 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
 <link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
 </head>
 <body>
 <div id="preamble" class="status">
@@ -26,10 +28,10 @@
 <div id="content" class="content">
 <h1 class="title">不同编程语言实现方式：时间戳（Timestamp）</h1>
 
-<div id="outline-container-orgef1c016" class="outline-2">
-<h2 id="orgef1c016">什么是时间戳</h2>
-<div class="outline-text-2" id="text-orgef1c016">
-<div class="preview" id="org03b36de">
+<div id="outline-container-org5825aa6" class="outline-2">
+<h2 id="org5825aa6">什么是时间戳</h2>
+<div class="outline-text-2" id="text-org5825aa6">
+<div class="preview" id="org8ccbf23">
 <p>
 时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
 </p>
@@ -42,13 +44,13 @@
 </div>
 </div>
 
-<div id="outline-container-orge564da4" class="outline-2">
-<h2 id="orge564da4">获取当前时间戳</h2>
-<div class="outline-text-2" id="text-orge564da4">
+<div id="outline-container-org278cb8a" class="outline-2">
+<h2 id="org278cb8a">获取当前时间戳</h2>
+<div class="outline-text-2" id="text-org278cb8a">
 </div>
-<div id="outline-container-org5e35bde" class="outline-3">
-<h3 id="org5e35bde">Java</h3>
-<div class="outline-text-3" id="text-org5e35bde">
+<div id="outline-container-org2a8b549" class="outline-3">
+<h3 id="org2a8b549">Java</h3>
+<div class="outline-text-3" id="text-org2a8b549">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">pure java</span>
 System.currentTimeMillis<span style="color: #4f97d7;">()</span> / <span style="color: #a45bad;">1000</span>
@@ -63,9 +65,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-orgf5885bf" class="outline-3">
-<h3 id="orgf5885bf">JavaScript</h3>
-<div class="outline-text-3" id="text-orgf5885bf">
+<div id="outline-container-org8a464a5" class="outline-3">
+<h3 id="org8a464a5">JavaScript</h3>
+<div class="outline-text-3" id="text-org8a464a5">
 <div class="org-src-container">
 <pre class="src src-javascript">Math.round<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Date</span><span style="color: #bc6ec5;">()</span> / <span style="color: #a45bad;">1000</span><span style="color: #4f97d7;">)</span>
 </pre>
@@ -73,9 +75,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-orge6c8fce" class="outline-3">
-<h3 id="orge6c8fce">Shell</h3>
-<div class="outline-text-3" id="text-orge6c8fce">
+<div id="outline-container-orgbaab195" class="outline-3">
+<h3 id="orgbaab195">Shell</h3>
+<div class="outline-text-3" id="text-orgbaab195">
 <div class="org-src-container">
 <pre class="src src-shell">date +%s
 </pre>
@@ -83,9 +85,9 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 
-<div id="outline-container-org85eb9fc" class="outline-3">
-<h3 id="org85eb9fc">MySQL</h3>
-<div class="outline-text-3" id="text-org85eb9fc">
+<div id="outline-container-org8c19966" class="outline-3">
+<h3 id="org8c19966">MySQL</h3>
+<div class="outline-text-3" id="text-org8c19966">
 <div class="org-src-container">
 <pre class="src src-sql"><span style="color: #4f97d7; font-weight: bold;">SELECT</span> unix_timestamp<span style="color: #4f97d7;">(</span>now<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span>
 </pre>
