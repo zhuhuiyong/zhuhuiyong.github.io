@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-09-03 Tue 13:32 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux中的/etc/fstab文件介绍</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Linux中的/etc/fstab文件介绍</h1>
+
+<div id="outline-container-orge600005" class="outline-2">
+<h2 id="orge600005">简介</h2>
+<div class="outline-text-2" id="text-orge600005">
+<div class="PREVIEW" id="orgd23aa8b">
+<p>
+fstab文件包含了你的电脑上的存储设备及其文件系统的信息。它是决定一个硬盘（分区）被怎样使用或者说整合到整个系统中的文件。具体来说：用fstab可以自动挂载各种文件系统格式的硬盘、分区、可移动设备和远程设备等。
+</p>
+
+<p>
+fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够用你喜欢的编辑器打开它，但是必须是root用户才能编辑它。同时fsck、mount、umount的等命令都利用该程序。
+</p>
+
+</div>
+<p>
+/etc/fstab 是启动时的配置文件，不过，实际 filesystem 的挂载是记录到 /etc/mtab 与 /proc/mounts 这两个文件当中的。每次我们在更动 filesystem 的挂载时，也会同时更动这两个文件。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8923dee" class="outline-2">
+<h2 id="org8923dee">文件结构</h2>
+<div class="outline-text-2" id="text-org8923dee">
+<p>
+<code>fstab</code> 文件位于 <code>/etc/</code> 目录中，由 <code>root</code> 用户拥有。因此，您应该使用 <code>sudo</code> 权限或以 <code>root</code> 用户身份编辑该文件。
+</p>
+
+<p>
+每个文件系统都在单独的行上进行描述。每行上的字段由制表符或空格分隔。
+</p>
+
+<p>
+Fstab 文件由六列（部分）组成。
+</p>
+
+<ol class="org-ol">
+<li>文件系统（file systems）： 要挂载的块设备。</li>
+<li>挂载点(mount point)：文件系统在系统中挂载的位置。</li>
+<li>文件系统类型（type）：文件系统类型（Ext4、Ext3、交换、Xfs 等）。</li>
+<li>选项（options）：这决定了挂载文件系统时要考虑的挂载参数。具体参数说明参见<a href="#org8f721a0">选项（options）</a></li>
+<li>备份操作（dump）：dump utility用来决定是否做备份的. 允许的值是0和1。通常设置为0，dump就会忽略这个文件系统。</li>
+<li>是否以fsck检验扇区（pass）：由 fsck 实用程序在启动时检查文件系统，数值越大优先级越高。0将禁用文件系统检查。对于根文件系统，应将其设置为 1，对于其他分区，应将其设置为 2。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4e601f1" class="outline-2">
+<h2 id="org4e601f1">选项（options）<a id="org8f721a0"></a></h2>
+<div class="outline-text-2" id="text-org4e601f1">
+<ul class="org-ul">
+<li><code>noatime</code> 关闭atime特性，提高性能，这是一个很老的特性，放心关闭，还能减少loadcycle</li>
+<li><code>defaults</code> 使用默认设置。等于rw,suid,dev,exec,auto,nouser,async，具体含义看下面的解释。</li>
+<li>自动与手动挂载:
+<ul class="org-ul">
+<li><code>auto</code> 在启动或在终端中输入mount -a时自动挂载</li>
+<li><code>noauto</code> 设备（分区）只能手动挂载</li>
+</ul></li>
+<li>读写权限:
+<ul class="org-ul">
+<li><code>ro</code> 挂载为只读权限</li>
+<li><code>rw</code> 挂载为读写权限</li>
+</ul></li>
+<li>可执行:
+<ul class="org-ul">
+<li><code>exec</code> 是一个默认设置项，它使在那个分区中的可执行的二进制文件能够执行</li>
+<li><code>noexec</code> 二进制文件不允许执行。千万不要在你的root分区中用这个选项！！！</li>
+</ul></li>
+<li>I/O同步:
+<ul class="org-ul">
+<li><code>sync</code> 所有的I/O将以同步方式进行</li>
+<li><code>async</code> 所有的I/O将以非同步方式进行</li>
+</ul></li>
+<li>用户挂载权限:
+<ul class="org-ul">
+<li><code>user</code> 允许任何用户挂载设备。</li>
+<li><code>nouser</code> 只允许root用户挂载。这是默认设置。</li>
+</ul></li>
+<li>临时文件执行权限：
+<ul class="org-ul">
+<li><code>suid</code> 允许suid和sgid位的操作。它们主要用于允许计算机系统上的用户执行具有临时提升权限的二进制可执行文件，以执行特定任务。</li>
+<li><code>nosuid</code> 阻止suid和sgid位的操作。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-09-03 Tue 13:32<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>
