@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-10-11 Fri 15:08 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</h1>
+
+<div id="outline-container-org9c26041" class="outline-2">
+<h2 id="org9c26041">简介</h2>
+<div class="outline-text-2" id="text-org9c26041">
+<div class="PREVIEW" id="orgbce39bf">
+<p>
+使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
+</p>
+
+<p>
+本文将介绍如何实现这一功能。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0622701" class="outline-2">
+<h2 id="org0622701">Windows虚拟机</h2>
+<div class="outline-text-2" id="text-org0622701">
+<p>
+Windows虚拟机可参考以下方法：
+</p>
+
+<ol class="org-ol">
+<li>在虚拟机里访问此链接 <a href="https://www.spice-space.org/download.html">SPICE</a>。</li>
+<li>下载并安装 <a href="https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe">Windows SPICE Guest Tools</a>。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orge8f4d1d" class="outline-2">
+<h2 id="orge8f4d1d">Ubuntu虚拟机</h2>
+<div class="outline-text-2" id="text-orge8f4d1d">
+<p>
+Ubuntu系列的虚拟机使用以下命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo apt install -y qemu-guest-agent
+sudo apt install -y spice-vdagent
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeac9d9f" class="outline-2">
+<h2 id="orgeac9d9f">CentOS虚拟机</h2>
+<div class="outline-text-2" id="text-orgeac9d9f">
+<p>
+CentOS系列的虚拟机使用以下命令：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">sudo yum install -y qemu-guest-agent
+sudo yum install -y spice-vdagent
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2024-10-11 Fri 15:08<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>
