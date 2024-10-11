@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-10-11 Fri 15:08 -->
+<!-- 2024-10-11 Fri 15:15 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</title>
@@ -31,7 +31,7 @@
 <div id="outline-container-org9c26041" class="outline-2">
 <h2 id="org9c26041">简介</h2>
 <div class="outline-text-2" id="text-org9c26041">
-<div class="PREVIEW" id="orgbce39bf">
+<div class="PREVIEW" id="org4bbd4d3">
 <p>
 使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
 </p>
@@ -53,7 +53,8 @@ Windows虚拟机可参考以下方法：
 
 <ol class="org-ol">
 <li>在虚拟机里访问此链接 <a href="https://www.spice-space.org/download.html">SPICE</a>。</li>
-<li>下载并安装 <a href="https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe">Windows SPICE Guest Tools</a>。</li>
+<li>在打开的网页中，向下滚动，找到 <code>Guest</code> 章节，在 <code>Windows Binaries</code> 中下载 <a href="https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe">Windows SPICE Guest Tools</a>。</li>
+<li>在虚拟机中安装 <code>Windows SPICE Guest Tools</code> 。</li>
 </ol>
 </div>
 </div>
@@ -90,7 +91,7 @@ sudo yum install -y spice-vdagent
 <div id="postamble" class="status">
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
-    Last updated 2024-10-11 Fri 15:08<br>
+    Last updated 2024-10-11 Fri 15:15<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
 </div>
 </div>
