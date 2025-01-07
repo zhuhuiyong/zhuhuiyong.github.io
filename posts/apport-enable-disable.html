@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-01-07 二 09:22 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<p>
+#+ title: Ubuntu系统启用禁用崩溃检测报告功能（Apport）
+</p>
+
+<div id="outline-container-org5d7801e" class="outline-2">
+<h2 id="org5d7801e">简介</h2>
+<div class="outline-text-2" id="text-org5d7801e">
+<div class="PREVIEW" id="orge3e5f69">
+<p>
+Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org289d48b" class="outline-2">
+<h2 id="org289d48b">检查Apport服务状态</h2>
+<div class="outline-text-2" id="text-org289d48b">
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo systemctl status apport.service 
+&#9679; apport.service - automatic crash report generation
+     Loaded: loaded <span style="color: #4f97d7;">(</span>/usr/lib/systemd/system/apport.service; enabled; preset: e&gt;
+     Active: active <span style="color: #bc6ec5;">(</span>exited<span style="color: #bc6ec5;">)</span> since Tue <span style="color: #a45bad;">2025-01-07</span> <span style="color: #a45bad;">08:53:51</span> CST; <span style="color: #a45bad;">9min</span> ago
+   Main PID: <span style="color: #a45bad;">1045</span> <span style="color: #bc6ec5;">(</span><span style="color: #7590db;">code</span>=exited, <span style="color: #7590db;">status</span>=<span style="color: #a45bad;">0/SUCCESS</span><span style="color: #bc6ec5;">)</span>
+        CPU: <span style="color: #a45bad;">119ms</span>
+
+<span style="color: #a45bad;">1&#26376;</span> <span style="color: #a45bad;">07</span> <span style="color: #a45bad;">08:53:51</span> UM780XTX systemd<span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">1</span><span style="color: #bc6ec5;">]</span>: Starting apport.service - automatic crash &gt;
+<span style="color: #a45bad;">1&#26376;</span> <span style="color: #a45bad;">07</span> <span style="color: #a45bad;">08:53:51</span> UM780XTX systemd<span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">1</span><span style="color: #bc6ec5;">]</span>: Finished apport.service - automatic crash &gt;
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org796f3ec" class="outline-2">
+<h2 id="org796f3ec">启用Apport服务</h2>
+<div class="outline-text-2" id="text-org796f3ec">
+</div>
+<div id="outline-container-org74304b6" class="outline-3">
+<h3 id="org74304b6">方法一：使用systemctl命令临时启用Apport</h3>
+<div class="outline-text-3" id="text-org74304b6">
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo systemctl start apport
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgff18c30" class="outline-3">
+<h3 id="orgff18c30">方法二：修改配置文件永久启用Apport</h3>
+<div class="outline-text-3" id="text-orgff18c30">
+<p>
+使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=0</code> 修改为 <code>enabled=1</code> 永久启用Apport。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo vi /etc/default/apport
+</pre>
+</div>
+
+<p>
+使用cat查看修改后的文件内容。
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo cat /etc/default/apport
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">set this to 0 to disable apport, or to 1 to enable it</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">you can temporarily override this with</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">sudo service apport start force_start=1</span>
+<span style="color: #7590db;">enabled</span>=<span style="color: #a45bad;">1</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf562ed4" class="outline-2">
+<h2 id="orgf562ed4">禁用Apport服务</h2>
+<div class="outline-text-2" id="text-orgf562ed4">
+</div>
+<div id="outline-container-orgfc5b839" class="outline-3">
+<h3 id="orgfc5b839">方法一：使用systemctl命令临时禁用Apport</h3>
+<div class="outline-text-3" id="text-orgfc5b839">
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo systemctl stop apport
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org193654c" class="outline-3">
+<h3 id="org193654c">方法二：修改配置文件永久禁用Apport</h3>
+<div class="outline-text-3" id="text-org193654c">
+<p>
+使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=1</code> 修改为 <code>enabled=0</code> 永久禁用Apport。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo vi /etc/default/apport
+</pre>
+</div>
+
+<p>
+使用cat查看修改后的文件内容。
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo cat /etc/default/apport
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">set this to 0 to disable apport, or to 1 to enable it</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">you can temporarily override this with</span>
+<span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">sudo service apport start force_start=1</span>
+<span style="color: #7590db;">enabled</span>=<span style="color: #a45bad;">0</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf86fca4" class="outline-2">
+<h2 id="orgf86fca4">清理缓存</h2>
+<div class="outline-text-2" id="text-orgf86fca4">
+<p>
+缓存的错误日志位于此目录下： <code>/var/crash/</code> ，禁用Apport后，可以清理此目录下的文件。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ sudo rm /var/crash/*
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2025-01-07 二 09:22<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>
