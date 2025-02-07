@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-02-07 五 10:13 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何在Linux中生成字符串</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何在Linux中生成字符串</h1>
+<div class="PREVIEW" id="orgfab290d">
+<p>
+本文介绍如何在Linux中，使用Shell命令生成随机长度的字段串，如何获取字符串长度。
+</p>
+
+</div>
+<div id="outline-container-org31eeb3e" class="outline-2">
+<h2 id="org31eeb3e">生成指定字节长度的随机字符串</h2>
+<div class="outline-text-2" id="text-org31eeb3e">
+</div>
+<div id="outline-container-org611e4fc" class="outline-3">
+<h3 id="org611e4fc">方法一</h3>
+<div class="outline-text-3" id="text-org611e4fc">
+<div class="org-src-container">
+<pre class="src src-shell">$ head -c <span style="color: #a45bad;">1</span> /dev/urandom | od -A n -t x | tr -d <span style="color: #2d9574;">' '</span>
+<span style="color: #a45bad;">0000009b</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96e48de" class="outline-3">
+<h3 id="org96e48de">方法二</h3>
+<div class="outline-text-3" id="text-org96e48de">
+<div class="org-src-container">
+<pre class="src src-shell">$ echo $<span style="color: #7590db;">RANDOM</span> | md5sum | cut -c <span style="color: #a45bad;">1-8</span> 
+d93e80aa
+
+$ echo $<span style="color: #7590db;">RANDOM</span> | cksum | cut -c <span style="color: #a45bad;">1-8</span> 
+<span style="color: #a45bad;">16554059</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4237b81" class="outline-3">
+<h3 id="org4237b81">方法三</h3>
+<div class="outline-text-3" id="text-org4237b81">
+<div class="org-src-container">
+<pre class="src src-shell">$ openssl rand -hex <span style="color: #a45bad;">64</span> | cut -c <span style="color: #a45bad;">1-8</span>
+<span style="color: #a45bad;">0b00f627</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd6cc32a" class="outline-2">
+<h2 id="orgd6cc32a">获取字符长度</h2>
+<div class="outline-text-2" id="text-orgd6cc32a">
+<p>
+在Shell脚本编程中，经常需要获取字符串的长度。有多种方法可以实现这一需求，以下是一些常用的方法：
+</p>
+</div>
+
+<div id="outline-container-orgde3226b" class="outline-3">
+<h3 id="orgde3226b">${#string}</h3>
+<div class="outline-text-3" id="text-orgde3226b">
+<p>
+这是最简单也是最直接的方法。在Shell中，可以直接使用${#string}来获取字符串的长度。例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #7590db;">str</span>=<span style="color: #2d9574;">"Hello World"</span>
+$ echo $<span style="color: #4f97d7;">{</span>#<span style="color: #7590db;">str</span><span style="color: #4f97d7;">}</span> <span style="color: #2aa1ae; background-color: #292e34;"># </span><span style="color: #2aa1ae; background-color: #292e34;">&#36755;&#20986; 11</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5bd092d" class="outline-3">
+<h3 id="org5bd092d">awk</h3>
+<div class="outline-text-3" id="text-org5bd092d">
+<p>
+awk是一个强大的文本处理工具，它的length函数可以用来获取字符串的长度。使用awk时，可以通过管道将字符串传递给awk，然后使用length函数计算长度。例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #7590db;">str</span>=<span style="color: #2d9574;">"Hello World"</span>
+$ echo $<span style="color: #7590db;">str</span> | awk <span style="color: #2d9574;">'{print length}'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1fe200" class="outline-3">
+<h3 id="orgc1fe200">expr</h3>
+<div class="outline-text-3" id="text-orgc1fe200">
+<p>
+expr是另一个用于字符串操作的工具，它的length选项可以返回字符串的长度。使用expr时，需要将字符串作为参数传递给expr length。例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #7590db;">str</span>=<span style="color: #2d9574;">"Hello World"</span>
+$ expr length <span style="color: #2d9574;">"$str"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5f7d486" class="outline-3">
+<h3 id="org5f7d486">wc</h3>
+<div class="outline-text-3" id="text-org5f7d486">
+<p>
+wc命令通常用于计算文件中的行数、单词数或字符数。使用wc -m选项可以计算字符串中的字符数。需要注意的是，使用echo命令时应该加上-n选项，以避免在字符串末尾添加换行符，这样会影响长度的计算。例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ <span style="color: #7590db;">str</span>=<span style="color: #2d9574;">"Hello World"</span>
+$ echo -n $<span style="color: #7590db;">str</span> | wc -m
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2025-02-07 五 10:12<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>
