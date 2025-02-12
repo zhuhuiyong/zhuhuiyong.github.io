@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-02-12 三 08:59 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>如何在Ubuntu中删除多余的内核</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">如何在Ubuntu中删除多余的内核</h1>
+<div class="PREVIEW" id="orgdf32cfc">
+<p>
+删除和清理不再使用的多余内核可以释放磁盘空间、提高利用率，并避免潜在的存储空间不足。本文将介绍在 <code>Ubuntu</code> 系统中删除多余内核的几种方法。
+</p>
+
+</div>
+
+<div id="outline-container-orge5fbb66" class="outline-2">
+<h2 id="orge5fbb66">方法一：自动删除多余内核</h2>
+<div class="outline-text-2" id="text-orge5fbb66">
+<p>
+使用 <code>sudo apt autoremove --purge</code> 命令可以自动删除未使用的旧内核。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo apt autoremove --purge
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdcf0b44" class="outline-2">
+<h2 id="orgdcf0b44">方法二：手动删除多余内核</h2>
+<div class="outline-text-2" id="text-orgdcf0b44">
+<p>
+查看当前使用的内核版本：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">uname -r
+</pre>
+</div>
+
+<p>
+列出已安装的内核版本：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">dpkg --list | grep linux-image
+</pre>
+</div>
+
+<p>
+删除特定内核：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo apt purge linux-image-x.x.x-x-generic
+</pre>
+</div>
+
+<p>
+其中 x.x.x-x 代表要删除的内核版本号。
+</p>
+
+<p>
+更新 GRUB 引导加载程序：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo update-grub
+</pre>
+</div>
+
+<p>
+重新启动系统：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo reboot
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d81a1d" class="outline-2">
+<h2 id="org2d81a1d">方法三：删除不必要的 rc 包</h2>
+<div class="outline-text-2" id="text-org2d81a1d">
+<p>
+使用以下命令删除所有 rc 状态的包：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">sudo dpkg --purge $<span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">dpkg -l | awk '/^rc/{print $2}'</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<p>
+注意：在执行这些命令之前，请确保备份数据，并理解每个命令的作用，以避免系统不稳定或数据丢失。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2025-02-12 三 08:59<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+</div>
+</div>
+</body>
+</html>
