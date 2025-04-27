@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-01-07 二 09:43 -->
+<!-- 2025-04-27 日 14:15 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>查看Java .class文件版本号</title>
@@ -27,11 +27,10 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">查看Java .class文件版本号</h1>
-
-<div id="outline-container-orgebc3a96" class="outline-2">
-<h2 id="orgebc3a96">简介</h2>
-<div class="outline-text-2" id="text-orgebc3a96">
-<div class="preview" id="org8765e22">
+<div id="outline-container-org2f3e8f4" class="outline-2">
+<h2 id="org2f3e8f4">简介</h2>
+<div class="outline-text-2" id="text-org2f3e8f4">
+<div class="preview" id="org59f35b9">
 <p>
 本文将介绍如何查看.class文件和jar文件的Java发行版本。
 </p>
@@ -39,10 +38,9 @@
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgd81c46e" class="outline-2">
-<h2 id="orgd81c46e">Java .class 版本号</h2>
-<div class="outline-text-2" id="text-orgd81c46e">
+<div id="outline-container-orgba0178e" class="outline-2">
+<h2 id="orgba0178e">Java .class 版本号</h2>
+<div class="outline-text-2" id="text-orgba0178e">
 <p>
 编译Java文件时，将生成一个.class文件。在某些情况下，我们需要找到已编译类文件的Java发行版本。
 </p>
@@ -232,10 +230,9 @@
 </table>
 </div>
 </div>
-
-<div id="outline-container-orgea8cbbf" class="outline-2">
-<h2 id="orgea8cbbf">使用javap命令检查Class文件版本号</h2>
-<div class="outline-text-2" id="text-orgea8cbbf">
+<div id="outline-container-org70935d7" class="outline-2">
+<h2 id="org70935d7">使用javap命令检查Class文件版本号</h2>
+<div class="outline-text-2" id="text-org70935d7">
 <p>
 我们可以使用javap命令，查看.class文件的版本号。
 </p>
@@ -248,16 +245,16 @@
 <p>
 以上命令输出结果可能是：
 </p>
-<pre class="example">
-minor version: 0
+<div class="org-src-container">
+<pre class="src src-nil">minor version: 0
 major version: 55
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org8ea1507" class="outline-2">
-<h2 id="org8ea1507">检查jar文件版本号</h2>
-<div class="outline-text-2" id="text-org8ea1507">
+</div>
+<div id="outline-container-org97faf35" class="outline-2">
+<h2 id="org97faf35">检查jar文件版本号</h2>
+<div class="outline-text-2" id="text-org97faf35">
 <p>
 在 Java 中，jar 包是一种常用的打包和分发 Java 类的格式。如果你想查看一个 jar 包是使用哪个 JDK 版本编译的，可以有2种方法。
 </p>
@@ -278,23 +275,25 @@ major version: 55
 jar包中还有一个MANIFEST文件，其中包含有关所使用JDK的一些头信息。
 </p>
 
-<pre class="example">
-Build-Jdk: 17.0.4
+<div class="org-src-container">
+<pre class="src src-nil">Build-Jdk: 17.0.4
 </pre>
+</div>
 
-<pre class="example">
-Created-By: 17.0.4
+<div class="org-src-container">
+<pre class="src src-nil">Created-By: 17.0.4
 </pre>
+</div>
 
-<pre class="example">
-Build-Jdk-Spec: 20
+<div class="org-src-container">
+<pre class="src src-nil">Build-Jdk-Spec: 20
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org9717e61" class="outline-2">
-<h2 id="org9717e61">参考</h2>
-<div class="outline-text-2" id="text-org9717e61">
+</div>
+<div id="outline-container-org6a97959" class="outline-2">
+<h2 id="org6a97959">参考</h2>
+<div class="outline-text-2" id="text-org6a97959">
 <p>
 <a href="https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-4.html</a>
 </p>
@@ -309,7 +308,7 @@ Build-Jdk-Spec: 20
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:04<br>
-    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15).
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
 </div>
 </body>
