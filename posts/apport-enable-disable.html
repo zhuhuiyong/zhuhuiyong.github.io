@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-04-27 日 14:15 -->
+<!-- 2025-05-19 一 09:42 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ubuntu系统启用禁用崩溃检测报告功能（Apport）</title>
@@ -27,10 +27,10 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Ubuntu系统启用禁用崩溃检测报告功能（Apport）</h1>
-<div id="outline-container-orgf6c80bf" class="outline-2">
-<h2 id="orgf6c80bf">简介</h2>
-<div class="outline-text-2" id="text-orgf6c80bf">
-<div class="PREVIEW" id="org56f2ace">
+<div id="outline-container-org8af6aa5" class="outline-2">
+<h2 id="org8af6aa5">简介</h2>
+<div class="outline-text-2" id="text-org8af6aa5">
+<div class="PREVIEW" id="org0268943">
 <p>
 Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
 </p>
@@ -38,9 +38,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-org4e1111c" class="outline-2">
-<h2 id="org4e1111c">检查Apport服务状态</h2>
-<div class="outline-text-2" id="text-org4e1111c">
+<div id="outline-container-org2209516" class="outline-2">
+<h2 id="org2209516">检查Apport服务状态</h2>
+<div class="outline-text-2" id="text-org2209516">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl status apport.service 
 &#9679; apport.service - automatic crash report generation
@@ -56,22 +56,22 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-org12be1b9" class="outline-2">
-<h2 id="org12be1b9">启用Apport服务</h2>
-<div class="outline-text-2" id="text-org12be1b9">
+<div id="outline-container-org774b186" class="outline-2">
+<h2 id="org774b186">启用Apport服务</h2>
+<div class="outline-text-2" id="text-org774b186">
 </div>
-<div id="outline-container-orgcf7db7e" class="outline-3">
-<h3 id="orgcf7db7e">方法一：使用systemctl命令临时启用Apport</h3>
-<div class="outline-text-3" id="text-orgcf7db7e">
+<div id="outline-container-orgb34b85e" class="outline-3">
+<h3 id="orgb34b85e">方法一：使用systemctl命令临时启用Apport</h3>
+<div class="outline-text-3" id="text-orgb34b85e">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl start apport
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org0ea24b0" class="outline-3">
-<h3 id="org0ea24b0">方法二：修改配置文件永久启用Apport</h3>
-<div class="outline-text-3" id="text-org0ea24b0">
+<div id="outline-container-org32c4685" class="outline-3">
+<h3 id="org32c4685">方法二：修改配置文件永久启用Apport</h3>
+<div class="outline-text-3" id="text-org32c4685">
 <p>
 使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=0</code> 修改为 <code>enabled=1</code> 永久启用Apport。
 </p>
@@ -95,22 +95,22 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-orgeda8a46" class="outline-2">
-<h2 id="orgeda8a46">禁用Apport服务</h2>
-<div class="outline-text-2" id="text-orgeda8a46">
+<div id="outline-container-org96d2427" class="outline-2">
+<h2 id="org96d2427">禁用Apport服务</h2>
+<div class="outline-text-2" id="text-org96d2427">
 </div>
-<div id="outline-container-orgd983053" class="outline-3">
-<h3 id="orgd983053">方法一：使用systemctl命令临时禁用Apport</h3>
-<div class="outline-text-3" id="text-orgd983053">
+<div id="outline-container-orgd41c036" class="outline-3">
+<h3 id="orgd41c036">方法一：使用systemctl命令临时禁用Apport</h3>
+<div class="outline-text-3" id="text-orgd41c036">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl stop apport
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf104614" class="outline-3">
-<h3 id="orgf104614">方法二：修改配置文件永久禁用Apport</h3>
-<div class="outline-text-3" id="text-orgf104614">
+<div id="outline-container-orgf798dc0" class="outline-3">
+<h3 id="orgf798dc0">方法二：修改配置文件永久禁用Apport</h3>
+<div class="outline-text-3" id="text-orgf798dc0">
 <p>
 使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=1</code> 修改为 <code>enabled=0</code> 永久禁用Apport。
 </p>
@@ -134,9 +134,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-orgcba5da4" class="outline-2">
-<h2 id="orgcba5da4">清理缓存</h2>
-<div class="outline-text-2" id="text-orgcba5da4">
+<div id="outline-container-org0782076" class="outline-2">
+<h2 id="org0782076">清理缓存</h2>
+<div class="outline-text-2" id="text-org0782076">
 <p>
 缓存的错误日志位于此目录下： <code>/var/crash/</code> ，禁用Apport后，可以清理此目录下的文件。
 </p>

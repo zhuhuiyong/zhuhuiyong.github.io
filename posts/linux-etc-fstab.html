@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-04-27 日 14:15 -->
+<!-- 2025-05-19 一 09:42 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux中的/etc/fstab文件介绍</title>
@@ -27,10 +27,10 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux中的/etc/fstab文件介绍</h1>
-<div id="outline-container-orge116e1c" class="outline-2">
-<h2 id="orge116e1c">简介</h2>
-<div class="outline-text-2" id="text-orge116e1c">
-<div class="PREVIEW" id="orgf222f78">
+<div id="outline-container-org1c87f39" class="outline-2">
+<h2 id="org1c87f39">简介</h2>
+<div class="outline-text-2" id="text-org1c87f39">
+<div class="PREVIEW" id="org1f3ef35">
 <p>
 fstab文件包含了你的电脑上的存储设备及其文件系统的信息。它是决定一个硬盘（分区）被怎样使用或者说整合到整个系统中的文件。具体来说：用fstab可以自动挂载各种文件系统格式的硬盘、分区、可移动设备和远程设备等。
 </p>
@@ -45,9 +45,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org367f9ba" class="outline-2">
-<h2 id="org367f9ba">文件结构</h2>
-<div class="outline-text-2" id="text-org367f9ba">
+<div id="outline-container-orgae9db72" class="outline-2">
+<h2 id="orgae9db72">文件结构</h2>
+<div class="outline-text-2" id="text-orgae9db72">
 <p>
 <code>fstab</code> 文件位于 <code>/etc/</code> 目录中，由 <code>root</code> 用户拥有。因此，您应该使用 <code>sudo</code> 权限或以 <code>root</code> 用户身份编辑该文件。
 </p>
@@ -64,15 +64,15 @@ Fstab 文件由六列（部分）组成。
 <li>文件系统（file systems）： 要挂载的块设备。</li>
 <li>挂载点(mount point)：文件系统在系统中挂载的位置。</li>
 <li>文件系统类型（type）：文件系统类型（Ext4、Ext3、交换、Xfs 等）。</li>
-<li>选项（options）：这决定了挂载文件系统时要考虑的挂载参数。具体参数说明参见<a href="#orgd2e6b9b">选项（options）</a></li>
+<li>选项（options）：这决定了挂载文件系统时要考虑的挂载参数。具体参数说明参见<a href="#org9aaf9cf">选项（options）</a></li>
 <li>备份操作（dump）：dump utility用来决定是否做备份的. 允许的值是0和1。通常设置为0，dump就会忽略这个文件系统。</li>
 <li>是否以fsck检验扇区（pass）：由 fsck 实用程序在启动时检查文件系统，数值越大优先级越高。0将禁用文件系统检查。对于根文件系统，应将其设置为 1，对于其他分区，应将其设置为 2。</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgc4865c0" class="outline-2">
-<h2 id="orgc4865c0">选项（options）<a id="orgd2e6b9b"></a></h2>
-<div class="outline-text-2" id="text-orgc4865c0">
+<div id="outline-container-orgf6daf18" class="outline-2">
+<h2 id="orgf6daf18">选项（options）<a id="org9aaf9cf"></a></h2>
+<div class="outline-text-2" id="text-orgf6daf18">
 <ul class="org-ul">
 <li><code>noatime</code> 关闭atime特性，提高性能，这是一个很老的特性，放心关闭，还能减少loadcycle</li>
 <li><code>defaults</code> 使用默认设置。等于rw,suid,dev,exec,auto,nouser,async，具体含义看下面的解释。</li>

@@ -14,9 +14,9 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Fri, 21 Jun 2024 10:36:57 +0800</pubDate>
-  <lastBuildDate>Fri, 21 Jun 2024 10:36:57 +0800</lastBuildDate>
-  <generator>Emacs 29.3 Org-mode 9.6.15</generator>
+  <pubDate>Mon, 19 May 2025 09:42:06 +0800</pubDate>
+  <lastBuildDate>Mon, 19 May 2025 09:42:06 +0800</lastBuildDate>
+  <generator>Emacs 29.3 Org-mode 9.7.26</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
     <url>https://orgmode.org/img/org-mode-unicorn-logo.png</url>
@@ -36,11 +36,10 @@
     </p>
 
     <p>
-    <a href="uml-class-diagrams.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/uml-class-diagrams.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>SpringBoot处理CORS跨域请求</title>
     <link>https://laozhuzhu.com/posts/spring-cors.html</link>
@@ -61,11 +60,10 @@
     </p>
 
     <p>
-    <a href="spring-cors.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/spring-cors.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>不同编程语言实现方式：时间戳（Timestamp）</title>
     <link>https://laozhuzhu.com/posts/multiple-code-impl-timestamp.html</link>
@@ -82,11 +80,10 @@
     </p>
 
     <p>
-    <a href="multiple-code-impl-timestamp.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/multiple-code-impl-timestamp.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>Linux区域设置（locale）</title>
     <link>https://laozhuzhu.com/posts/linux-locale-environment-variables.html</link>
@@ -107,11 +104,62 @@
     </p>
 
     <p>
-    <a href="linux-locale-environment-variables.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/linux-locale-environment-variables.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
+  <item>
+    <title>Linux中的/etc/fstab文件介绍</title>
+    <link>https://laozhuzhu.com/posts/linux-etc-fstab.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">linux-etc-fstab.org</guid>
+    <pubDate>Tue, 03 Sep 2024 13:32:00 +0800</pubDate>
 
+    <description><![CDATA[<p>
+    fstab文件包含了你的电脑上的存储设备及其文件系统的信息。它是决定一个硬盘（分区）被怎样使用或者说整合到整个系统中的文件。具体来说：用fstab可以自动挂载各种文件系统格式的硬盘、分区、可移动设备和远程设备等。
+    </p>
+
+    <p>
+    fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够用你喜欢的编辑器打开它，但是必须是root用户才能编辑它。同时fsck、mount、umount的等命令都利用该程序。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/linux-etc-fstab.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+  <item>
+    <title>Linux mkisofs命令：制作ISO映像文件</title>
+    <link>https://laozhuzhu.com/posts/linux-command-mkisofs.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">linux-command-mkisofs.org</guid>
+    <pubDate>Fri, 16 May 2025 10:20:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    <code>mkisofs</code> 是一个多功能命令行实用程序，用于从目录创建 ISO 映像文件。ISO文件是光盘映像文件，可用于分发大量文件、进行备份或创建可引导媒体。该命令也称为 <code>genisoimage</code> 。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/linux-command-mkisofs.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+  <item>
+    <title>Linux Find命令：查找文件</title>
+    <link>https://laozhuzhu.com/posts/linux-command-find.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">linux-command-find.org</guid>
+    <pubDate>Sun, 27 Apr 2025 14:16:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    find 命令是 Linux 系统中非常强大和灵活的文件查找工具，可以用来根据各种条件查找文件，包括文件名、大小、类型、修改时间以及文件权限等。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/linux-command-find.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
   <item>
     <title>How to Mock Environment Variables in Unit Tests</title>
     <link>https://laozhuzhu.com/posts/java-unit-testing-environment-variables.html</link>
@@ -132,11 +180,26 @@
     </p>
 
     <p>
-    <a href="java-unit-testing-environment-variables.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/java-unit-testing-environment-variables.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
+  <item>
+    <title>如何在Ubuntu中删除多余的内核</title>
+    <link>https://laozhuzhu.com/posts/how-to-remove-ubuntu-kernel.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-remove-ubuntu-kernel.org</guid>
+    <pubDate>Wed, 12 Feb 2025 08:59:00 +0800</pubDate>
 
+    <description><![CDATA[<p>
+    删除和清理不再使用的多余内核可以释放磁盘空间、提高利用率，并避免潜在的存储空间不足。本文将介绍在 <code>Ubuntu</code> 系统中删除多余内核的几种方法。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/how-to-remove-ubuntu-kernel.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
   <item>
     <title>如何移除MySQL字段中的Html标签</title>
     <link>https://laozhuzhu.com/posts/how-to-remove-html-tags-in-mysql.html</link>
@@ -149,11 +212,26 @@
     </p>
 
     <p>
-    <a href="how-to-remove-html-tags-in-mysql.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-remove-html-tags-in-mysql.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
+  <item>
+    <title>如何在Linux中生成字符串</title>
+    <link>https://laozhuzhu.com/posts/how-to-gen-strings-on-linux.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-gen-strings-on-linux.org</guid>
+    <pubDate>Fri, 07 Feb 2025 10:12:00 +0800</pubDate>
 
+    <description><![CDATA[<p>
+    本文介绍如何在Linux中，使用Shell命令生成随机长度的字段串，如何获取字符串长度。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/how-to-gen-strings-on-linux.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
   <item>
     <title>查看Java .class文件版本号</title>
     <link>https://laozhuzhu.com/posts/how-to-find-java-class-file-version.html</link>
@@ -166,11 +244,10 @@
     </p>
 
     <p>
-    <a href="how-to-find-java-class-file-version.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-find-java-class-file-version.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>如何在Linux Shell中获取本周的第一天和最后一天</title>
     <link>https://laozhuzhu.com/posts/how-to-find-first-and-last-day-of-a-week-in-shell.html</link>
@@ -183,11 +260,66 @@
     </p>
 
     <p>
-    <a href="how-to-find-first-and-last-day-of-a-week-in-shell.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-find-first-and-last-day-of-a-week-in-shell.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
+  <item>
+    <title>Linux系统中查找域名IP地址的方法</title>
+    <link>https://laozhuzhu.com/posts/how-to-find-domain-ip.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-find-domain-ip.org</guid>
+    <pubDate>Thu, 04 Jul 2024 09:25:00 +0800</pubDate>
 
+    <description><![CDATA[<p>
+    在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
+    </p>
+
+    <p>
+    方法一： <code>dig</code>  命令。
+    </p>
+
+    <p>
+    方法二： <code>host</code> 命令。
+    </p>
+
+    <p>
+    方法三： <code>nslookup</code> 命令。
+    </p>
+
+    <p>
+    方法四： <code>ping</code> 命令。
+    </p>
+
+    <p>
+    方法五： <code>wget</code> 命令。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/how-to-find-domain-ip.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+  <item>
+    <title>如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</title>
+    <link>https://laozhuzhu.com/posts/how-to-enable-clipboard-sharing-in-qemu-kvm.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">how-to-enable-clipboard-sharing-in-qemu-kvm.org</guid>
+    <pubDate>Fri, 11 Oct 2024 15:15:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
+    </p>
+
+    <p>
+    本文将介绍如何实现这一功能。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/how-to-enable-clipboard-sharing-in-qemu-kvm.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
   <item>
     <title>如何禁用F12浏览器开发者工具</title>
     <link>https://laozhuzhu.com/posts/how-to-disable-f12-devtools-in-browser.html</link>
@@ -204,11 +336,10 @@
     </p>
 
     <p>
-    <a href="how-to-disable-f12-devtools-in-browser.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-disable-f12-devtools-in-browser.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>如何清除GitHub提交历史记录</title>
     <link>https://laozhuzhu.com/posts/how-to-delete-commit-history-in-github.html</link>
@@ -225,11 +356,10 @@
     </p>
 
     <p>
-    <a href="how-to-delete-commit-history-in-github.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-delete-commit-history-in-github.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>Linux中如何实现大文件分卷压缩和合并解压</title>
     <link>https://laozhuzhu.com/posts/how-to-compress-and-split-files-in-linux.html</link>
@@ -258,11 +388,10 @@
     </p>
 
     <p>
-    <a href="how-to-compress-and-split-files-in-linux.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-compress-and-split-files-in-linux.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>如何在编译Java时保留方法参数名</title>
     <link>https://laozhuzhu.com/posts/how-to-compile-java-class-to-include-method-parameter-names.html</link>
@@ -280,11 +409,10 @@
     </p>
 
     <p>
-    <a href="how-to-compile-java-class-to-include-method-parameter-names.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-compile-java-class-to-include-method-parameter-names.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>如何清理Linux系统日志</title>
     <link>https://laozhuzhu.com/posts/how-to-clean-linux-system-journal-logs.html</link>
@@ -309,11 +437,10 @@
     </p>
 
     <p>
-    <a href="how-to-clean-linux-system-journal-logs.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-clean-linux-system-journal-logs.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>Java反射：判断方法是Getter还是Setter</title>
     <link>https://laozhuzhu.com/posts/how-to-check-method-is-get-or-set-in-java.html</link>
@@ -326,11 +453,10 @@
     </p>
 
     <p>
-    <a href="how-to-check-method-is-get-or-set-in-java.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-check-method-is-get-or-set-in-java.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>Linux下如何修改路由表优先级</title>
     <link>https://laozhuzhu.com/posts/how-to-change-route-priority-on-linux.html</link>
@@ -351,11 +477,10 @@
     </p>
 
     <p>
-    <a href="how-to-change-route-priority-on-linux.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/how-to-change-route-priority-on-linux.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
-
   <item>
     <title>Executable Comments in Java</title>
     <link>https://laozhuzhu.com/posts/executable-comments-in-java.html</link>
@@ -372,11 +497,26 @@
     </p>
 
     <p>
-    <a href="executable-comments-in-java.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/executable-comments-in-java.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
+  <item>
+    <title>Ubuntu系统启用禁用崩溃检测报告功能（Apport）</title>
+    <link>https://laozhuzhu.com/posts/apport-enable-disable.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">apport-enable-disable.org</guid>
+    <pubDate>Tue, 07 Jan 2025 09:39:00 +0800</pubDate>
 
+    <description><![CDATA[<p>
+    Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/apport-enable-disable.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
   <item>
     <title>ASCII Code - The extended ASCII table</title>
     <link>https://laozhuzhu.com/posts/ASCIICode.html</link>
@@ -396,7 +536,7 @@
     </p>
 
     <p>
-    <a href="ASCIICode.html">(Read more)</a>
+    <a href="https://laozhuzhu.com/ASCIICode.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
