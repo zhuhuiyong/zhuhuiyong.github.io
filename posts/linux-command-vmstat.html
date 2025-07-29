@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 12:49 -->
+<!-- 2025-07-29 二 13:05 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux vmstat命令：虚拟内存统计</title>
@@ -27,7 +27,7 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux vmstat命令：虚拟内存统计</h1>
-<div class="PREVIEW" id="orgda6c1ab">
+<div class="PREVIEW" id="orge2d0848">
 <p>
 <code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
 </p>
@@ -41,11 +41,11 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org8db1d4b" class="outline-2">
-<h2 id="org8db1d4b">vmstat 输出参数的解释</h2>
-<div class="outline-text-2" id="text-org8db1d4b">
+<div id="outline-container-orgacc258e" class="outline-2">
+<h2 id="orgacc258e">vmstat 输出参数</h2>
+<div class="outline-text-2" id="text-orgacc258e">
 <p>
-<b>Proc</b>
+<b>进程（Proc）</b>
 </p>
 
 <ul class="org-ul">
@@ -54,17 +54,17 @@
 </ul>
 
 <p>
-<b>Memory</b>
+<b>内存（Memory）</b>
 </p>
 <ul class="org-ul">
-<li>swpd：使用的虚拟内存大小，如果这个值大于0，表示物理内存可能不足。</li>
-<li>free：空闲的物理内存大小。</li>
-<li>buff：用于存储目录内容、权限等信息的缓存大小。</li>
-<li>cache：用于文件缓冲的内存大小。</li>
+<li>swpd：使用的虚拟内存大小（单位：KB），如果这个值大于0，表示物理内存可能不足。</li>
+<li>free：空闲的物理内存大小（单位：KB）。</li>
+<li>buff：用于Buffer的内存大小（单位：KB）。</li>
+<li>cache：用于Cache的内存大小（单位：KB）。</li>
 </ul>
 
 <p>
-<b>Swap</b>
+<b>交换空间（Swap）</b>
 </p>
 <ul class="org-ul">
 <li>si：每秒从磁盘读入虚拟内存的大小，如果这个值大于0，可能表示物理内存不足或存在内存泄露。</li>
@@ -78,6 +78,15 @@
 <ul class="org-ul">
 <li>bi：块设备每秒接收的块数量，默认块大小是1024字节。</li>
 <li>bo：块设备每秒发送的块数量。</li>
+</ul>
+
+<p>
+<b>系统（System）</b>
+</p>
+
+<ul class="org-ul">
+<li>in：每秒的中断次数。</li>
+<li>cs：每秒的上下文切换次数</li>
 </ul>
 
 <p>
@@ -123,7 +132,7 @@
 <div id="postamble" class="status">
 <div id="footer">
     Copyright 2023 - 2024 LaoZhuZhu.COM<br>
-    Last updated 2025-07-29 二 12:49<br>
+    Last updated 2025-07-29 二 13:05<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
 </div>

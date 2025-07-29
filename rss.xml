@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Tue, 29 Jul 2025 12:49:23 +0800</pubDate>
-  <lastBuildDate>Tue, 29 Jul 2025 12:49:23 +0800</lastBuildDate>
+  <pubDate>Tue, 29 Jul 2025 13:05:57 +0800</pubDate>
+  <lastBuildDate>Tue, 29 Jul 2025 13:05:57 +0800</lastBuildDate>
   <generator>Emacs 29.3 Org-mode 9.7.26</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -133,7 +133,7 @@
     <link>https://laozhuzhu.com/posts/linux-command-vmstat.html</link>
     <author>Laozhuzhu.COM (zhuhy)</author>
     <guid isPermaLink="false">linux-command-vmstat.org</guid>
-    <pubDate>Tue, 29 Jul 2025 12:49:00 +0800</pubDate>
+    <pubDate>Tue, 29 Jul 2025 13:05:00 +0800</pubDate>
 
     <description><![CDATA[<p>
     <code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
