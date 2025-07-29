@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-24 四 11:23 -->
+<!-- 2025-07-29 二 13:08 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何在编译Java时保留方法参数名</title>
@@ -27,7 +27,7 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">如何在编译Java时保留方法参数名</h1>
-<div class="PREVIEW" id="orgcb71a2f">
+<div class="PREVIEW" id="orgc5b1c42">
 <p>
 在Java 8之前的版本，代码编译为class文件后，方法参数的类型是固定的，但参数名称却丢失了，参数名会变成arg0、arg1&#x2026;.。而现在，在Java8开始可以在class文件中保留参数名，这就给反射带来了极大的遍历。
 如果需要保留方法参数名，在编译时，可以启用 <code>-parameters</code> 选项，默认情况下此选项是关闭的。
@@ -84,9 +84,9 @@ name: num, type: int
 name: message, type: class java.lang.String
 </pre>
 </div>
-<div id="outline-container-org6ed6822" class="outline-2">
-<h2 id="org6ed6822">Maven设置</h2>
-<div class="outline-text-2" id="text-org6ed6822">
+<div id="outline-container-org8899c53" class="outline-2">
+<h2 id="org8899c53">Maven设置</h2>
+<div class="outline-text-2" id="text-org8899c53">
 <div class="org-src-container">
 <pre class="src src-xml">.............
 &lt;<span style="color: #bc6ec5; font-weight: bold;">plugin</span>&gt;
@@ -107,17 +107,17 @@ name: message, type: class java.lang.String
 </div>
 </div>
 </div>
-<div id="outline-container-org7e808ae" class="outline-2">
-<h2 id="org7e808ae">Eclipse设置</h2>
-<div class="outline-text-2" id="text-org7e808ae">
+<div id="outline-container-orga097b72" class="outline-2">
+<h2 id="orga097b72">Eclipse设置</h2>
+<div class="outline-text-2" id="text-orga097b72">
 <p>
 <code>Preferences</code> -&gt; <code>java</code> -&gt; <code>Compiler</code> 下勾选 <code>Store information about method parameters</code> 选项。
 </p>
 </div>
 </div>
-<div id="outline-container-org4020e05" class="outline-2">
-<h2 id="org4020e05">Idea设置</h2>
-<div class="outline-text-2" id="text-org4020e05">
+<div id="outline-container-orgeb8a8f3" class="outline-2">
+<h2 id="orgeb8a8f3">Idea设置</h2>
+<div class="outline-text-2" id="text-orgeb8a8f3">
 <p>
 <code>File</code> -&gt; <code>Settings</code> -&gt; <code>Build,Execution,Deployment</code> -&gt; <code>Java Compiler</code> 下的 <code>Additional command line parameters</code> 选项中添加 <code>-parameters</code> 。
 </p>
@@ -126,7 +126,7 @@ name: message, type: class java.lang.String
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2024-06-21 五 10:31<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

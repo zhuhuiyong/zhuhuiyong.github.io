@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-24 四 11:23 -->
+<!-- 2025-07-29 二 13:08 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux系统中查找域名IP地址的方法</title>
@@ -27,10 +27,10 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux系统中查找域名IP地址的方法</h1>
-<div id="outline-container-orgf8560b0" class="outline-2">
-<h2 id="orgf8560b0">简介</h2>
-<div class="outline-text-2" id="text-orgf8560b0">
-<div class="PREVIEW" id="org1764900">
+<div id="outline-container-orge44b27c" class="outline-2">
+<h2 id="orge44b27c">简介</h2>
+<div class="outline-text-2" id="text-orge44b27c">
+<div class="PREVIEW" id="org7b36c6e">
 <p>
 在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
 </p>
@@ -58,9 +58,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org968aedc" class="outline-2">
-<h2 id="org968aedc">方法一：dig</h2>
-<div class="outline-text-2" id="text-org968aedc">
+<div id="outline-container-org6fbc4c1" class="outline-2">
+<h2 id="org6fbc4c1">方法一：dig</h2>
+<div class="outline-text-2" id="text-org6fbc4c1">
 <div class="org-src-container">
 <pre class="src src-shell">$ dig bing.com
 
@@ -87,9 +87,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgf4d6a23" class="outline-2">
-<h2 id="orgf4d6a23">方法二：host</h2>
-<div class="outline-text-2" id="text-orgf4d6a23">
+<div id="outline-container-org0d9e2e8" class="outline-2">
+<h2 id="org0d9e2e8">方法二：host</h2>
+<div class="outline-text-2" id="text-org0d9e2e8">
 <div class="org-src-container">
 <pre class="src src-shell">$ host bing.com
 bing.com has address <span style="color: #a45bad;">13.107.21.200</span>
@@ -100,9 +100,9 @@ bing.com mail is handled by <span style="color: #a45bad;">10</span> bing-com.mai
 </div>
 </div>
 </div>
-<div id="outline-container-org9b599f7" class="outline-2">
-<h2 id="org9b599f7">方法三：nslookup</h2>
-<div class="outline-text-2" id="text-org9b599f7">
+<div id="outline-container-org37ab1b5" class="outline-2">
+<h2 id="org37ab1b5">方法三：nslookup</h2>
+<div class="outline-text-2" id="text-org37ab1b5">
 <div class="org-src-container">
 <pre class="src src-shell">~$ nslookup bing.com
 Server:   <span style="color: #a45bad;">127.0.0.53</span>
@@ -120,9 +120,9 @@ Address: <span style="color: #a45bad;">2620:1ec:c11::200</span>
 </div>
 </div>
 </div>
-<div id="outline-container-org2fd82f5" class="outline-2">
-<h2 id="org2fd82f5">方法四：ping</h2>
-<div class="outline-text-2" id="text-org2fd82f5">
+<div id="outline-container-orga9c471e" class="outline-2">
+<h2 id="orga9c471e">方法四：ping</h2>
+<div class="outline-text-2" id="text-orga9c471e">
 <div class="org-src-container">
 <pre class="src src-shell">$ ping bing.com -c <span style="color: #a45bad;">1</span>
 PING bing.com <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">204.79.197.200</span><span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">56</span><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">84</span><span style="color: #4f97d7;">)</span> bytes of data.
@@ -135,9 +135,9 @@ rtt min/avg/max/mdev = <span style="color: #a45bad;">78.368/78.368/78.368/0.000<
 </div>
 </div>
 </div>
-<div id="outline-container-org98e68e9" class="outline-2">
-<h2 id="org98e68e9">方法五：wget</h2>
-<div class="outline-text-2" id="text-org98e68e9">
+<div id="outline-container-orgc1d8d0b" class="outline-2">
+<h2 id="orgc1d8d0b">方法五：wget</h2>
+<div class="outline-text-2" id="text-orgc1d8d0b">
 <div class="org-src-container">
 <pre class="src src-shell">$ wget --spider bing.com
 Spider mode enabled. Check if remote file exists.
@@ -161,7 +161,7 @@ but recursion is disabled -- not retrieving.
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2024-07-04 四 09:25<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
