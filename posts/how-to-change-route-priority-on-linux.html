@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-05-19 一 09:42 -->
+<!-- 2025-07-24 四 11:23 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux下如何修改路由表优先级</title>
@@ -27,10 +27,10 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux下如何修改路由表优先级</h1>
-<div id="outline-container-org0eb5b0b" class="outline-2">
-<h2 id="org0eb5b0b">简介</h2>
-<div class="outline-text-2" id="text-org0eb5b0b">
-<div class="preview" id="org2752590">
+<div id="outline-container-org8f7aa2b" class="outline-2">
+<h2 id="org8f7aa2b">简介</h2>
+<div class="outline-text-2" id="text-org8f7aa2b">
+<div class="preview" id="orgb86d6e2">
 <p>
 在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
 </p>
@@ -46,16 +46,16 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orga9e6e30" class="outline-2">
-<h2 id="orga9e6e30">路由优先级</h2>
-<div class="outline-text-2" id="text-orga9e6e30">
+<div id="outline-container-orga4075cb" class="outline-2">
+<h2 id="orga4075cb">路由优先级</h2>
+<div class="outline-text-2" id="text-orga4075cb">
 <p>
 如果您有两条路由用于完全相同的目的地（例如，这两条路由都适用于192.168.1.0/24），则会根据其 <code>metric</code> 参数进行比较： <code>metric</code> 值越小，优先级越高。
 </p>
 </div>
-<div id="outline-container-orge0c4bf4" class="outline-3">
-<h3 id="orge0c4bf4">查看路由优先级</h3>
-<div class="outline-text-3" id="text-orge0c4bf4">
+<div id="outline-container-org103e771" class="outline-3">
+<h3 id="org103e771">查看路由优先级</h3>
+<div class="outline-text-3" id="text-org103e771">
 <p>
 可以使用以下命令，查看路由优先级。
 </p>
@@ -86,13 +86,13 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 </div>
 </div>
 </div>
-<div id="outline-container-org97dcb22" class="outline-2">
-<h2 id="org97dcb22">修改路由优先级</h2>
-<div class="outline-text-2" id="text-org97dcb22">
+<div id="outline-container-org310026f" class="outline-2">
+<h2 id="org310026f">修改路由优先级</h2>
+<div class="outline-text-2" id="text-org310026f">
 </div>
-<div id="outline-container-orga3d98a1" class="outline-3">
-<h3 id="orga3d98a1">临时修改方法</h3>
-<div class="outline-text-3" id="text-orga3d98a1">
+<div id="outline-container-orgbd99f2f" class="outline-3">
+<h3 id="orgbd99f2f">临时修改方法</h3>
+<div class="outline-text-3" id="text-orgbd99f2f">
 <p>
 可以使用以下命令，修改路由优先级。
 </p>
@@ -117,13 +117,13 @@ $ sudo ip route add default via y.y.y.y dev wlp3s0 metric <span style="color: #a
 </div>
 </div>
 </div>
-<div id="outline-container-orge48740e" class="outline-3">
-<h3 id="orge48740e">永久修改方法</h3>
-<div class="outline-text-3" id="text-orge48740e">
+<div id="outline-container-org62fb93d" class="outline-3">
+<h3 id="org62fb93d">永久修改方法</h3>
+<div class="outline-text-3" id="text-org62fb93d">
 </div>
-<div id="outline-container-orgbd52b30" class="outline-4">
-<h4 id="orgbd52b30">检查当前网络连接的管理方式</h4>
-<div class="outline-text-4" id="text-orgbd52b30">
+<div id="outline-container-org618fed6" class="outline-4">
+<h4 id="org618fed6">检查当前网络连接的管理方式</h4>
+<div class="outline-text-4" id="text-org618fed6">
 <p>
 如果使用 <code>nmcli</code> 命令有类似如下的输出结果，就表示你的系统当前使用的是Network Manager。
 </p>
@@ -143,9 +143,9 @@ docker0          bridge    connected <span style="color: #4f97d7;">(</span>exter
 </p>
 </div>
 </div>
-<div id="outline-container-org75772e4" class="outline-4">
-<h4 id="org75772e4">使用nmcli</h4>
-<div class="outline-text-4" id="text-org75772e4">
+<div id="outline-container-org17d1a36" class="outline-4">
+<h4 id="org17d1a36">使用nmcli</h4>
+<div class="outline-text-4" id="text-org17d1a36">
 <p>
 执行以下命令，可以将当前连接的 <code>metrics</code> 修改为 <code>10</code> 。
 </p>
@@ -166,7 +166,7 @@ Connection successfully activated <span style="color: #4f97d7;">(</span>D-Bus ac
 </div>
 
 <p>
-现在，此连接的 <code>metrics</code> 应该已经被我们设置为 <code>10</code> 了，你可以按照“<a href="#orge0c4bf4">查看路由优先级</a>”章节的描述，检查下我们的修改是否生效了。
+现在，此连接的 <code>metrics</code> 应该已经被我们设置为 <code>10</code> 了，你可以按照“<a href="#org103e771">查看路由优先级</a>”章节的描述，检查下我们的修改是否生效了。
 </p>
 
 <p>

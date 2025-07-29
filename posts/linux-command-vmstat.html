@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-07-29 二 12:49 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux vmstat命令：虚拟内存统计</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Linux vmstat命令：虚拟内存统计</h1>
+<div class="PREVIEW" id="orgda6c1ab">
+<p>
+<code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
+</p>
+
+</div>
+<div id="outline-container-orgf28ffe9" class="outline-2">
+<h2 id="orgf28ffe9">vmstat命令的使用</h2>
+<div class="outline-text-2" id="text-orgf28ffe9">
+<p>
+<code>vmstat</code> 命令通常通过两个数字参数来使用，第一个参数是采样的时间间隔数（单位是秒），第二个参数是采样的次数。例如， <code>vmstat 2 1</code> 表示每两秒采集一次服务器状态，只采集一次。如果想要持续监控，可以只指定时间间隔，如 <code>vmstat 2</code> ，这样 <code>vmstat</code> 会每两秒采集数据，直到手动停止命令。
+</p>
+</div>
+</div>
+<div id="outline-container-org8db1d4b" class="outline-2">
+<h2 id="org8db1d4b">vmstat 输出参数的解释</h2>
+<div class="outline-text-2" id="text-org8db1d4b">
+<p>
+<b>Proc</b>
+</p>
+
+<ul class="org-ul">
+<li>r：运行队列的进程数，即分配到CPU的进程数。当这个值超过CPU数量时，可能会出现CPU瓶颈。</li>
+<li>b：等待I/O的进程数。</li>
+</ul>
+
+<p>
+<b>Memory</b>
+</p>
+<ul class="org-ul">
+<li>swpd：使用的虚拟内存大小，如果这个值大于0，表示物理内存可能不足。</li>
+<li>free：空闲的物理内存大小。</li>
+<li>buff：用于存储目录内容、权限等信息的缓存大小。</li>
+<li>cache：用于文件缓冲的内存大小。</li>
+</ul>
+
+<p>
+<b>Swap</b>
+</p>
+<ul class="org-ul">
+<li>si：每秒从磁盘读入虚拟内存的大小，如果这个值大于0，可能表示物理内存不足或存在内存泄露。</li>
+<li>so：每秒虚拟内存写入磁盘的大小。</li>
+</ul>
+
+<p>
+<b>IO</b>
+</p>
+
+<ul class="org-ul">
+<li>bi：块设备每秒接收的块数量，默认块大小是1024字节。</li>
+<li>bo：块设备每秒发送的块数量。</li>
+</ul>
+
+<p>
+<b>CPU</b>
+</p>
+
+<ul class="org-ul">
+<li>in：每秒CPU的中断次数，包括时间中断。</li>
+<li>cs：每秒上下文切换次数。</li>
+<li>us：用户CPU时间。</li>
+<li>sy：系统CPU时间。</li>
+<li>id：空闲CPU时间。</li>
+<li>wa：等待I/O的CPU时间。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org371fe6e" class="outline-2">
+<h2 id="org371fe6e">vmstat命令的高级用法</h2>
+<div class="outline-text-2" id="text-org371fe6e">
+<p>
+除了基本的使用方法外，vmstat还提供了一些高级选项，例如：
+</p>
+
+<ul class="org-ul">
+<li>vmstat -a：显示活跃和非活跃内存。</li>
+<li>vmstat -f：显示从系统启动至今的fork数量。</li>
+<li>vmstat -s：显示内存使用的详细信息。</li>
+<li>vmstat -d：查看磁盘的读/写情况。</li>
+<li>vmstat -p /dev/sda1：显示指定磁盘分区的统计信息。</li>
+<li>vmstat -m：查看系统的slab信息。</li>
+</ul>
+
+<p>
+在使用 <code>vmstat</code> 进行性能监控时，需要注意的是，如果运行队列（r）经常大于4，空闲CPU时间（id）经常少于40%，则表明CPU负荷较重。如果块设备的读写（bi和bo）长期不为0，表明内存可能不足。如果磁盘的读写（disk）经常不为0，并且等待I/O的进程队列（b）大于3，表明I/O性能可能不佳。
+</p>
+
+<p>
+通过对 <code>vmstat</code> 命令输出的理解和分析，系统管理员可以对Linux系统进行性能调优，以确保系统的高稳定性和可靠性。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2025-07-29 二 12:49<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
+</div>
+</div>
+</body>
+</html>

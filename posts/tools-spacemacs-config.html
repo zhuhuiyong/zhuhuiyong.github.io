@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-07-24 四 11:23 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spacemacs配置</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="/themes/readtheorg/css/readtheorg.css"/>
+<script type="text/javascript" src="/themes/readtheorg/lib/js/jquery.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/lib/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="/themes/readtheorg/js/readtheorg.js"></script>
+<style> #content{max-width:1800px;}</style>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">Spacemacs配置</h1>
+<div id="outline-container-org90d2563" class="outline-2">
+<h2 id="org90d2563">user-init</h2>
+<div class="outline-text-2" id="text-org90d2563">
+</div>
+<div id="outline-container-org465111f" class="outline-3">
+<h3 id="org465111f">使用国内镜像</h3>
+<div class="outline-text-3" id="text-org465111f">
+<div class="org-src-container">
+<pre class="src src-nil">  ;; 国内镜像
+(setq configuration-layer-elpa-archives
+      '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ;;("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+        ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+
+)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org7dd82af" class="outline-2">
+<h2 id="org7dd82af">user-config</h2>
+<div class="outline-text-2" id="text-org7dd82af">
+</div>
+<div id="outline-container-org4dfa38a" class="outline-3">
+<h3 id="org4dfa38a">常规设置</h3>
+<div class="outline-text-3" id="text-org4dfa38a">
+</div>
+<div id="outline-container-org6379355" class="outline-4">
+<h4 id="org6379355">禁用高亮当前行</h4>
+<div class="outline-text-4" id="text-org6379355">
+<div class="org-src-container">
+<pre class="src src-nil">(global-hl-line-mode -1) ; Disable current line highlight
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf456651" class="outline-4">
+<h4 id="orgf456651">中英文字体等宽</h4>
+<div class="outline-text-4" id="text-orgf456651">
+<div class="org-src-container">
+<pre class="src src-nil">(use-package cnfonts
+  :ensure t
+  :init
+  (cnfonts-mode 1)
+  (message "^_^ cnfonts loaded!")
+  :config
+  (setq cnfonts-enable 1))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org10da9f3" class="outline-4">
+<h4 id="org10da9f3">在标题栏提示你目前所在位置</h4>
+<div class="outline-text-4" id="text-org10da9f3">
+<div class="org-src-container">
+<pre class="src src-nil">;; 在标题栏提示你目前所在位置.
+(setq frame-title-format '("^_^ Emacs@"system-name": %b %+%+ %f"))
+</pre>
+</div>
+
+<p>
+参考：
+</p>
+
+<p>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/efaq/Displaying-the-current-file-name-in-the-titlebar.html">Displaying-the-current-file-name-in-the-titlebar on gnu org</a>
+</p>
+
+<p>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/efaq/Displaying-the-current-file-name-in-the-titlebar.html">EmacsWiki FrameTitle</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org455b81f" class="outline-4">
+<h4 id="org455b81f">用空格代替tab</h4>
+<div class="outline-text-4" id="text-org455b81f">
+<div class="org-src-container">
+<pre class="src src-nil">;; 用空格代替tab
+(setq-default indent-tabs-mode nil)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd54491a" class="outline-4">
+<h4 id="orgd54491a">启用菜单栏</h4>
+<div class="outline-text-4" id="text-orgd54491a">
+<div class="org-src-container">
+<pre class="src src-nil">;; 启用菜单栏
+(menu-bar-mode)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org358c884" class="outline-3">
+<h3 id="org358c884">org-mode设置</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2024 LaoZhuZhu.COM<br>
+    Last updated 2025-07-24 四 11:15<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
+</div>
+</div>
+</body>
+</html>
