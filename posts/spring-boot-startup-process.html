@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-02-15 日 22:27 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SpringBoot源码解析：SpringApplication启动流程</title>
+<meta name="author" content="zhuhy" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
+<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<hr style="border-top: 1px solid black;">
+<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
+    <div>
+        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
+        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
+        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
+    </div>
+</div>
+<hr style="border-top: 1px solid black;">
+</div>
+<div id="content" class="content">
+<h1 class="title">SpringBoot源码解析：SpringApplication启动流程</h1>
+<div id="outline-container-org77f3378" class="outline-2">
+<h2 id="org77f3378">概述</h2>
+<div class="outline-text-2" id="text-org77f3378">
+<div class="preview" id="orgdda5e6a">
+<p>
+SpringBoot的核心优势之一便是“约定优于配置”的自动化启动机制，而这一切的入口都源于 <code>SpringApplication</code> 类。无论是通过 <code>SpringApplication.run()</code> 静态方法启动，还是手动实例化 <code>SpringApplication</code> 后调用 <code>run()</code> 方法，其底层都遵循一套固定的启动流程。
+</p>
+
+</div>
+<p>
+SpringApplication的启动流程本质上是“初始化准备-环境构建-上下文创建-刷新启动-回调通知”的闭环过程，核心目标是完成Spring容器的初始化、Bean的扫描与实例化、自动化配置的激活，最终启动应用并对外提供服务。整个流程可划分为三大核心阶段：
+</p>
+
+<ol class="org-ol">
+<li><b>初始化阶段</b> ：实例化SpringApplication对象，加载核心组件（初始化器、监听器），判断应用类型（Servlet/Reactive/NONE）。</li>
+<li><b>运行阶段</b> ：优化环境准备流程、精简上下文创建链路，强化对原生Java特性的兼容，核心Spring容器启动逻辑保持稳定但性能有提升。</li>
+<li><b>异常处理与结束阶段</b> ：处理启动过程中的异常，触发启动完成/失败回调，释放资源。</li>
+</ol>
+
+<p>
+本文将基于SpringBoot4.0.x版本源码角度出发，详细拆解 <code>SpringApplication</code> 的完整启动链路。
+</p>
+</div>
+</div>
+<div id="outline-container-orgf5c2d33" class="outline-2">
+<h2 id="orgf5c2d33">初始化阶段：SpringApplication对象的创建</h2>
+<div class="outline-text-2" id="text-orgf5c2d33">
+<p>
+初始化阶段的核心是构建SpringApplication实例，完成基础组件的加载与初始化。启动入口通常有两种写法，本质逻辑一致：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#26041;&#24335;1&#65306;&#38745;&#24577;&#26041;&#27861;&#30452;&#25509;&#21551;&#21160;</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">main</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">[]</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    SpringApplication.run<span style="color: #bc6ec5;">(</span>Application.<span style="color: #4f97d7; font-weight: bold;">class</span>, args<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#26041;&#24335;2&#65306;&#25163;&#21160;&#23454;&#20363;&#21270;&#21518;&#21551;&#21160;&#65288;&#25903;&#25345;&#33258;&#23450;&#20041;&#37197;&#32622;&#65289;</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">main</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">[]</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">SpringApplication</span> <span style="color: #7590db;">app</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SpringApplication</span><span style="color: #bc6ec5;">(</span>Application.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #bc6ec5;">)</span>;
+    app.setBannerMode<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">Banner</span>.<span style="color: #a45bad;">Mode</span>.CONSOLE<span style="color: #bc6ec5;">)</span>;
+    app.setLogStartupInfo<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">false</span><span style="color: #bc6ec5;">)</span>;
+    app.run<span style="color: #bc6ec5;">(</span>args<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-orgc80dd8e" class="outline-3">
+<h3 id="orgc80dd8e">静态run()方法的逻辑</h3>
+<div class="outline-text-3" id="text-orgc80dd8e">
+<p>
+静态 <code>run()</code> 方法，用于实例化SpringApplication并调用其成员方法 <code>run()</code> ，源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #bc6ec5; font-weight: bold;">run</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">primarySource</span>, <span style="color: #ce537a; font-weight: bold;">String</span>... <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> run<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #2d9574;">&lt;</span>?<span style="color: #2d9574;">&gt;[]{</span>primarySource<span style="color: #2d9574;">}</span>, args<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #bc6ec5; font-weight: bold;">run</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;[]</span> <span style="color: #7590db;">primarySources</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">[]</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#23454;&#20363;&#21270;SpringApplication&#24182;&#35843;&#29992;run&#26041;&#27861;</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SpringApplication</span><span style="color: #bc6ec5;">(</span>primarySources<span style="color: #bc6ec5;">)</span>.run<span style="color: #bc6ec5;">(</span>args<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb031757" class="outline-3">
+<h3 id="orgb031757">SpringApplication构造函数的核心逻辑</h3>
+<div class="outline-text-3" id="text-orgb031757">
+<p>
+调用 <code>new SpringApplication(primarySources)</code> 时，会完成初始化工作，源码位于 <code>SpringApplication</code> 类的构造方法：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"> <span style="color: #4f97d7; font-weight: bold;">public</span> SpringApplication<span style="color: #4f97d7;">(</span><span style="color: #a45bad;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span>... primarySources<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+     <span style="color: #4f97d7; font-weight: bold;">this</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">null</span>, primarySources<span style="color: #bc6ec5;">)</span>;
+ <span style="color: #4f97d7;">}</span>
+
+<span style="color: #a45bad;">@SuppressWarnings</span><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">{</span> <span style="color: #2d9574;">"unchecked"</span>, <span style="color: #2d9574;">"rawtypes"</span> <span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> SpringApplication<span style="color: #4f97d7;">(</span><span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">ResourceLoader</span> <span style="color: #7590db;">resourceLoader</span>, <span style="color: #a45bad;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span>... primarySources<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader = resourceLoader;
+    Assert.notNull<span style="color: #bc6ec5;">(</span>primarySources, <span style="color: #2d9574;">"'primarySources' must not be null"</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#20445;&#23384;&#20027;&#37197;&#32622;&#31867;&#65288;&#22914;Application.class&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">this</span>.primarySources = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">LinkedHashSet</span><span style="color: #bc6ec5;">&lt;&gt;(</span>Arrays.asList<span style="color: #2d9574;">(</span>primarySources<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#25512;&#26029;&#24212;&#29992;&#31867;&#22411;</span>
+    <span style="color: #4f97d7; font-weight: bold;">this</span>.properties.setWebApplicationType<span style="color: #bc6ec5;">(</span>WebApplicationType.deduce<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#21152;&#36733;&#21021;&#22987;&#21270;&#22120;&#65288;ApplicationContextInitializer&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">this</span>.bootstrapRegistryInitializers = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ArrayList</span><span style="color: #bc6ec5;">&lt;&gt;(</span>getSpringFactoriesInstances<span style="color: #2d9574;">(</span>BootstrapRegistryInitializer.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    setInitializers<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">Collection</span><span style="color: #2d9574;">)</span> getSpringFactoriesInstances<span style="color: #2d9574;">(</span>ApplicationContextInitializer.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">3. &#21152;&#36733;&#30417;&#21548;&#22120;&#65288;ApplicationListener&#65289;</span>
+    setListeners<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">Collection</span><span style="color: #2d9574;">)</span> getSpringFactoriesInstances<span style="color: #2d9574;">(</span>ApplicationListener.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">4. &#25512;&#26029;&#20027;&#21551;&#21160;&#31867;&#65288;&#36890;&#36807;&#22534;&#26632;&#20449;&#24687;&#25214;&#21040;main&#26041;&#27861;&#25152;&#22312;&#31867;&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass = deduceMainApplicationClass<span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-orgf396425" class="outline-4">
+<h4 id="orgf396425">推断应用类型</h4>
+<div class="outline-text-4" id="text-orgf396425">
+<p>
+<code>WebApplicationType</code> 用于标识应用类型，决定后续创建的上下文类型和是否启动 Web 服务器，主要分为三类：
+</p>
+<ul class="org-ul">
+<li><code>SERVLET</code> ：传统Servlet应用。</li>
+<li><code>REACTIVE</code> ：响应式应用。</li>
+<li><code>NONE</code> ：非Web应用（既无 <code>Servlet</code> 也无 <code>Reactive</code> 相关类）。</li>
+</ul>
+
+<p>
+SpringBoot 4.0.x 通过 <code>WebApplicationType.deduce()</code> 方法，遍历的 Deducer 接口的具体实现类，来推断应用类型。源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">WebApplicationType</span> <span style="color: #bc6ec5; font-weight: bold;">deduce</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">Deducer</span> <span style="color: #7590db;">deducer</span> : SpringFactoriesLoader.forDefaultResourceLocation<span style="color: #2d9574;">()</span>.load<span style="color: #2d9574;">(</span>Deducer.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">WebApplicationType</span> <span style="color: #7590db;">deduced</span> = deducer.deduceWebApplicationType<span style="color: #2d9574;">()</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>deduced != <span style="color: #a45bad;">null</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      <span style="color: #4f97d7; font-weight: bold;">return</span> deduced;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> isServletApplication<span style="color: #bc6ec5;">()</span> ? <span style="color: #a45bad;">WebApplicationType</span>.SERVLET : <span style="color: #a45bad;">WebApplicationType</span>.NONE;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI 接口，其设计目的是：将“Reactive 应用推断”和“Servlet 应用推断”解耦。 <code>Deducer</code> 接口的源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@FunctionalInterface</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">interface</span> <span style="color: #ce537a; font-weight: bold;">Deducer</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #9f8766;">/**</span>
+<span style="color: #9f8766;">    * &#25512;&#26029;&#24212;&#29992;&#31867;&#22411;&#65292;&#36820;&#22238; null &#34920;&#31034;&#24403;&#21069; Deducer &#26080;&#27861;&#25512;&#26029;&#65292;&#20132;&#32473;&#19979;&#19968;&#20010; Deducer &#25110;&#20828;&#24213;&#36923;&#36753;</span>
+<span style="color: #9f8766;">    */</span>
+  <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">WebApplicationType</span> <span style="color: #bc6ec5; font-weight: bold;">deduceWebApplicationType</span><span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<code>Deducer</code> 接口默认的实现类如下：
+</p>
+
+<ol class="org-ol">
+<li><code>WebFluxWebApplicationTypeDeducer</code> ：
+<ul class="org-ul">
+<li>包名： spring-boot-webflux</li>
+<li>SPI配置文件：/META-INF/spring.factories</li>
+<li>推断逻辑：存在 <code>org.springframework.web.reactive.DispatcherHandler</code> 和 <code>reactor.core.publisher.Mono</code> 。</li>
+</ul></li>
+<li><code>WebMvcWebApplicationTypeDeducer</code> ：
+<ul class="org-ul">
+<li>包名：spring-boot-webmvc</li>
+<li>SPI配置文件：：/META-INF/spring.factories</li>
+<li>推断逻辑：存在 <code>jakarta.servlet.Servlet</code> 、 <code>org.springframework.web.servlet.DispatcherServlet</code> 以及 <code>org.springframework.web.context.ConfigurableWebApplicationContext</code> 。</li>
+</ul></li>
+</ol>
+
+<p>
+如果你需要自定义应用类型推断逻辑，可参考以上实现类来完成。
+</p>
+</div>
+</div>
+<div id="outline-container-org56afea8" class="outline-4">
+<h4 id="org56afea8">加载初始化器与监听器</h4>
+<div class="outline-text-4" id="text-org56afea8">
+<p>
+通过 <code>SpringFactoriesLoader</code> 加载 META-INF/spring.factories 文件中配置的扩展类：
+</p>
+<ul class="org-ul">
+<li><code>ApplicationContextInitializer</code> ：上下文初始化器，用于在上下文刷新前自定义上下文配置；</li>
+<li><code>ApplicationListener</code> ：应用监听器，用于监听启动过程中的各类事件（如启动开始、环境准备完成等）。</li>
+</ul>
+
+<p>
+<code>ApplicationContextInitializer</code> 和 <code>ApplicationListener</code> 的加载流程相似，核心依赖 SpringBoot SPI 机制（SpringFactoriesLoader），且都经过「加载类名 → 反射实例化 → 排序」三个主要步骤。源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #bc6ec5; font-weight: bold;">getSpringFactoriesInstances</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">type</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> getSpringFactoriesInstances<span style="color: #bc6ec5;">(</span>type, <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #bc6ec5; font-weight: bold;">getSpringFactoriesInstances</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">type</span>, <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">ArgumentResolver</span> <span style="color: #7590db;">argumentResolver</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> SpringFactoriesLoader.forDefaultResourceLocation<span style="color: #bc6ec5;">(</span>getClassLoader<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>.load<span style="color: #bc6ec5;">(</span>type, argumentResolver<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+具体的加载逻辑在 <code>SpringFactoriesLoader</code> 的 <code>load</code> 方法中：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #bc6ec5; font-weight: bold;">load</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">factoryType</span>, <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">ArgumentResolver</span> <span style="color: #7590db;">argumentResolver</span>,
+    <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">FailureHandler</span> <span style="color: #7590db;">failureHandler</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+
+  Assert.notNull<span style="color: #bc6ec5;">(</span>factoryType, <span style="color: #2d9574;">"'factoryType' must not be null"</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#36890;&#36807; SPI &#21152;&#36733;&#25152;&#26377;&#37197;&#32622;&#30340;&#23454;&#29616;&#31867;&#20840;&#31867;&#21517;</span>
+  <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">implementationNames</span> = loadFactoryNames<span style="color: #bc6ec5;">(</span>factoryType<span style="color: #bc6ec5;">)</span>;
+  logger.trace<span style="color: #bc6ec5;">(</span>LogMessage.format<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"Loaded [%s] names: %s"</span>, factoryType.getName<span style="color: #67b11d;">()</span>, implementationNames<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#21453;&#23556;&#23454;&#20363;&#21270;&#25152;&#26377;&#23454;&#29616;&#31867;</span>
+  <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">T</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">result</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ArrayList</span><span style="color: #bc6ec5;">&lt;&gt;(</span>implementationNames.size<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #ce537a; font-weight: bold;">FailureHandler</span> <span style="color: #7590db;">failureHandlerToUse</span> = <span style="color: #bc6ec5;">(</span>failureHandler != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> ? failureHandler : THROWING_FAILURE_HANDLER;
+  <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #7590db;">implementationName</span> : implementationNames<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">T</span> <span style="color: #7590db;">factory</span> = instantiateFactory<span style="color: #2d9574;">(</span>implementationName, factoryType, argumentResolver, failureHandlerToUse<span style="color: #2d9574;">)</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>factory != <span style="color: #a45bad;">null</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      result.add<span style="color: #67b11d;">(</span>factory<span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">3. &#25490;&#24207;&#65288;&#25353; @Order &#27880;&#35299;&#25110; Ordered &#25509;&#21475;&#65289;</span>
+  AnnotationAwareOrderComparator.sort<span style="color: #bc6ec5;">(</span>result<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">return</span> result;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf718bc3" class="outline-4">
+<h4 id="orgf718bc3">推断主类</h4>
+<div class="outline-text-4" id="text-orgf718bc3">
+<p>
+通过遍历当前线程的调用栈，找到包含main方法的类，源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #4f97d7;">&lt;</span>?<span style="color: #4f97d7;">&gt;</span> <span style="color: #bc6ec5; font-weight: bold;">deduceMainApplicationClass</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> StackWalker.getInstance<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">StackWalker</span>.<span style="color: #a45bad;">Option</span>.RETAIN_CLASS_REFERENCE<span style="color: #bc6ec5;">)</span>
+    .walk<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>::findMainClass<span style="color: #bc6ec5;">)</span>
+    .orElse<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+
+<span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">Optional</span><span style="color: #4f97d7;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span><span style="color: #4f97d7;">&gt;</span> <span style="color: #bc6ec5; font-weight: bold;">findMainClass</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Stream</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">StackFrame</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">stack</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> stack.filter<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">(</span>frame<span style="color: #2d9574;">)</span> -&gt; Objects.equals<span style="color: #2d9574;">(</span>frame.getMethodName<span style="color: #67b11d;">()</span>, <span style="color: #2d9574;">"main"</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>
+    .findFirst<span style="color: #bc6ec5;">()</span>
+    .map<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">StackWalker</span>.StackFrame::getDeclaringClass<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgee3054f" class="outline-2">
+<h2 id="orgee3054f">运行阶段：核心启动流程</h2>
+<div class="outline-text-2" id="text-orgee3054f">
+<p>
+实例化SpringApplication后，调用 <code>run()</code> 方法进入核心运行阶段，该方法是启动流程的核心，源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #bc6ec5; font-weight: bold;">run</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">String</span>... <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#21551;&#21160;&#26102;&#38388;&#30417;&#25511;&#65288;&#29992;&#20110;&#25171;&#21360;&#21551;&#21160;&#32791;&#26102;&#65289;</span>
+  <span style="color: #ce537a; font-weight: bold;">Startup</span> <span style="color: #7590db;">startup</span> = Startup.create<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isRegisterShutdownHook<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    SpringApplication.shutdownHook.enableShutdownHookAddition<span style="color: #2d9574;">()</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #ce537a; font-weight: bold;">DefaultBootstrapContext</span> <span style="color: #7590db;">bootstrapContext</span> = createBootstrapContext<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span> = <span style="color: #a45bad;">null</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#37197;&#32622;headless&#27169;&#24335;&#65288;&#36866;&#37197;&#26080;&#22270;&#24418;&#30028;&#38754;&#30340;&#26381;&#21153;&#22120;&#29615;&#22659;&#65289;</span>
+  configureHeadlessProperty<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">3. &#21152;&#36733;SpringApplicationRunListener&#65288;&#36816;&#34892;&#30417;&#21548;&#22120;&#65292;&#30417;&#21548;&#21551;&#21160;&#20840;&#27969;&#31243;&#65289;</span>
+  <span style="color: #ce537a; font-weight: bold;">SpringApplicationRunListeners</span> <span style="color: #7590db;">listeners</span> = getRunListeners<span style="color: #bc6ec5;">(</span>args<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">4. &#21457;&#24067;&#8220;&#21551;&#21160;&#24320;&#22987;&#8221;&#20107;&#20214;</span>
+  listeners.starting<span style="color: #bc6ec5;">(</span>bootstrapContext, <span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">try</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">5. &#23553;&#35013;&#21629;&#20196;&#34892;&#21442;&#25968;</span>
+    <span style="color: #ce537a; font-weight: bold;">ApplicationArguments</span> <span style="color: #7590db;">applicationArguments</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">DefaultApplicationArguments</span><span style="color: #2d9574;">(</span>args<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">6. &#21021;&#22987;&#21270;&#29615;&#22659;&#65288;&#21152;&#36733;&#37197;&#32622;&#12289;&#28608;&#27963;Profiles&#12289;&#32465;&#23450;&#23646;&#24615;&#28304;&#65289;</span>
+    <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span> = prepareEnvironment<span style="color: #2d9574;">(</span>listeners, bootstrapContext, applicationArguments<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">7. &#25171;&#21360;&#21551;&#21160;Banner&#65288;SpringBoot Logo&#65289;</span>
+    <span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #7590db;">printedBanner</span> = printBanner<span style="color: #2d9574;">(</span>environment<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">8. &#21019;&#24314;&#24212;&#29992;&#19978;&#19979;&#25991;&#65288;&#26681;&#25454;WebApplicationType&#21019;&#24314;&#23545;&#24212;&#31867;&#22411;&#30340;&#19978;&#19979;&#25991;&#65289;</span>
+    context = createApplicationContext<span style="color: #2d9574;">()</span>;
+    context.setApplicationStartup<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.applicationStartup<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">10. &#19978;&#19979;&#25991;&#21069;&#32622;&#22788;&#29702;&#65288;&#32465;&#23450;&#29615;&#22659;&#12289;&#25191;&#34892;&#21021;&#22987;&#21270;&#22120;&#12289;&#27880;&#20876;&#20027;&#31867;Bean&#31561;&#65289;</span>
+    prepareContext<span style="color: #2d9574;">(</span>bootstrapContext, context, environment, listeners, applicationArguments, printedBanner<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">11. &#21047;&#26032;&#19978;&#19979;&#25991;&#65288;&#26680;&#24515;&#20013;&#30340;&#26680;&#24515;&#65306;Bean&#21152;&#36733;&#12289;Web&#26381;&#21153;&#22120;&#21551;&#21160;&#65289;</span>
+    refreshContext<span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">12. &#19978;&#19979;&#25991;&#21518;&#32622;&#22788;&#29702;&#65288;&#25193;&#23637;&#28857;&#65292;&#40664;&#35748;&#31354;&#23454;&#29616;&#65289;</span>
+    afterRefresh<span style="color: #2d9574;">(</span>context, applicationArguments<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">13. &#20572;&#27490;&#35745;&#26102;&#65292;&#25171;&#21360;&#21551;&#21160;&#32791;&#26102;</span>
+    <span style="color: #ce537a; font-weight: bold;">Duration</span> <span style="color: #7590db;">timeTakenToStarted</span> = startup.started<span style="color: #2d9574;">()</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isLogStartupInfo<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">StartupInfoLogger</span><span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass, environment<span style="color: #67b11d;">)</span>.logStarted<span style="color: #67b11d;">(</span>getApplicationLog<span style="color: #b1951d;">()</span>, startup<span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">14. &#21457;&#24067;&#8220;&#21551;&#21160;&#23436;&#25104;&#8221;&#20107;&#20214;</span>
+    listeners.started<span style="color: #2d9574;">(</span>context, timeTakenToStarted<span style="color: #2d9574;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">15. &#25191;&#34892;ApplicationRunner/CommandLineRunner&#65288;&#21551;&#21160;&#21518;&#33258;&#23450;&#20041;&#36923;&#36753;&#65289;</span>
+    callRunners<span style="color: #2d9574;">(</span>context, applicationArguments<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">catch</span> <span style="color: #bc6ec5;">(</span>Throwable ex<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">16. &#21551;&#21160;&#22833;&#36133;&#22788;&#29702;&#65288;&#21457;&#24067;&#22833;&#36133;&#20107;&#20214;&#12289;&#29983;&#25104;&#24322;&#24120;&#25253;&#21578;&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">throw</span> handleRunFailure<span style="color: #2d9574;">(</span>context, ex, listeners<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">try</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>context.isRunning<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">17. &#21457;&#24067;&#8220;&#24212;&#29992;&#23601;&#32490;&#8221;&#20107;&#20214;</span>
+      listeners.ready<span style="color: #67b11d;">(</span>context, startup.ready<span style="color: #b1951d;">()</span><span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">catch</span> <span style="color: #bc6ec5;">(</span>Throwable ex<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">throw</span> handleRunFailure<span style="color: #2d9574;">(</span>context, ex, <span style="color: #a45bad;">null</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">18. &#36820;&#22238;&#21019;&#24314;&#22909;&#30340;&#19978;&#19979;&#25991;</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> context;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+下文拆解该方法中的关键步骤，重点分析环境准备、上下文创建与刷新、Runner调用等核心环节。
+</p>
+</div>
+<div id="outline-container-orgf6d3bde" class="outline-3">
+<h3 id="orgf6d3bde">准备应用环境（prepareEnvironment）</h3>
+<div class="outline-text-3" id="text-orgf6d3bde">
+<p>
+<code>prepareEnvironment</code> 是 SpringBoot 启动流程中“环境准备阶段”的主要方法，此方法构建一个包含系统属性、环境变量、命令行参数、配置文件、Profile 配置等所有配置源的 ConfigurableEnvironment 对象，为后续上下文初始化和 Bean 加载提供统一的配置环境。源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #bc6ec5; font-weight: bold;">prepareEnvironment</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">SpringApplicationRunListeners</span> <span style="color: #7590db;">listeners</span>,
+    <span style="color: #ce537a; font-weight: bold;">DefaultBootstrapContext</span> <span style="color: #7590db;">bootstrapContext</span>, <span style="color: #ce537a; font-weight: bold;">ApplicationArguments</span> <span style="color: #7590db;">applicationArguments</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">1. &#21019;&#24314;/&#33719;&#21462;&#29615;&#22659;&#23545;&#35937;&#65288;&#26681;&#25454;WebApplicationType&#36866;&#37197;&#31867;&#22411;&#65289;</span>
+  <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span> = getOrCreateEnvironment<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">2. &#37197;&#32622;&#29615;&#22659;&#65306;&#28155;&#21152;&#23646;&#24615;&#28304;&#12289;&#22788;&#29702;&#21629;&#20196;&#34892;&#21442;&#25968;&#12289;&#28608;&#27963;Profile</span>
+  configureEnvironment<span style="color: #bc6ec5;">(</span>environment, applicationArguments.getSourceArgs<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">3. &#32465;&#23450;&#37197;&#32622;&#23646;&#24615;&#21040;Environment&#65288;&#22788;&#29702;&#21344;&#20301;&#31526;&#31561;&#65289;</span>
+  ConfigurationPropertySources.attach<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">4. &#35302;&#21457;&#29615;&#22659;&#20934;&#22791;&#20107;&#20214;&#65288;&#20801;&#35768;&#30417;&#21548;&#22120;&#25193;&#23637;&#29615;&#22659;&#65289;</span>
+  listeners.environmentPrepared<span style="color: #bc6ec5;">(</span>bootstrapContext, environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">5. &#23558;&#29615;&#22659;&#32465;&#23450;&#21040;SpringApplication&#33258;&#36523;&#23646;&#24615;</span>
+  ApplicationInfoPropertySource.moveToEnd<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  DefaultPropertiesPropertySource.moveToEnd<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  Assert.state<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">!</span>environment.containsProperty<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"spring.main.environment-prefix"</span><span style="color: #2d9574;">)</span>, <span style="color: #2d9574;">"Environment prefix cannot be set via properties."</span><span style="color: #bc6ec5;">)</span>;
+  bindToSpringApplication<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">6. &#29615;&#22659;&#31867;&#22411;&#36716;&#25442;&#65288;&#36866;&#37197;WebApplicationType&#65289;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">!</span><span style="color: #4f97d7; font-weight: bold;">this</span>.isCustomEnvironment<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">EnvironmentConverter</span> <span style="color: #7590db;">environmentConverter</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">EnvironmentConverter</span><span style="color: #2d9574;">(</span>getClassLoader<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+    environment = environmentConverter.convertEnvironmentIfNecessary<span style="color: #2d9574;">(</span>environment, deduceEnvironmentClass<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  ConfigurationPropertySources.attach<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">return</span> environment;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-org510d551" class="outline-4">
+<h4 id="org510d551">创建环境 getOrCreateEnvironment</h4>
+<div class="outline-text-4" id="text-org510d551">
+<p>
+<code>getOrCreateEnvironment</code> 是 <code>prepareEnvironment</code> 流程的第一步，此步骤使用 <code>ApplicationContextFactory</code> 工厂模式解耦环境创建逻辑，核心目标是：
+</p>
+<ol class="org-ol">
+<li>优先复用已自定义的 Environment（若有）；</li>
+<li>基于“应用类型（WebApplicationType）”+“ApplicationContextFactory 工厂”创建适配的 <code>ConfigurableEnvironment</code> ；</li>
+<li>提供多层兜底逻辑，确保最终返回非空的环境对象。</li>
+</ol>
+
+<p>
+源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #bc6ec5; font-weight: bold;">getOrCreateEnvironment</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.environment != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #4f97d7; font-weight: bold;">this</span>.environment;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #ce537a; font-weight: bold;">WebApplicationType</span> <span style="color: #7590db;">webApplicationType</span> = <span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getWebApplicationType<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span> = <span style="color: #4f97d7; font-weight: bold;">this</span>.applicationContextFactory.createEnvironment<span style="color: #bc6ec5;">(</span>webApplicationType<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>environment == <span style="color: #a45bad;">null</span> &amp;&amp; <span style="color: #4f97d7; font-weight: bold;">this</span>.applicationContextFactory != <span style="color: #a45bad;">ApplicationContextFactory</span>.DEFAULT<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    environment = <span style="color: #a45bad;">ApplicationContextFactory</span>.DEFAULT.createEnvironment<span style="color: #2d9574;">(</span>webApplicationType<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #bc6ec5;">(</span>environment != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> ? environment : <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ApplicationEnvironment</span><span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf6ac4cd" class="outline-4">
+<h4 id="orgf6ac4cd">配置环境 configureEnvironment</h4>
+<div class="outline-text-4" id="text-orgf6ac4cd">
+<p>
+<code>configureEnvironment</code> 是 <code>prepareEnvironment</code> 流程的子步骤，调用时机在 getOrCreateEnvironment（创建环境对象）之后、ConfigurationPropertySources.attach（绑定配置属性源）之前。此步骤的主要作用为：
+</p>
+<ol class="org-ol">
+<li>为环境添加统一的类型转换服务；</li>
+<li>向环境中添加/排序各类属性源（PropertySource），明确配置优先级；</li>
+<li>激活指定的 Profile（环境），处理 Profile 分组等特性；</li>
+<li>最终让 ConfigurableEnvironment 具备“完整的配置加载能力”和“Profile 管理能力”。</li>
+</ol>
+
+<p>
+源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">configureEnvironment</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">[]</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.addConversionService<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    environment.setConversionService<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ApplicationConversionService</span><span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  configurePropertySources<span style="color: #bc6ec5;">(</span>environment, args<span style="color: #bc6ec5;">)</span>;
+  configureProfiles<span style="color: #bc6ec5;">(</span>environment, args<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤 1：设置类型转换服务（ApplicationConversionService）</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.addConversionService<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    environment.setConversionService<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ApplicationConversionService</span><span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+此步骤的核心逻辑为：
+</p>
+<ol class="org-ol">
+<li>this.addConversionService：SpringApplication 的成员变量，默认值为 true（开启类型转换），开发者可通过 SpringApplication.setAddConversionService(false) 关闭；</li>
+<li>ApplicationConversionService：SpringBoot 定制的类型转换服务，是 ConversionService 的实现类，核心作用是统一处理配置属性的类型转换（如将配置文件中的 String 类型值转换为 int/boolean/List/ 自定义类型）。</li>
+</ol>
+
+<p>
+此步骤的主要作用为：
+</p>
+<ol class="org-ol">
+<li>解决「配置值类型不匹配」问题：例如配置文件中 server.port=8080（String）自动转为 int，spring.main.banner-mode=off（String）自动转为 Banner.Mode 枚举；</li>
+<li>内置丰富的转换器：支持时间（如 10s → Duration）、大小（如 10MB → DataSize）、集合（如 a,b,c → List&lt;String&gt;）等常用类型转换；</li>
+<li>可扩展：开发者可自定义 Converter 注册到 ApplicationConversionService，例如：</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#33258;&#23450;&#20041;&#36716;&#25442;&#22120;&#65306;String &#8594; &#33258;&#23450;&#20041;&#26522;&#20030;</span>
+ApplicationConversionService.addConverter<span style="color: #4f97d7;">(</span>String.<span style="color: #4f97d7; font-weight: bold;">class</span>, MyEnum.<span style="color: #4f97d7; font-weight: bold;">class</span>, MyEnum::valueOf<span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+<b>步骤 2：配置属性源（configurePropertySources）</b>
+</p>
+
+<p>
+这是 configureEnvironment 的核心步骤，负责“添加属性源”、“调整属性源顺序”、“保证配置优先级”，是 SpringBoot 配置加载的核心逻辑。
+</p>
+
+<p>
+源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">configurePropertySources</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #bc6ec5;">[]</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #ce537a; font-weight: bold;">MutablePropertySources</span> <span style="color: #7590db;">sources</span> = environment.getPropertySources<span style="color: #bc6ec5;">()</span>;
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">!</span>CollectionUtils.isEmpty<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.defaultProperties<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    DefaultPropertiesPropertySource.addOrMerge<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.defaultProperties, sources<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.addCommandLineProperties &amp;&amp; args.length &gt; <span style="color: #a45bad;">0</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">String</span> <span style="color: #7590db;">name</span> = <span style="color: #a45bad;">CommandLinePropertySource</span>.COMMAND_LINE_PROPERTY_SOURCE_NAME;
+    <span style="color: #ce537a; font-weight: bold;">PropertySource</span><span style="color: #2d9574;">&lt;</span>?<span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">source</span> = sources.get<span style="color: #2d9574;">(</span>name<span style="color: #2d9574;">)</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>source != <span style="color: #a45bad;">null</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      <span style="color: #ce537a; font-weight: bold;">CompositePropertySource</span> <span style="color: #7590db;">composite</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">CompositePropertySource</span><span style="color: #67b11d;">(</span>name<span style="color: #67b11d;">)</span>;
+      composite
+        .addPropertySource<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SimpleCommandLinePropertySource</span><span style="color: #b1951d;">(</span><span style="color: #2d9574;">"springApplicationCommandLineArgs"</span>, args<span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>;
+      composite.addPropertySource<span style="color: #67b11d;">(</span>source<span style="color: #67b11d;">)</span>;
+      sources.replace<span style="color: #67b11d;">(</span>name, composite<span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+    <span style="color: #4f97d7; font-weight: bold;">else</span> <span style="color: #2d9574;">{</span>
+      sources.addFirst<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SimpleCommandLinePropertySource</span><span style="color: #b1951d;">(</span>args<span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  environment.getPropertySources<span style="color: #bc6ec5;">()</span>.addLast<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ApplicationInfoPropertySource</span><span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+PropertySource 是 Spring 定义的抽象类，每个 PropertySource 对应一个配置来源（如命令行、配置文件、系统属性），MutablePropertySources 是其有序容器——排在前面的属性源优先级更高，会覆盖后面的同名配置。
+</p>
+
+<p>
+PropertySource 默认的优先级，依次为：
+</p>
+<ol class="org-ol">
+<li>commandLineArgs：命令行参数（如 &#x2013;server.port=8080），由 configurePropertySources 添加到首位</li>
+<li>systemProperties：JVM 系统属性（如 -Dspring.application.name=app），StandardEnvironment 内置，默认第二位</li>
+<li>systemEnvironment：操作系统环境变量（如 SPRING<sub>APPLICATION</sub><sub>NAME</sub>=app），StandardEnvironment 内置，默认第三位</li>
+<li>defaultProperties：SpringApplication 设置的默认属性，由 configurePropertySources 添加到末尾</li>
+<li>配置文件（application.yml/properties）：类路径/外部配置文件</li>
+</ol>
+
+<p>
+开发者可重写 configurePropertySources 自定义属性源，例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SpringBootApplication</span>
+<span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">class</span> <span style="color: #ce537a; font-weight: bold;">MyApp</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">public</span> <span style="color: #4f97d7; font-weight: bold;">static</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">main</span><span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #2d9574;">[]</span> <span style="color: #7590db;">args</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SpringApplication</span><span style="color: #2d9574;">(</span>MyApp.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+            <span style="color: #a45bad;">@Override</span>
+            <span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">configurePropertySources</span><span style="color: #67b11d;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span>, <span style="color: #ce537a; font-weight: bold;">String</span><span style="color: #b1951d;">[]</span> <span style="color: #7590db;">args</span><span style="color: #67b11d;">)</span> <span style="color: #67b11d;">{</span>
+                <span style="color: #4f97d7; font-weight: bold;">super</span>.configurePropertySources<span style="color: #b1951d;">(</span>environment, args<span style="color: #b1951d;">)</span>; <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#20445;&#30041;&#40664;&#35748;&#36923;&#36753;</span>
+                <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#28155;&#21152;&#33258;&#23450;&#20041;&#23646;&#24615;&#28304;&#65292;&#20248;&#20808;&#32423;&#39640;&#20110;&#31995;&#32479;&#23646;&#24615;</span>
+                <span style="color: #ce537a; font-weight: bold;">Map</span><span style="color: #b1951d;">&lt;</span><span style="color: #ce537a; font-weight: bold;">String</span>, <span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #b1951d;">&gt;</span> <span style="color: #7590db;">customProps</span> = Map.of<span style="color: #b1951d;">(</span><span style="color: #2d9574;">"custom.key"</span>, <span style="color: #2d9574;">"custom.value"</span><span style="color: #b1951d;">)</span>;
+                environment.getPropertySources<span style="color: #b1951d;">()</span>.addBefore<span style="color: #b1951d;">(</span><span style="color: #2d9574;">"systemProperties"</span>, <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">MapPropertySource</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"customSource"</span>, customProps<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">)</span>;
+            <span style="color: #67b11d;">}</span>
+        <span style="color: #2d9574;">}</span>.run<span style="color: #2d9574;">(</span>args<span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgec90774" class="outline-3">
+<h3 id="orgec90774">打印 Banner</h3>
+<div class="outline-text-3" id="text-orgec90774">
+<p>
+Banner 是 SpringBoot 启动时打印的标识（默认是 SpringBoot logo），可通过spring.main.banner-mode配置关闭，或自定义 Banner（如在resources/banner.txt中配置）。
+</p>
+
+<p>
+源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #bc6ec5; font-weight: bold;">printBanner</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;1&#65306;&#20174;&#29615;&#22659;&#20013;&#21160;&#24577;&#33719;&#21462;Banner&#27169;&#24335;&#65292;&#21028;&#26029;&#26159;&#21542;&#20851;&#38381;Banner</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getBannerMode<span style="color: #2d9574;">(</span>environment<span style="color: #2d9574;">)</span> == <span style="color: #a45bad;">Banner</span>.<span style="color: #a45bad;">Mode</span>.OFF<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">null</span>;
+    <span style="color: #bc6ec5;">}</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;2&#65306;&#21021;&#22987;&#21270;&#36164;&#28304;&#21152;&#36733;&#22120;&#65288;&#29992;&#20110;&#21152;&#36733;&#31867;&#36335;&#24452;&#19979;&#30340;Banner&#25991;&#20214;&#65289;</span>
+    <span style="color: #ce537a; font-weight: bold;">ResourceLoader</span> <span style="color: #7590db;">resourceLoader</span> = <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> ? <span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader
+            : <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">DefaultResourceLoader</span><span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;3&#65306;&#21019;&#24314;Banner&#25171;&#21360;&#22120;&#65288;&#26680;&#24515;&#23553;&#35013;&#31867;&#65289;</span>
+    <span style="color: #ce537a; font-weight: bold;">SpringApplicationBannerPrinter</span> <span style="color: #7590db;">bannerPrinter</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SpringApplicationBannerPrinter</span><span style="color: #bc6ec5;">(</span>resourceLoader, <span style="color: #4f97d7; font-weight: bold;">this</span>.banner<span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;4&#65306;&#21028;&#26029;Banner&#36755;&#20986;&#27169;&#24335;&#65288;LOG/&#40664;&#35748;CONSOLE&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getBannerMode<span style="color: #2d9574;">(</span>environment<span style="color: #2d9574;">)</span> == <span style="color: #a45bad;">Mode</span>.LOG<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">return</span> bannerPrinter.print<span style="color: #2d9574;">(</span>environment, <span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass, logger<span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;5&#65306;&#40664;&#35748;&#27169;&#24335;&#65288;CONSOLE&#65289;&#65292;&#36755;&#20986;&#21040;&#25511;&#21046;&#21488;</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> bannerPrinter.print<span style="color: #bc6ec5;">(</span>environment, <span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass, System.out<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤 1：动态判断是否关闭 Banner</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getBannerMode<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span> == <span style="color: #a45bad;">Banner</span>.<span style="color: #a45bad;">Mode</span>.OFF<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #a45bad;">null</span>;
+<span style="color: #4f97d7;">}</span> 
+</pre>
+</div>
+
+<p>
+<b>步骤 2：初始化资源加载器</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">ResourceLoader</span> <span style="color: #7590db;">resourceLoader</span> = <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader != <span style="color: #a45bad;">null</span><span style="color: #4f97d7;">)</span> ? <span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader
+        : <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">DefaultResourceLoader</span><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">null</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><b>复用自定义资源加载器</b> ：若开发者通过 SpringApplication.setResourceLoader() 设置了自定义 ResourceLoader（如加载外部资源），则优先复用；</li>
+<li><b>默认资源加载器</b> ：创建 DefaultResourceLoader(null)，null 表示使用「当前线程上下文类加载器」（Thread.currentThread().getContextClassLoader()），这是 Spring 加载类路径资源的默认方式；</li>
+<li><b>核心作用</b> ：用于加载类路径下的 banner.txt/banner.png 等文件（后续由 SpringApplicationBannerPrinter 调用）。</li>
+</ul>
+
+<p>
+<b>步骤 3：创建 SpringApplicationBannerPrinter</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">SpringApplicationBannerPrinter</span> <span style="color: #7590db;">bannerPrinter</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">SpringApplicationBannerPrinter</span><span style="color: #4f97d7;">(</span>resourceLoader, <span style="color: #4f97d7; font-weight: bold;">this</span>.banner<span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>入参说明：</li>
+<li><code>resourceLoader</code> ：步骤 2 初始化的资源加载器，用于加载文件型 Banner；</li>
+<li><code>this.banner</code> ：开发者通过 SpringApplication.setBanner() 自定义的 Banner 实例（默认 null）；</li>
+<li>核心作用：SpringApplicationBannerPrinter 是 Banner 加载 / 渲染 / 输出的唯一入口，封装了「自定义 Banner → 文件 Banner → 默认 Banner」的加载优先级，以及「控制台 / 日志」的输出逻辑。</li>
+</ul>
+
+<p>
+<b>步骤 4：以 LOG 模式输出Banner</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getBannerMode<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span> == <span style="color: #a45bad;">Mode</span>.LOG<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">return</span> bannerPrinter.print<span style="color: #bc6ec5;">(</span>environment, <span style="color: #4f97d7; font-weight: bold;">this</span>.mainApplicationClass, logger<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span> 
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Mode.LOG 输出逻辑：调用 bannerPrinter.print(&#x2026;, logger) 重载方法，将 Banner 内容输出到日志框架（如 Logback/Log4j2），而非控制台；</li>
+<li>logger 说明：logger 是 SpringApplication 的内置日志器（类型为 org.slf4j.Logger），默认日志级别为 INFO，输出格式遵循应用的日志配置；</li>
+<li>print 方法（日志版）核心逻辑：</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #bc6ec5; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Environment</span> <span style="color: #7590db;">environment</span>, <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">sourceClass</span>, <span style="color: #ce537a; font-weight: bold;">Log</span> <span style="color: #7590db;">logger</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #7590db;">banner</span> = getBanner<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">try</span> <span style="color: #bc6ec5;">{</span>
+    logger.info<span style="color: #2d9574;">(</span>createStringFromBanner<span style="color: #67b11d;">(</span>banner, environment, sourceClass<span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">catch</span> <span style="color: #bc6ec5;">(</span>UnsupportedEncodingException ex<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    logger.warn<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"Failed to create String for banner"</span>, ex<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">PrintedBanner</span><span style="color: #bc6ec5;">(</span>banner, sourceClass<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤5：默认模式（CONSOLE），输出到控制台</b>
+</p>
+
+<p>
+该步骤的触发需同时满足以下条件：
+</p>
+<ol class="org-ol">
+<li>getBannerMode(environment) 返回 Banner.Mode.CONSOLE（核心条件）：
+<ul class="org-ul">
+<li>开发者未显式设置 bannerMode（代码 / 配置）；</li>
+<li>环境中未启用控制台结构化日志（spring.logging.console.structured.format 未配置）；</li>
+</ul></li>
+<li>排除 OFF（关闭）和 LOG（日志输出）模式 —— 这是 4.0.x 版本简化后的分支逻辑（仅保留 OFF/LOG/CONSOLE 三种模式）。</li>
+</ol>
+
+<p>
+print方法的源码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #bc6ec5; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Environment</span> <span style="color: #7590db;">environment</span>, <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #bc6ec5;">&lt;</span>?<span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">sourceClass</span>, <span style="color: #ce537a; font-weight: bold;">PrintStream</span> <span style="color: #7590db;">out</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #7590db;">banner</span> = getBanner<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  banner.printBanner<span style="color: #bc6ec5;">(</span>environment, sourceClass, out<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">return</span> <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">PrintedBanner</span><span style="color: #bc6ec5;">(</span>banner, sourceClass<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9e30ab9" class="outline-3">
+<h3 id="org9e30ab9">创建应用上下文（createApplicationContext）</h3>
+<div class="outline-text-3" id="text-org9e30ab9">
+<p>
+使用ApplicationContextFactory 工厂，根据 <code>WebApplicationType</code> 创建对应的上下文实例：
+</p>
+
+<ul class="org-ul">
+<li>NONE → AnnotationConfigApplicationContext；</li>
+<li>SERVLET → AnnotationConfigServletWebServerApplicationContext；</li>
+<li>REACTIVE → AnnotationConfigReactiveWebServerApplicationContext。</li>
+</ul>
+
+<p>
+核心代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #bc6ec5; font-weight: bold;">createApplicationContext</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span> = <span style="color: #4f97d7; font-weight: bold;">this</span>.applicationContextFactory
+    .create<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.getWebApplicationType<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+  Assert.state<span style="color: #bc6ec5;">(</span>context != <span style="color: #a45bad;">null</span>, <span style="color: #2d9574;">"ApplicationContextFactory created null context"</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">return</span> context;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<code>DefaultApplicationContextFactory</code> 是默认的工厂实现类，默认工厂会根据应用类型创建适配的上下文：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">WebApplicationType</th>
+<th scope="col" class="org-left">创建的上下文实现类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">NONE（非 Web）</td>
+<td class="org-left">AnnotationConfigApplicationContext</td>
+</tr>
+
+<tr>
+<td class="org-left">SERVLET（Servlet Web</td>
+<td class="org-left">AnnotationConfigServletWebServerApplicationContext</td>
+</tr>
+
+<tr>
+<td class="org-left">REACTIVE（Reactive Web）</td>
+<td class="org-left">AnnotationConfigReactiveWebServerApplicationContext</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org21abb55" class="outline-3">
+<h3 id="org21abb55">准备上下文（prepareContext）</h3>
+<div class="outline-text-3" id="text-org21abb55">
+<p>
+这一阶段为上下文刷新做前置准备：
+</p>
+
+<ol class="org-ol">
+<li>将Environment绑定到上下文；</li>
+<li>执行ApplicationContextInitializer（初始化器）；</li>
+<li>发布ApplicationContextInitializedEvent事件；</li>
+<li>注册单例 Bean（如命令行参数、主类）；</li>
+<li>加载主类的 Bean 定义（扫描@SpringBootApplication注解）；</li>
+<li>发布ApplicationPreparedEvent事件。</li>
+</ol>
+
+<p>
+源码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">prepareContext</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">DefaultBootstrapContext</span> <span style="color: #7590db;">bootstrapContext</span>, <span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span>,
+    <span style="color: #ce537a; font-weight: bold;">ConfigurableEnvironment</span> <span style="color: #7590db;">environment</span>, <span style="color: #ce537a; font-weight: bold;">SpringApplicationRunListeners</span> <span style="color: #7590db;">listeners</span>,
+    <span style="color: #ce537a; font-weight: bold;">ApplicationArguments</span> <span style="color: #7590db;">applicationArguments</span>, <span style="color: #a45bad;">@Nullable</span> <span style="color: #ce537a; font-weight: bold;">Banner</span> <span style="color: #7590db;">printedBanner</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;1&#65306;&#32465;&#23450;&#19978;&#19979;&#25991;&#19982;&#29615;&#22659;&#65288;&#26680;&#24515;&#20851;&#32852;&#65289;</span>
+  context.setEnvironment<span style="color: #bc6ec5;">(</span>environment<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;2&#65306;&#19978;&#19979;&#25991;&#21518;&#32622;&#22788;&#29702;&#65288;&#37197;&#32622;&#36164;&#28304;&#21152;&#36733;&#22120;&#12289;&#36716;&#25442;&#26381;&#21153;&#31561;&#65289;</span>
+  postProcessApplicationContext<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;3&#65306;AOT&#36866;&#37197;&#8212;&#8212;&#28155;&#21152;&#29983;&#25104;&#30340;&#21021;&#22987;&#21270;&#22120;</span>
+  addAotGeneratedInitializerIfNecessary<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.initializers<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;4&#65306;&#25191;&#34892;&#19978;&#19979;&#25991;&#21021;&#22987;&#21270;&#22120;&#65288;ApplicationContextInitializer&#65289;</span>
+  applyInitializers<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;5&#65306;&#21457;&#24067;&#19978;&#19979;&#25991;&#20934;&#22791;&#23436;&#25104;&#20107;&#20214;&#65288;&#36890;&#30693;&#30417;&#21548;&#22120;&#65289;</span>
+  listeners.contextPrepared<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;6&#65306;&#20851;&#38381;&#24341;&#23548;&#19978;&#19979;&#25991;</span>
+  bootstrapContext.close<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;7&#65306;&#25171;&#21360;&#21551;&#21160;&#26085;&#24535;&#65288;&#32465;&#23450;Properties&#37197;&#32622;&#65292;4.0.x&#35843;&#25972;&#65289;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isLogStartupInfo<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    logStartupInfo<span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span>;
+    logStartupProfileInfo<span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;8&#65306;&#27880;&#20876; boot &#21333;&#20363;Bean&#65288;&#21442;&#25968;&#12289;Banner&#65289;</span>
+  <span style="color: #ce537a; font-weight: bold;">ConfigurableListableBeanFactory</span> <span style="color: #7590db;">beanFactory</span> = context.getBeanFactory<span style="color: #bc6ec5;">()</span>;
+  beanFactory.registerSingleton<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"springApplicationArguments"</span>, applicationArguments<span style="color: #bc6ec5;">)</span>;
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>printedBanner != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    beanFactory.registerSingleton<span style="color: #2d9574;">(</span><span style="color: #2d9574;">"springBootBanner"</span>, printedBanner<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;9&#65306;&#37197;&#32622;Bean&#24037;&#21378;&#35268;&#21017;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>beanFactory <span style="color: #4f97d7; font-weight: bold;">instanceof</span> AbstractAutowireCapableBeanFactory autowireCapableBeanFactory<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    autowireCapableBeanFactory.setAllowCircularReferences<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isAllowCircularReferences<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>beanFactory <span style="color: #4f97d7; font-weight: bold;">instanceof</span> DefaultListableBeanFactory listableBeanFactory<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      listableBeanFactory.setAllowBeanDefinitionOverriding<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isAllowBeanDefinitionOverriding<span style="color: #b1951d;">()</span><span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;10&#65306;&#25042;&#21152;&#36733;&#37197;&#32622;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isLazyInitialization<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    context.addBeanFactoryPostProcessor<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">LazyInitializationBeanFactoryPostProcessor</span><span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;11&#65306;&#20445;&#25345;&#24212;&#29992;&#23384;&#27963;&#37197;&#32622;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isKeepAlive<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    context.addApplicationListener<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">KeepAlive</span><span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;12&#65306;&#28155;&#21152;&#23646;&#24615;&#28304;&#25490;&#24207;&#21518;&#32622;&#22788;&#29702;&#22120;</span>
+  context.addBeanFactoryPostProcessor<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">PropertySourceOrderingBeanFactoryPostProcessor</span><span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;13&#65306;&#26465;&#20214;&#21270;&#21152;&#36733;Bean&#23450;&#20041;&#65288;&#38750;AOT&#27169;&#24335;&#25165;&#25191;&#34892;&#65292;4.0.x&#26032;&#22686;&#65289;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">!</span>AotDetector.useGeneratedArtifacts<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">Load the sources</span>
+    <span style="color: #ce537a; font-weight: bold;">Set</span><span style="color: #2d9574;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">sources</span> = getAllSources<span style="color: #2d9574;">()</span>;
+    Assert.state<span style="color: #2d9574;">(</span><span style="color: #a45bad;">!</span>ObjectUtils.isEmpty<span style="color: #67b11d;">(</span>sources<span style="color: #67b11d;">)</span>, <span style="color: #2d9574;">"No sources defined"</span><span style="color: #2d9574;">)</span>;
+    load<span style="color: #2d9574;">(</span>context, sources.toArray<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">0</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#27493;&#39588;14&#65306;&#21457;&#24067;&#19978;&#19979;&#25991;&#21152;&#36733;&#23436;&#25104;&#20107;&#20214;</span>
+  listeners.contextLoaded<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤 1：绑定上下文与环境</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-java">context.setEnvironment<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">environment</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+将之前 prepareEnvironment 阶段准备好的 ConfigurableEnvironment 绑定到上下文。这是 Environment 与 ApplicationContext 的核心关联步骤，后续上下文内的所有 Bean 都能通过 @Value/@ConfigurationProperties 读取环境配置。
+</p>
+
+<p>
+<b>步骤 2：上下文后置处理</b>
+</p>
+
+<p>
+配置上下文的资源加载器、Bean 名称生成器、类型转换服务。
+</p>
+
+<p>
+源码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">postProcessApplicationContext</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#37197;&#32622;Bean &#21517;&#31216;&#29983;&#25104;&#22120;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.beanNameGenerator != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    context.getBeanFactory<span style="color: #2d9574;">()</span>
+      .registerSingleton<span style="color: #2d9574;">(</span><span style="color: #a45bad;">AnnotationConfigUtils</span>.CONFIGURATION_BEAN_NAME_GENERATOR, <span style="color: #4f97d7; font-weight: bold;">this</span>.beanNameGenerator<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#37197;&#32622;&#19978;&#19979;&#25991;&#30340;&#36164;&#28304;&#21152;&#36733;&#22120;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader != <span style="color: #a45bad;">null</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>context <span style="color: #4f97d7; font-weight: bold;">instanceof</span> GenericApplicationContext genericApplicationContext<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      genericApplicationContext.setResourceLoader<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader<span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>context <span style="color: #4f97d7; font-weight: bold;">instanceof</span> DefaultResourceLoader defaultResourceLoader<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+      defaultResourceLoader.setClassLoader<span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.resourceLoader.getClassLoader<span style="color: #b1951d;">()</span><span style="color: #67b11d;">)</span>;
+    <span style="color: #2d9574;">}</span>
+  <span style="color: #bc6ec5;">}</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#37197;&#32622;&#31867;&#22411;&#36716;&#25442;&#26381;&#21153;</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.addConversionService<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    context.getBeanFactory<span style="color: #2d9574;">()</span>.setConversionService<span style="color: #2d9574;">(</span>context.getEnvironment<span style="color: #67b11d;">()</span>.getConversionService<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤 3：AOT 适配 —— 添加生成的初始化器</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">addAotGeneratedInitializerIfNecessary<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.initializers<span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>AOT（Ahead-of-Time）：SpringBoot 4.0 强化的「提前编译」特性，可将运行时的 Bean 定义、初始化逻辑编译为字节码，提升启动速度；</li>
+<li>addAotGeneratedInitializerIfNecessary：若当前应用使用 AOT 编译产物（AotDetector.useGeneratedArtifacts() 为 true），则将 AOT 生成的 ApplicationContextInitializer 添加到初始化器列表；</li>
+<li>设计意图：AOT 模式下复用提前编译的初始化逻辑，避免运行时重复解析注解，提升启动效率。</li>
+</ul>
+
+<p>
+<b>步骤 4：执行上下文初始化器</b>
+</p>
+
+<p>
+源码如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@SuppressWarnings</span><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">{</span> <span style="color: #2d9574;">"rawtypes"</span>, <span style="color: #2d9574;">"unchecked"</span> <span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
+<span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">applyInitializers</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#36941;&#21382;&#25152;&#26377;&#21152;&#36733;&#30340; ApplicationContextInitializer&#65288;SPI/&#33258;&#23450;&#20041;&#65289;</span>
+    <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">ApplicationContextInitializer</span> <span style="color: #7590db;">initializer</span> : getInitializers<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+      <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#36866;&#37197;&#19978;&#19979;&#25991;&#31867;&#22411;&#65288;&#27867;&#22411;&#26657;&#39564;&#65289;</span>
+      <span style="color: #ce537a; font-weight: bold;">Class</span><span style="color: #2d9574;">&lt;</span>?<span style="color: #2d9574;">&gt;</span> <span style="color: #7590db;">requiredType</span> = GenericTypeResolver.resolveTypeArgument<span style="color: #2d9574;">(</span>initializer.getClass<span style="color: #67b11d;">()</span>,
+          ApplicationContextInitializer.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span>;
+      Assert.state<span style="color: #2d9574;">(</span>requiredType != <span style="color: #a45bad;">null</span>,
+          <span style="color: #67b11d;">()</span> -&gt; <span style="color: #2d9574;">"No generic type found for initializr of type "</span> + initializer.getClass<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+      Assert.state<span style="color: #2d9574;">(</span>requiredType.isInstance<span style="color: #67b11d;">(</span>context<span style="color: #67b11d;">)</span>, <span style="color: #2d9574;">"Unable to call initializer"</span><span style="color: #2d9574;">)</span>;
+      <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#25191;&#34892;&#21021;&#22987;&#21270;&#22120;&#30340; initialize &#26041;&#27861;</span>
+      initializer.initialize<span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>j
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>初始化器列表来自 SpringApplication 启动时通过 SPI 加载的 ApplicationContextInitializer（如 ContextIdApplicationContextInitializer）；</li>
+<li>作用：在上下文刷新前对其进行自定义初始化（如设置上下文 ID、添加属性源、注册 Bean 定义）；</li>
+<li>扩展场景：开发者可自定义初始化器，在该阶段修改上下文配置（如添加自定义 Bean 定义）。</li>
+</ul>
+
+<p>
+<b>步骤 5：发布上下文准备完成事件</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-java">listeners.contextPrepared<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">context</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>触发 SpringApplicationRunListener 的 contextPrepared 方法，发布 ApplicationContextInitializedEvent；</li>
+<li>作用：通知所有监听器「上下文已初始化但未加载 Bean 定义」，允许监听器在 Bean 加载前做最后调整；</li>
+<li>典型场景：SpringBoot 内置监听器在此阶段做上下文基础配置（如设置日志上下文）。</li>
+</ul>
+
+<p>
+<b>步骤 6：关闭引导上下文</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-java">bootstrapContext.close<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">context</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+DefaultBootstrapContext：SpringBoot 4.0 新增的「启动引导上下文」，用于管理启动阶段的临时资源（如 ApplicationContextFactory、EnvironmentPostProcessor 等）。
+</p>
+
+<p>
+bootstrapContext.close(context) 方法的主要作用为：
+</p>
+<ul class="org-ul">
+<li>将引导上下文中的临时资源「移交」给应用上下文（如绑定的配置、监听器）；</li>
+<li>关闭引导上下文，释放临时资源，避免内存泄漏；</li>
+<li>触发引导上下文的关闭事件，通知临时资源完成清理；</li>
+</ul>
+
+<p>
+<b>步骤 7：打印启动日志（绑定 Properties 配置）</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isLogStartupInfo<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    logStartupInfo<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+    logStartupProfileInfo<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>logStartupInfo：打印应用启动基础信息（如“Starting MyApp on localhost with PID 1234”）；</li>
+<li>logStartupProfileInfo：打印激活的 Profile 信息（如“The following 1 profile is active: 'dev'”）；</li>
+</ul>
+
+<p>
+可通过 spring.main.log-startup-info=false 关闭启动日志打印。
+</p>
+
+<p>
+<b>步骤 8：注册核心单例 Bean</b>
+</p>
+
+<p>
+注册命令行参数（springApplicationArguments）和 Banner（springBootBanner）为单例 Bean，源码如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">beanFactory.registerSingleton<span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"springApplicationArguments"</span>, <span style="color: #ce537a; font-weight: bold;">applicationArguments</span><span style="color: #4f97d7;">)</span>;
+<span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span>printedBanner != <span style="color: #a45bad;">null</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    beanFactory.registerSingleton<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"springBootBanner"</span>, printedBanner<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+<b>步骤 9：配置 Bean 工厂规则</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span>beanFactory <span style="color: #4f97d7; font-weight: bold;">instanceof</span> AbstractAutowireCapableBeanFactory autowireCapableBeanFactory<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    autowireCapableBeanFactory.setAllowCircularReferences<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isAllowCircularReferences<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span>beanFactory <span style="color: #4f97d7; font-weight: bold;">instanceof</span> DefaultListableBeanFactory listableBeanFactory<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        listableBeanFactory.setAllowBeanDefinitionOverriding<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isAllowBeanDefinitionOverriding<span style="color: #67b11d;">()</span><span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+核心逻辑：
+</p>
+<ul class="org-ul">
+<li><code>setAllowCircularReferences</code> ：设置是否允许循环依赖，默认为 <code>true</code> （允许循环依赖），可通过 spring.main.allow-circular-references=false 关闭；</li>
+<li><code>setAllowBeanDefinitionOverriding</code> ：设置是否允许Bean定义覆盖，默认 <code>false</code> （禁止 Bean 定义覆盖），可通过 spring.main.allow-bean-definition-overriding=true 开启。</li>
+</ul>
+
+<p>
+<b>步骤 10：懒加载配置</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isLazyInitialization<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    context.addBeanFactoryPostProcessor<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">LazyInitializationBeanFactoryPostProcessor</span><span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+核心逻辑：
+</p>
+<ul class="org-ul">
+<li><code>isLazyInitialization()</code> ：从 SpringApplication.Properties 读取懒加载配置，默认 false。可通过 spring.main.lazy-initialization=true 开启全局懒加载；</li>
+<li><code>LazyInitializationBeanFactoryPostProcessor</code> ：为所有 Bean 设置默认懒加载模式（除非 Bean 显式标注 @Lazy(false)）；</li>
+</ul>
+
+<p>
+<b>步骤 11：保持应用存活配置</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isKeepAlive<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    context.addApplicationListener<span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">KeepAlive</span><span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+核心逻辑：
+</p>
+<ul class="org-ul">
+<li><code>isKeepAlive()</code> ：读取 spring.main.keep-alive 配置，默认 false；</li>
+<li>KeepAlive 监听器：应用启动完成后阻止主线程退出，适用于「非 Web 应用但需要长期运行」的场景（如定时任务、消息消费者）；</li>
+<li>设计意图：替代传统的 Thread.sleep(Long.MAX<sub>VALUE</sub>)，提供标准化的应用存活机制。</li>
+</ul>
+
+<p>
+<b>步骤 12：添加属性源排序后置处理器</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">context.addBeanFactoryPostProcessor<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">PropertySourceOrderingBeanFactoryPostProcessor</span><span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>;
+</pre>
+</div>
+
+<p>
+核心逻辑：
+</p>
+<ul class="org-ul">
+<li><code>PropertySourceOrderingBeanFactoryPostProcessor</code> ：保证上下文环境中的属性源按 SpringBoot 标准优先级排序（命令行 &gt; 系统属性 &gt; 配置文件 &gt; 默认属性）；</li>
+<li>设计意图：修复极端场景下属性源顺序混乱的问题，确保配置优先级规则生效。</li>
+</ul>
+
+<p>
+<b>步骤 13：条件化加载 Bean 定义</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span><span style="color: #a45bad;">!</span>AotDetector.useGeneratedArtifacts<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">Set</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">sources</span> = getAllSources<span style="color: #bc6ec5;">()</span>;
+    Assert.state<span style="color: #bc6ec5;">(</span><span style="color: #a45bad;">!</span>ObjectUtils.isEmpty<span style="color: #2d9574;">(</span>sources<span style="color: #2d9574;">)</span>, <span style="color: #2d9574;">"No sources defined"</span><span style="color: #bc6ec5;">)</span>;
+    load<span style="color: #bc6ec5;">(</span>context, sources.toArray<span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #67b11d;">[</span><span style="color: #a45bad;">0</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+核心逻辑：
+</p>
+<ul class="org-ul">
+<li>AotDetector.useGeneratedArtifacts()：判断当前是否使用 AOT 编译产物（提前编译了 Bean 定义）；</li>
+<li>非 AOT 模式（默认）：执行 load 方法，运行时解析启动类、扫描组件、加载自动配置类，生成 Bean 定义；</li>
+<li>AOT 模式：跳过 load 方法，直接使用提前编译好的 Bean 定义（存储在 AOT 产物中），提升启动速度；</li>
+<li>Assert.state：校验 sources 非空（默认是启动类），避免无 Bean 定义导致启动失败；</li>
+<li>设计意图：适配 AOT 编译特性，区分「运行时解析」和「提前编译」两种场景。</li>
+</ul>
+
+<p>
+<b>步骤 14：发布上下文加载完成事件</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">listeners.contextLoaded(context);
+</pre>
+</div>
+
+<p>
+触发 SpringApplicationRunListener 的 contextLoaded 方法，发布 ApplicationPreparedEvent；
+</p>
+</div>
+</div>
+<div id="outline-container-org64e7c88" class="outline-3">
+<h3 id="org64e7c88">刷新上下文（refreshContext）</h3>
+<div class="outline-text-3" id="text-org64e7c88">
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">refreshContext</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isRegisterShutdownHook<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+    shutdownHook.registerApplicationContext<span style="color: #2d9574;">(</span>context<span style="color: #2d9574;">)</span>;
+  <span style="color: #bc6ec5;">}</span>
+  refresh<span style="color: #bc6ec5;">(</span>context<span style="color: #bc6ec5;">)</span>;
+<span style="color: #4f97d7;">}</span>
+<span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">refresh</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">applicationContext</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+  applicationContext.refresh<span style="color: #bc6ec5;">()</span>;
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+
+<p>
+这是整个启动流程的核心中的核心，底层调用ApplicationContext的refresh()方法（继承自 Spring Framework 的AbstractApplicationContext），完成：
+</p>
+
+<ol class="org-ol">
+<li>BeanFactory 初始化；</li>
+<li>加载所有 Bean 定义（扫描@Component/@Configuration等注解）；</li>
+<li>注册 BeanPostProcessor；</li>
+<li>初始化 MessageSource（国际化）；</li>
+<li>初始化事件多播器；</li>
+<li>创建 Web 服务器（ServletWebServerFactory 创建 Tomcat/Jetty/Undertow）；</li>
+<li>实例化所有非懒加载的单例 Bean；</li>
+<li>发布ContextRefreshedEvent事件。</li>
+</ol>
+
+<p>
+4.0.x 中，Web 服务器的创建是在onRefresh()方法中完成的（以 Servlet 应用为例）：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #a45bad;">@Override</span>
+<span style="color: #4f97d7; font-weight: bold;">protected</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">onRefresh</span><span style="color: #4f97d7;">()</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #4f97d7; font-weight: bold;">super</span>.onRefresh<span style="color: #bc6ec5;">()</span>;
+    <span style="color: #4f97d7; font-weight: bold;">try</span> <span style="color: #bc6ec5;">{</span>
+        createWebServer<span style="color: #2d9574;">()</span>;
+    <span style="color: #bc6ec5;">}</span> <span style="color: #4f97d7; font-weight: bold;">catch</span> <span style="color: #bc6ec5;">(</span>Throwable ex<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">throw</span> <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ApplicationContextException</span><span style="color: #2d9574;">(</span><span style="color: #2d9574;">"Unable to start web server"</span>, ex<span style="color: #2d9574;">)</span>;
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfc9a424" class="outline-3">
+<h3 id="orgfc9a424">执行 ApplicationRunner 和 CommandLineRunner</h3>
+<div class="outline-text-3" id="text-orgfc9a424">
+<p>
+这两个接口是 SpringBoot 提供的 “启动后执行逻辑” 的扩展点，区别在于：
+</p>
+
+<ul class="org-ul">
+<li>CommandLineRunner：接收原始命令行参数（String 数组）；</li>
+<li>ApplicationRunner：接收封装后的ApplicationArguments（更友好的参数解析）。</li>
+</ul>
+
+<p>
+核心执行逻辑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">callRunners</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ApplicationContext</span> <span style="color: #7590db;">context</span>, <span style="color: #ce537a; font-weight: bold;">ApplicationArguments</span> <span style="color: #7590db;">args</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
+    <span style="color: #ce537a; font-weight: bold;">List</span><span style="color: #bc6ec5;">&lt;</span><span style="color: #ce537a; font-weight: bold;">Object</span><span style="color: #bc6ec5;">&gt;</span> <span style="color: #7590db;">runners</span> = <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">ArrayList</span><span style="color: #bc6ec5;">&lt;&gt;()</span>;
+    runners.addAll<span style="color: #bc6ec5;">(</span>context.getBeansOfType<span style="color: #2d9574;">(</span>ApplicationRunner.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span>.values<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+    runners.addAll<span style="color: #bc6ec5;">(</span>context.getBeansOfType<span style="color: #2d9574;">(</span>CommandLineRunner.<span style="color: #4f97d7; font-weight: bold;">class</span><span style="color: #2d9574;">)</span>.values<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#25353;@Order&#27880;&#35299;&#25490;&#24207;</span>
+    AnnotationAwareOrderComparator.sort<span style="color: #bc6ec5;">(</span>runners<span style="color: #bc6ec5;">)</span>;
+    <span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">&#25191;&#34892;run&#26041;&#27861;</span>
+    <span style="color: #4f97d7; font-weight: bold;">for</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">Object</span> <span style="color: #7590db;">runner</span> : <span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">LinkedHashSet</span><span style="color: #2d9574;">&lt;&gt;(</span>runners<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
+        <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>runner <span style="color: #4f97d7; font-weight: bold;">instanceof</span> ApplicationRunner<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+            callRunner<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span><span style="color: #ce537a; font-weight: bold;">ApplicationRunner</span><span style="color: #b1951d;">)</span> runner, args<span style="color: #67b11d;">)</span>;
+        <span style="color: #2d9574;">}</span>
+        <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #2d9574;">(</span>runner <span style="color: #4f97d7; font-weight: bold;">instanceof</span> CommandLineRunner<span style="color: #2d9574;">)</span> <span style="color: #2d9574;">{</span>
+            callRunner<span style="color: #67b11d;">(</span><span style="color: #b1951d;">(</span><span style="color: #ce537a; font-weight: bold;">CommandLineRunner</span><span style="color: #b1951d;">)</span> runner, args<span style="color: #67b11d;">)</span>;
+        <span style="color: #2d9574;">}</span>
+    <span style="color: #bc6ec5;">}</span>
+<span style="color: #4f97d7;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgee09cbb" class="outline-3">
+<h3 id="orgee09cbb">异常处理</h3>
+<div class="outline-text-3" id="text-orgee09cbb">
+<p>
+启动过程中若发生异常，会通过SpringBootExceptionReporter生成异常报告，并发布ApplicationFailedEvent事件，最终抛出异常终止启动。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org0b466c3" class="outline-2">
+<h2 id="org0b466c3">总结</h2>
+<div class="outline-text-2" id="text-org0b466c3">
+<p>
+<b>关键点回顾</b>
+</p>
+
+<ul class="org-ul">
+<li>核心入口：SpringApplication 的run()方法是启动流程的总入口，串联了环境准备、上下文创建、刷新等所有核心步骤。</li>
+<li>核心扩展点：ApplicationContextInitializer（上下文初始化）、ApplicationListener（事件监听）、ApplicationRunner/CommandLineRunner（启动后执行逻辑）是扩展启动流程的关键。</li>
+<li>核心特性：内嵌服务器的启动是在上下文刷新的onRefresh()阶段完成的，这是 SpringBoot 无需手动部署服务器的核心原因。</li>
+</ul>
+
+<p>
+理解 SpringApplication 的启动流程，不仅能帮我们快速定位启动异常（如端口占用、配置解析失败），更能让我们基于扩展点定制启动逻辑（如自定义配置加载、启动前校验），真正掌握 SpringBoot 的底层设计思想。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<div id="footer">
+    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
+    Last updated 2026-02-15 日 22:26<br>
+    Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
+</div>
+</div>
+</body>
+</html>

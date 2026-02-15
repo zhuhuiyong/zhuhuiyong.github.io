@@ -14,8 +14,8 @@
   <link>https://laozhuzhu.com</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Tue, 29 Jul 2025 13:09:10 +0800</pubDate>
-  <lastBuildDate>Tue, 29 Jul 2025 13:09:10 +0800</lastBuildDate>
+  <pubDate>Sun, 15 Feb 2026 22:36:08 +0800</pubDate>
+  <lastBuildDate>Sun, 15 Feb 2026 22:36:08 +0800</lastBuildDate>
   <generator>Emacs 29.3 Org-mode 9.7.26</generator>
   <webMaster>Laozhuzhu.COM (zhuhy)</webMaster>
   <image>
@@ -61,6 +61,22 @@
 
     <p>
     <a href="https://laozhuzhu.com/spring-cors.html">(Read more)</a>
+    </p>
+    ]]></description>
+  </item>
+  <item>
+    <title>SpringBoot源码解析：SpringApplication启动流程</title>
+    <link>https://laozhuzhu.com/posts/spring-boot-startup-process.html</link>
+    <author>Laozhuzhu.COM (zhuhy)</author>
+    <guid isPermaLink="false">spring-boot-startup-process.org</guid>
+    <pubDate>Sun, 15 Feb 2026 22:26:00 +0800</pubDate>
+
+    <description><![CDATA[<p>
+    SpringBoot的核心优势之一便是“约定优于配置”的自动化启动机制，而这一切的入口都源于 <code>SpringApplication</code> 类。无论是通过 <code>SpringApplication.run()</code> 静态方法启动，还是手动实例化 <code>SpringApplication</code> 后调用 <code>run()</code> 方法，其底层都遵循一套固定的启动流程。
+    </p>
+
+    <p>
+    <a href="https://laozhuzhu.com/spring-boot-startup-process.html">(Read more)</a>
     </p>
     ]]></description>
   </item>
