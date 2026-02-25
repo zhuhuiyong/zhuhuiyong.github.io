@@ -1,49 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux vmstat命令：虚拟内存统计</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux vmstat命令：虚拟内存统计</h1>
-<div class="PREVIEW" id="org5640052">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org605eb76">1. vmstat命令的使用</a></li>
+<li><a href="#org0299222">2. vmstat 输出参数</a></li>
+<li><a href="#org451b3e6">3. vmstat命令的高级用法</a></li>
+</ul>
+</div>
+</div>
+<div class="PREVIEW" id="orgced236a">
 <p>
 <code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
 </p>
 
 </div>
-<div id="outline-container-org93fd68c" class="outline-2">
-<h2 id="org93fd68c">vmstat命令的使用</h2>
-<div class="outline-text-2" id="text-org93fd68c">
+<div id="outline-container-org605eb76" class="outline-2">
+<h2 id="org605eb76"><span class="section-number-2">1.</span> vmstat命令的使用</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 <code>vmstat</code> 命令通常通过两个数字参数来使用，第一个参数是采样的时间间隔数（单位是秒），第二个参数是采样的次数。例如， <code>vmstat 2 1</code> 表示每两秒采集一次服务器状态，只采集一次。如果想要持续监控，可以只指定时间间隔，如 <code>vmstat 2</code> ，这样 <code>vmstat</code> 会每两秒采集数据，直到手动停止命令。
 </p>
 </div>
 </div>
-<div id="outline-container-orgf7be74e" class="outline-2">
-<h2 id="orgf7be74e">vmstat 输出参数</h2>
-<div class="outline-text-2" id="text-orgf7be74e">
+<div id="outline-container-org0299222" class="outline-2">
+<h2 id="org0299222"><span class="section-number-2">2.</span> vmstat 输出参数</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 <b>进程（Proc）</b>
 </p>
@@ -103,9 +128,9 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org0bbffbd" class="outline-2">
-<h2 id="org0bbffbd">vmstat命令的高级用法</h2>
-<div class="outline-text-2" id="text-org0bbffbd">
+<div id="outline-container-org451b3e6" class="outline-2">
+<h2 id="org451b3e6"><span class="section-number-2">3.</span> vmstat命令的高级用法</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 除了基本的使用方法外，vmstat还提供了一些高级选项，例如：
 </p>
@@ -131,7 +156,6 @@
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2025-07-29 二 13:05<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

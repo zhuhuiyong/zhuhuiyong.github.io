@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Executable Comments in Java</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 <script>
   window.MathJax = {
     tex: {
@@ -46,31 +47,63 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Executable Comments in Java</h1>
-<div id="outline-container-org0c02ecb" class="outline-2">
-<h2 id="org0c02ecb">原文地址</h2>
-<div class="outline-text-2" id="text-org0c02ecb">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgeb105aa">1. 原文地址</a></li>
+<li><a href="#org8665405">2. Overview</a></li>
+<li><a href="#org49ecca7">3. Comments</a></li>
+<li><a href="#orgde47e39">4. Comments and Unicode</a>
+<ul>
+<li><a href="#org23492df">4.1. Unicode Escapes</a></li>
+<li><a href="#org5ee3bd2">4.2. Lexical Translation</a></li>
+<li><a href="#org3bdcc90">4.3. Unicode and IDEs</a></li>
+</ul>
+</li>
+<li><a href="#orgf08f993">5. Conclusion</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgeb105aa" class="outline-2">
+<h2 id="orgeb105aa"><span class="section-number-2">1.</span> 原文地址</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 <a href="https://www.baeldung.com/java-executable-comments">https://www.baeldung.com/java-executable-comments</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org6255f7d" class="outline-2">
-<h2 id="org6255f7d">Overview</h2>
-<div class="outline-text-2" id="text-org6255f7d">
-<div class="preview" id="org2b3a533">
+<div id="outline-container-org8665405" class="outline-2">
+<h2 id="org8665405"><span class="section-number-2">2.</span> Overview</h2>
+<div class="outline-text-2" id="text-2">
+<div class="preview" id="orgc3e7f51">
 <p>
 Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
 </p>
@@ -82,9 +115,9 @@ In this tutorial, we’ll explore cases where comments in our code can become ex
 </div>
 </div>
 </div>
-<div id="outline-container-orgec213a3" class="outline-2">
-<h2 id="orgec213a3">Comments</h2>
-<div class="outline-text-2" id="text-orgec213a3">
+<div id="outline-container-org49ecca7" class="outline-2">
+<h2 id="org49ecca7"><span class="section-number-2">3.</span> Comments</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 Before we dive in, let’s revisit comments in Java. They are part of the Java syntax and come in two basic formats:
 </p>
@@ -117,9 +150,9 @@ Additionally, a multiple-line comment (also known as a multiline comment) starts
 </p>
 </div>
 </div>
-<div id="outline-container-org9e4e5f2" class="outline-2">
-<h2 id="org9e4e5f2">Comments and Unicode</h2>
-<div class="outline-text-2" id="text-org9e4e5f2">
+<div id="outline-container-orgde47e39" class="outline-2">
+<h2 id="orgde47e39"><span class="section-number-2">4.</span> Comments and Unicode</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 Now, let’s start with an example. The following code prints “Baeldung” in the standard output:
 </p>
@@ -141,9 +174,9 @@ However, this isn’t accurate. It’s important to note Java doesn’t allow co
 With that in mind, let’s examine our example in detail and see the reasons why the code prints “Baeldung” in the console.
 </p>
 </div>
-<div id="outline-container-orgde1ca02" class="outline-3">
-<h3 id="orgde1ca02">Unicode Escapes</h3>
-<div class="outline-text-3" id="text-orgde1ca02">
+<div id="outline-container-org23492df" class="outline-3">
+<h3 id="org23492df"><span class="section-number-3">4.1.</span> Unicode Escapes</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 The code from the example isn’t treated as a comment because of the “\u000d” Unicode escape sequence we placed before it.
 </p>
@@ -169,9 +202,9 @@ Moving forward, let’s take a closer look at how Java performs the lexical tran
 </p>
 </div>
 </div>
-<div id="outline-container-orgec69e04" class="outline-3">
-<h3 id="orgec69e04">Lexical Translation</h3>
-<div class="outline-text-3" id="text-orgec69e04">
+<div id="outline-container-org5ee3bd2" class="outline-3">
+<h3 id="org5ee3bd2"><span class="section-number-3">4.2.</span> Lexical Translation</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 When executing the lexical translation, the Unicode encoding takes precedence over any other encoding, even if it’s part of the comment. To put it differently, Java will first encode all Unicode escape sequences and then move forward with other translations.
 </p>
@@ -207,9 +240,9 @@ System.out.println<span style="color: #4f97d7;">(</span><span style="color: #2d9
 </div>
 </div>
 </div>
-<div id="outline-container-org7ef9f3b" class="outline-3">
-<h3 id="org7ef9f3b">Unicode and IDEs</h3>
-<div class="outline-text-3" id="text-org7ef9f3b">
+<div id="outline-container-org3bdcc90" class="outline-3">
+<h3 id="org3bdcc90"><span class="section-number-3">4.3.</span> Unicode and IDEs</h3>
+<div class="outline-text-3" id="text-4-3">
 <p>
 Nowadays, we often use an IDE as a development tool. Additionally, we frequently rely on it and expect it’ll warn us if something in our code seems suspicious.
 </p>
@@ -234,9 +267,9 @@ Here, we replaced the “//” and the letter “S” with Unicode escapes. The 
 </div>
 </div>
 </div>
-<div id="outline-container-org34ef799" class="outline-2">
-<h2 id="org34ef799">Conclusion</h2>
-<div class="outline-text-2" id="text-org34ef799">
+<div id="outline-container-orgf08f993" class="outline-2">
+<h2 id="orgf08f993"><span class="section-number-2">5.</span> Conclusion</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 In this tutorial, we learned how comments and Unicode escape sequences work together.
 </p>
@@ -253,7 +286,6 @@ Being able to write Unicode characters is useful when we’d like to use non-Lat
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:10<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

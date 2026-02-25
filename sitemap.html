@@ -1,101 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-15 日 22:47 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sitemap</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Sitemap</h1>
-<div id="outline-container-orgb1adac1" class="outline-2">
-<h2 id="orgb1adac1"><a href="posts.html">[2024-01-02] 文章</a></h2>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org5268102">1. [2026-02-25] LaoZhuZhu</a></li>
+<li><a href="#org5014d64">2. [2024-01-02] 文章</a></li>
+<li><a href="#org97eaf73">3. posts</a>
+<ul>
+<li><a href="#orge634b55">3.1. [2026-02-15] SpringBoot源码解析：SpringApplication启动流程</a></li>
+<li><a href="#org3d4630b">3.2. [2025-07-29] Linux vmstat命令：虚拟内存统计</a></li>
+<li><a href="#org2ad6554">3.3. [2025-05-16] Linux mkisofs命令：制作ISO映像文件</a></li>
+<li><a href="#org9063e88">3.4. [2025-04-27] Linux Find命令：查找文件</a></li>
+<li><a href="#orgeed705a">3.5. [2025-02-12] 如何在Ubuntu中删除多余的内核</a></li>
+<li><a href="#orgfc385df">3.6. [2025-02-07] 如何在Linux中生成字符串</a></li>
+<li><a href="#org1cbc454">3.7. [2025-01-07] Ubuntu系统启用禁用崩溃检测报告功能（Apport）</a></li>
+<li><a href="#orgd23ed54">3.8. [2024-10-11] 如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</a></li>
+<li><a href="#orgf5a5a6e">3.9. [2024-09-03] Linux中的/etc/fstab文件介绍</a></li>
+<li><a href="#orgf73970f">3.10. [2024-07-04] Linux系统中查找域名IP地址的方法</a></li>
+<li><a href="#org4948c92">3.11. [2024-06-21] 如何在编译Java时保留方法参数名</a></li>
+<li><a href="#orgd7adfae">3.12. [2024-06-09] UML:类图</a></li>
+<li><a href="#org3f0df74">3.13. [2024-04-09] 不同编程语言实现方式：时间戳（Timestamp）</a></li>
+<li><a href="#org622d3c1">3.14. [2024-01-17] Linux中如何实现大文件分卷压缩和合并解压</a></li>
+<li><a href="#orgb148734">3.15. [2024-01-11] Linux下如何修改路由表优先级</a></li>
+<li><a href="#orgac4581e">3.16. [2024-01-02] Linux区域设置（locale）</a></li>
+<li><a href="#orgc979359">3.17. [2023-12-15] 如何清除GitHub提交历史记录</a></li>
+<li><a href="#orgb54e763">3.18. [2023-12-15] 如何清理Linux系统日志</a></li>
+<li><a href="#org7d935ae">3.19. [2023-12-06] SpringBoot处理CORS跨域请求</a></li>
+<li><a href="#orge6cf4bc">3.20. [2023-11-30] 查看Java .class文件版本号</a></li>
+<li><a href="#org2f7c0a8">3.21. [2023-11-27] 如何在Linux Shell中获取本周的第一天和最后一天</a></li>
+<li><a href="#orga434354">3.22. [2023-11-23] How to Mock Environment Variables in Unit Tests</a></li>
+<li><a href="#org8572e47">3.23. [2023-11-20] Executable Comments in Java</a></li>
+<li><a href="#org84a6732">3.24. [2023-11-13] Java反射：判断方法是Getter还是Setter</a></li>
+<li><a href="#orgcf549c5">3.25. [2023-11-10] 如何禁用F12浏览器开发者工具</a></li>
+<li><a href="#org69e377f">3.26. [2023-11-10] 如何移除MySQL字段中的Html标签</a></li>
+<li><a href="#org209c06d">3.27. [2023-11-10] ASCII Code - The extended ASCII table</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div id="outline-container-orgbcfd513" class="outline-2">
-<h2 id="orgbcfd513"><a href="index.html">[2023-11-20] Something</a></h2>
 </div>
-<div id="outline-container-org3848d38" class="outline-2">
-<h2 id="org3848d38">posts</h2>
-<div class="outline-text-2" id="text-org3848d38">
+<div id="outline-container-org5268102" class="outline-2">
+<h2 id="org5268102"><span class="section-number-2">1.</span> <a href="index.html">[2026-02-25] LaoZhuZhu</a></h2>
 </div>
-<div id="outline-container-org740508c" class="outline-3">
-<h3 id="org740508c"><a href="posts/spring-boot-startup-process.html">[2026-02-15] SpringBoot源码解析：SpringApplication启动流程</a></h3>
-<div class="outline-text-3" id="text-org740508c">
+<div id="outline-container-org5014d64" class="outline-2">
+<h2 id="org5014d64"><span class="section-number-2">2.</span> <a href="posts.html">[2024-01-02] 文章</a></h2>
+</div>
+<div id="outline-container-org97eaf73" class="outline-2">
+<h2 id="org97eaf73"><span class="section-number-2">3.</span> posts</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orge634b55" class="outline-3">
+<h3 id="orge634b55"><span class="section-number-3">3.1.</span> <a href="posts/spring-boot-startup-process.html">[2026-02-15] SpringBoot源码解析：SpringApplication启动流程</a></h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 SpringBoot的核心优势之一便是“约定优于配置”的自动化启动机制，而这一切的入口都源于 <code>SpringApplication</code> 类。无论是通过 <code>SpringApplication.run()</code> 静态方法启动，还是手动实例化 <code>SpringApplication</code> 后调用 <code>run()</code> 方法，其底层都遵循一套固定的启动流程。
 </p>
 </div>
 </div>
-<div id="outline-container-org4bdc3a2" class="outline-3">
-<h3 id="org4bdc3a2"><a href="posts/linux-command-vmstat.html">[2025-07-29] Linux vmstat命令：虚拟内存统计</a></h3>
-<div class="outline-text-3" id="text-org4bdc3a2">
+<div id="outline-container-org3d4630b" class="outline-3">
+<h3 id="org3d4630b"><span class="section-number-3">3.2.</span> <a href="posts/linux-command-vmstat.html">[2025-07-29] Linux vmstat命令：虚拟内存统计</a></h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 <code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
 </p>
 </div>
 </div>
-<div id="outline-container-org0483c05" class="outline-3">
-<h3 id="org0483c05"><a href="posts/linux-command-mkisofs.html">[2025-05-16] Linux mkisofs命令：制作ISO映像文件</a></h3>
-<div class="outline-text-3" id="text-org0483c05">
+<div id="outline-container-org2ad6554" class="outline-3">
+<h3 id="org2ad6554"><span class="section-number-3">3.3.</span> <a href="posts/linux-command-mkisofs.html">[2025-05-16] Linux mkisofs命令：制作ISO映像文件</a></h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 <code>mkisofs</code> 是一个多功能命令行实用程序，用于从目录创建 ISO 映像文件。ISO文件是光盘映像文件，可用于分发大量文件、进行备份或创建可引导媒体。该命令也称为 <code>genisoimage</code> 。
 </p>
 </div>
 </div>
-<div id="outline-container-org427e694" class="outline-3">
-<h3 id="org427e694"><a href="posts/linux-command-find.html">[2025-04-27] Linux Find命令：查找文件</a></h3>
-<div class="outline-text-3" id="text-org427e694">
+<div id="outline-container-org9063e88" class="outline-3">
+<h3 id="org9063e88"><span class="section-number-3">3.4.</span> <a href="posts/linux-command-find.html">[2025-04-27] Linux Find命令：查找文件</a></h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 find 命令是 Linux 系统中非常强大和灵活的文件查找工具，可以用来根据各种条件查找文件，包括文件名、大小、类型、修改时间以及文件权限等。
 </p>
 </div>
 </div>
-<div id="outline-container-orgf118b97" class="outline-3">
-<h3 id="orgf118b97"><a href="posts/how-to-remove-ubuntu-kernel.html">[2025-02-12] 如何在Ubuntu中删除多余的内核</a></h3>
-<div class="outline-text-3" id="text-orgf118b97">
+<div id="outline-container-orgeed705a" class="outline-3">
+<h3 id="orgeed705a"><span class="section-number-3">3.5.</span> <a href="posts/how-to-remove-ubuntu-kernel.html">[2025-02-12] 如何在Ubuntu中删除多余的内核</a></h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
 删除和清理不再使用的多余内核可以释放磁盘空间、提高利用率，并避免潜在的存储空间不足。本文将介绍在 <code>Ubuntu</code> 系统中删除多余内核的几种方法。
 </p>
 </div>
 </div>
-<div id="outline-container-orgcaf4ef9" class="outline-3">
-<h3 id="orgcaf4ef9"><a href="posts/how-to-gen-strings-on-linux.html">[2025-02-07] 如何在Linux中生成字符串</a></h3>
-<div class="outline-text-3" id="text-orgcaf4ef9">
+<div id="outline-container-orgfc385df" class="outline-3">
+<h3 id="orgfc385df"><span class="section-number-3">3.6.</span> <a href="posts/how-to-gen-strings-on-linux.html">[2025-02-07] 如何在Linux中生成字符串</a></h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 本文介绍如何在Linux中，使用Shell命令生成随机长度的字段串，如何获取字符串长度。
 </p>
 </div>
 </div>
-<div id="outline-container-org55319a1" class="outline-3">
-<h3 id="org55319a1"><a href="posts/apport-enable-disable.html">[2025-01-07] Ubuntu系统启用禁用崩溃检测报告功能（Apport）</a></h3>
-<div class="outline-text-3" id="text-org55319a1">
+<div id="outline-container-org1cbc454" class="outline-3">
+<h3 id="org1cbc454"><span class="section-number-3">3.7.</span> <a href="posts/apport-enable-disable.html">[2025-01-07] Ubuntu系统启用禁用崩溃检测报告功能（Apport）</a></h3>
+<div class="outline-text-3" id="text-3-7">
 <p>
 Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
 </p>
 </div>
 </div>
-<div id="outline-container-org47569cd" class="outline-3">
-<h3 id="org47569cd"><a href="posts/how-to-enable-clipboard-sharing-in-qemu-kvm.html">[2024-10-11] 如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</a></h3>
-<div class="outline-text-3" id="text-org47569cd">
+<div id="outline-container-orgd23ed54" class="outline-3">
+<h3 id="orgd23ed54"><span class="section-number-3">3.8.</span> <a href="posts/how-to-enable-clipboard-sharing-in-qemu-kvm.html">[2024-10-11] 如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</a></h3>
+<div class="outline-text-3" id="text-3-8">
 <p>
 使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
 </p>
@@ -105,9 +160,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </p>
 </div>
 </div>
-<div id="outline-container-orgbbb3d7c" class="outline-3">
-<h3 id="orgbbb3d7c"><a href="posts/linux-etc-fstab.html">[2024-09-03] Linux中的/etc/fstab文件介绍</a></h3>
-<div class="outline-text-3" id="text-orgbbb3d7c">
+<div id="outline-container-orgf5a5a6e" class="outline-3">
+<h3 id="orgf5a5a6e"><span class="section-number-3">3.9.</span> <a href="posts/linux-etc-fstab.html">[2024-09-03] Linux中的/etc/fstab文件介绍</a></h3>
+<div class="outline-text-3" id="text-3-9">
 <p>
 fstab文件包含了你的电脑上的存储设备及其文件系统的信息。它是决定一个硬盘（分区）被怎样使用或者说整合到整个系统中的文件。具体来说：用fstab可以自动挂载各种文件系统格式的硬盘、分区、可移动设备和远程设备等。
 </p>
@@ -117,9 +172,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org41a355a" class="outline-3">
-<h3 id="org41a355a"><a href="posts/how-to-find-domain-ip.html">[2024-07-04] Linux系统中查找域名IP地址的方法</a></h3>
-<div class="outline-text-3" id="text-org41a355a">
+<div id="outline-container-orgf73970f" class="outline-3">
+<h3 id="orgf73970f"><span class="section-number-3">3.10.</span> <a href="posts/how-to-find-domain-ip.html">[2024-07-04] Linux系统中查找域名IP地址的方法</a></h3>
+<div class="outline-text-3" id="text-3-10">
 <p>
 在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
 </p>
@@ -145,9 +200,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org0aabf37" class="outline-3">
-<h3 id="org0aabf37"><a href="posts/how-to-compile-java-class-to-include-method-parameter-names.html">[2024-06-21] 如何在编译Java时保留方法参数名</a></h3>
-<div class="outline-text-3" id="text-org0aabf37">
+<div id="outline-container-org4948c92" class="outline-3">
+<h3 id="org4948c92"><span class="section-number-3">3.11.</span> <a href="posts/how-to-compile-java-class-to-include-method-parameter-names.html">[2024-06-21] 如何在编译Java时保留方法参数名</a></h3>
+<div class="outline-text-3" id="text-3-11">
 <p>
 在Java 8之前的版本，代码编译为class文件后，方法参数的类型是固定的，但参数名称却丢失了，参数名会变成arg0、arg1&#x2026;.。而现在，在Java8开始可以在class文件中保留参数名，这就给反射带来了极大的遍历。
 如果需要保留方法参数名，在编译时，可以启用 <code>-parameters</code> 选项，默认情况下此选项是关闭的。
@@ -158,17 +213,17 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org0170177" class="outline-3">
-<h3 id="org0170177"><a href="posts/uml-class-diagrams.html">[2024-06-09] UML:类图</a></h3>
-<div class="outline-text-3" id="text-org0170177">
+<div id="outline-container-orgd7adfae" class="outline-3">
+<h3 id="orgd7adfae"><span class="section-number-3">3.12.</span> <a href="posts/uml-class-diagrams.html">[2024-06-09] UML:类图</a></h3>
+<div class="outline-text-3" id="text-3-12">
 <p>
 类图（Class Diagram）是描述类、接口、协同以及他们之间关系的图，用来显示系统中这些概念的静态结构。类图也是其它图的基础，我们可以在类图的基础上，使用状态图、协作图、组件图和配置图等。
 </p>
 </div>
 </div>
-<div id="outline-container-orgeef74ef" class="outline-3">
-<h3 id="orgeef74ef"><a href="posts/multiple-code-impl-timestamp.html">[2024-04-09] 不同编程语言实现方式：时间戳（Timestamp）</a></h3>
-<div class="outline-text-3" id="text-orgeef74ef">
+<div id="outline-container-org3f0df74" class="outline-3">
+<h3 id="org3f0df74"><span class="section-number-3">3.13.</span> <a href="posts/multiple-code-impl-timestamp.html">[2024-04-09] 不同编程语言实现方式：时间戳（Timestamp）</a></h3>
+<div class="outline-text-3" id="text-3-13">
 <p>
 时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
 </p>
@@ -178,9 +233,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-orgcaa26c2" class="outline-3">
-<h3 id="orgcaa26c2"><a href="posts/how-to-compress-and-split-files-in-linux.html">[2024-01-17] Linux中如何实现大文件分卷压缩和合并解压</a></h3>
-<div class="outline-text-3" id="text-orgcaa26c2">
+<div id="outline-container-org622d3c1" class="outline-3">
+<h3 id="org622d3c1"><span class="section-number-3">3.14.</span> <a href="posts/how-to-compress-and-split-files-in-linux.html">[2024-01-17] Linux中如何实现大文件分卷压缩和合并解压</a></h3>
+<div class="outline-text-3" id="text-3-14">
 <p>
 个别时候，当我们想上传文件时，可能因为文件太大，网速太慢等原因，导致上传失败。此时，我们必须将大文件分割成一些小文件，以便上传。
 </p>
@@ -202,9 +257,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-orgc7e85d2" class="outline-3">
-<h3 id="orgc7e85d2"><a href="posts/how-to-change-route-priority-on-linux.html">[2024-01-11] Linux下如何修改路由表优先级</a></h3>
-<div class="outline-text-3" id="text-orgc7e85d2">
+<div id="outline-container-orgb148734" class="outline-3">
+<h3 id="orgb148734"><span class="section-number-3">3.15.</span> <a href="posts/how-to-change-route-priority-on-linux.html">[2024-01-11] Linux下如何修改路由表优先级</a></h3>
+<div class="outline-text-3" id="text-3-15">
 <p>
 在多个网络连接的情况下，比如WIFI和VPN同时存在的时候，路由表中就会存在多个默认网关。
 </p>
@@ -218,9 +273,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org5a5bdb1" class="outline-3">
-<h3 id="org5a5bdb1"><a href="posts/linux-locale-environment-variables.html">[2024-01-02] Linux区域设置（locale）</a></h3>
-<div class="outline-text-3" id="text-org5a5bdb1">
+<div id="outline-container-orgac4581e" class="outline-3">
+<h3 id="orgac4581e"><span class="section-number-3">3.16.</span> <a href="posts/linux-locale-environment-variables.html">[2024-01-02] Linux区域设置（locale）</a></h3>
+<div class="outline-text-3" id="text-3-16">
 <p>
 区域设置是一组环境变量，用于定义Linux系统上应用程序和shell会话的语言、国家/地区和字符编码设置（或任何其他特殊变体首选项）。
 </p>
@@ -234,9 +289,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org12d3fc7" class="outline-3">
-<h3 id="org12d3fc7"><a href="posts/how-to-delete-commit-history-in-github.html">[2023-12-15] 如何清除GitHub提交历史记录</a></h3>
-<div class="outline-text-3" id="text-org12d3fc7">
+<div id="outline-container-orgc979359" class="outline-3">
+<h3 id="orgc979359"><span class="section-number-3">3.17.</span> <a href="posts/how-to-delete-commit-history-in-github.html">[2023-12-15] 如何清除GitHub提交历史记录</a></h3>
+<div class="outline-text-3" id="text-3-17">
 <p>
 GitHub是开发人员和团队管理、协作和跟踪工作的重要工具。但是，有时您可能需要删除提交历史记录，以清理存储库或删除敏感信息。
 </p>
@@ -246,9 +301,9 @@ GitHub是开发人员和团队管理、协作和跟踪工作的重要工具。�
 </p>
 </div>
 </div>
-<div id="outline-container-org7a5375a" class="outline-3">
-<h3 id="org7a5375a"><a href="posts/how-to-clean-linux-system-journal-logs.html">[2023-12-15] 如何清理Linux系统日志</a></h3>
-<div class="outline-text-3" id="text-org7a5375a">
+<div id="outline-container-orgb54e763" class="outline-3">
+<h3 id="orgb54e763"><span class="section-number-3">3.18.</span> <a href="posts/how-to-clean-linux-system-journal-logs.html">[2023-12-15] 如何清理Linux系统日志</a></h3>
+<div class="outline-text-3" id="text-3-18">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -266,9 +321,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 </div>
 </div>
-<div id="outline-container-orga30728a" class="outline-3">
-<h3 id="orga30728a"><a href="posts/spring-cors.html">[2023-12-06] SpringBoot处理CORS跨域请求</a></h3>
-<div class="outline-text-3" id="text-orga30728a">
+<div id="outline-container-org7d935ae" class="outline-3">
+<h3 id="org7d935ae"><span class="section-number-3">3.19.</span> <a href="posts/spring-cors.html">[2023-12-06] SpringBoot处理CORS跨域请求</a></h3>
+<div class="outline-text-3" id="text-3-19">
 <p>
 In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
 </p>
@@ -282,25 +337,25 @@ Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/s
 </p>
 </div>
 </div>
-<div id="outline-container-org63d068b" class="outline-3">
-<h3 id="org63d068b"><a href="posts/how-to-find-java-class-file-version.html">[2023-11-30] 查看Java .class文件版本号</a></h3>
-<div class="outline-text-3" id="text-org63d068b">
+<div id="outline-container-orge6cf4bc" class="outline-3">
+<h3 id="orge6cf4bc"><span class="section-number-3">3.20.</span> <a href="posts/how-to-find-java-class-file-version.html">[2023-11-30] 查看Java .class文件版本号</a></h3>
+<div class="outline-text-3" id="text-3-20">
 <p>
 本文将介绍如何查看.class文件和jar文件的Java发行版本。
 </p>
 </div>
 </div>
-<div id="outline-container-orgf305280" class="outline-3">
-<h3 id="orgf305280"><a href="posts/how-to-find-first-and-last-day-of-a-week-in-shell.html">[2023-11-27] 如何在Linux Shell中获取本周的第一天和最后一天</a></h3>
-<div class="outline-text-3" id="text-orgf305280">
+<div id="outline-container-org2f7c0a8" class="outline-3">
+<h3 id="org2f7c0a8"><span class="section-number-3">3.21.</span> <a href="posts/how-to-find-first-and-last-day-of-a-week-in-shell.html">[2023-11-27] 如何在Linux Shell中获取本周的第一天和最后一天</a></h3>
+<div class="outline-text-3" id="text-3-21">
 <p>
 在Shell编程中，可以使用 <code>date</code> 命令获取本周的第一天和最后一天。
 </p>
 </div>
 </div>
-<div id="outline-container-org5dd7e7b" class="outline-3">
-<h3 id="org5dd7e7b"><a href="posts/java-unit-testing-environment-variables.html">[2023-11-23] How to Mock Environment Variables in Unit Tests</a></h3>
-<div class="outline-text-3" id="text-org5dd7e7b">
+<div id="outline-container-orga434354" class="outline-3">
+<h3 id="orga434354"><span class="section-number-3">3.22.</span> <a href="posts/java-unit-testing-environment-variables.html">[2023-11-23] How to Mock Environment Variables in Unit Tests</a></h3>
+<div class="outline-text-3" id="text-3-22">
 <p>
 When we’re unit testing code that depends on environment variables, we may wish to provide specific values for them as part of our test implementation.
 </p>
@@ -314,9 +369,9 @@ In this tutorial we’ll look at the challenges of depending on environment vari
 </p>
 </div>
 </div>
-<div id="outline-container-orgd3e135e" class="outline-3">
-<h3 id="orgd3e135e"><a href="posts/executable-comments-in-java.html">[2023-11-20] Executable Comments in Java</a></h3>
-<div class="outline-text-3" id="text-orgd3e135e">
+<div id="outline-container-org8572e47" class="outline-3">
+<h3 id="org8572e47"><span class="section-number-3">3.23.</span> <a href="posts/executable-comments-in-java.html">[2023-11-20] Executable Comments in Java</a></h3>
+<div class="outline-text-3" id="text-3-23">
 <p>
 Comments can be useful when we need additional notes in our code. They can help us make our code more understandable. Additionally, they can be especially useful in methods that perform complex operations.
 </p>
@@ -326,17 +381,17 @@ In this tutorial, we’ll explore cases where comments in our code can become ex
 </p>
 </div>
 </div>
-<div id="outline-container-org5817b3a" class="outline-3">
-<h3 id="org5817b3a"><a href="posts/how-to-check-method-is-get-or-set-in-java.html">[2023-11-13] Java反射：判断方法是Getter还是Setter</a></h3>
-<div class="outline-text-3" id="text-org5817b3a">
+<div id="outline-container-org84a6732" class="outline-3">
+<h3 id="org84a6732"><span class="section-number-3">3.24.</span> <a href="posts/how-to-check-method-is-get-or-set-in-java.html">[2023-11-13] Java反射：判断方法是Getter还是Setter</a></h3>
+<div class="outline-text-3" id="text-3-24">
 <p>
 在使用反射（Reflection）过程中，常常需要获取Class的Getter或Setter，以下代码可以用来检查Method,是Getter还是Setter。
 </p>
 </div>
 </div>
-<div id="outline-container-orgdbc9968" class="outline-3">
-<h3 id="orgdbc9968"><a href="posts/how-to-disable-f12-devtools-in-browser.html">[2023-11-10] 如何禁用F12浏览器开发者工具</a></h3>
-<div class="outline-text-3" id="text-orgdbc9968">
+<div id="outline-container-orgcf549c5" class="outline-3">
+<h3 id="orgcf549c5"><span class="section-number-3">3.25.</span> <a href="posts/how-to-disable-f12-devtools-in-browser.html">[2023-11-10] 如何禁用F12浏览器开发者工具</a></h3>
+<div class="outline-text-3" id="text-3-25">
 <p>
 当不想让自己的前端代码被用户调试时，需要使用户无法打开或使用浏览器的开发者工具。
 </p>
@@ -346,17 +401,17 @@ In this tutorial, we’ll explore cases where comments in our code can become ex
 </p>
 </div>
 </div>
-<div id="outline-container-orgc80a812" class="outline-3">
-<h3 id="orgc80a812"><a href="posts/how-to-remove-html-tags-in-mysql.html">[2023-11-10] 如何移除MySQL字段中的Html标签</a></h3>
-<div class="outline-text-3" id="text-orgc80a812">
+<div id="outline-container-org69e377f" class="outline-3">
+<h3 id="org69e377f"><span class="section-number-3">3.26.</span> <a href="posts/how-to-remove-html-tags-in-mysql.html">[2023-11-10] 如何移除MySQL字段中的Html标签</a></h3>
+<div class="outline-text-3" id="text-3-26">
 <p>
 在处理文本数据时，我们经常会遇到需要清除HTML标签的情况，在MySQL中，我们可以使用正则表达式和一些字符串函数来实现这一目标。 本文将介绍如何使用MySQL清除HTML标签。
 </p>
 </div>
 </div>
-<div id="outline-container-org35d20fe" class="outline-3">
-<h3 id="org35d20fe"><a href="posts/ASCIICode.html">[2023-11-10] ASCII Code - The extended ASCII table</a></h3>
-<div class="outline-text-3" id="text-org35d20fe">
+<div id="outline-container-org209c06d" class="outline-3">
+<h3 id="org209c06d"><span class="section-number-3">3.27.</span> <a href="posts/ASCIICode.html">[2023-11-10] ASCII Code - The extended ASCII table</a></h3>
+<div class="outline-text-3" id="text-3-27">
 <p>
 <b>ASCII</b>, stands for American Standard Code for Information Interchange.
 It's a 7-bit character code where every single bit represents a unique
@@ -373,8 +428,7 @@ most-used 8-bit character encoding in the world.
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
-    Last updated 2026-02-15 日 22:47<br>
+    Last updated 2026-02-25 三 15:31<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
 </div>

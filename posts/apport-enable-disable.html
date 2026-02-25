@@ -1,36 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ubuntu系统启用禁用崩溃检测报告功能（Apport）</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Ubuntu系统启用禁用崩溃检测报告功能（Apport）</h1>
-<div id="outline-container-orgd7ab57d" class="outline-2">
-<h2 id="orgd7ab57d">简介</h2>
-<div class="outline-text-2" id="text-orgd7ab57d">
-<div class="PREVIEW" id="orgb632e1d">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org21a157c">1. 简介</a></li>
+<li><a href="#orgfd9e792">2. 检查Apport服务状态</a></li>
+<li><a href="#org7bf2436">3. 启用Apport服务</a>
+<ul>
+<li><a href="#orgd4aefd7">3.1. 方法一：使用systemctl命令临时启用Apport</a></li>
+<li><a href="#org3f59675">3.2. 方法二：修改配置文件永久启用Apport</a></li>
+</ul>
+</li>
+<li><a href="#org183ffe9">4. 禁用Apport服务</a>
+<ul>
+<li><a href="#org37970bb">4.1. 方法一：使用systemctl命令临时禁用Apport</a></li>
+<li><a href="#org29797e2">4.2. 方法二：修改配置文件永久禁用Apport</a></li>
+</ul>
+</li>
+<li><a href="#org37f9919">5. 清理缓存</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org21a157c" class="outline-2">
+<h2 id="org21a157c"><span class="section-number-2">1.</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+<div class="PREVIEW" id="orgb50bf4a">
 <p>
 Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
 </p>
@@ -38,9 +75,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-orgc590e5a" class="outline-2">
-<h2 id="orgc590e5a">检查Apport服务状态</h2>
-<div class="outline-text-2" id="text-orgc590e5a">
+<div id="outline-container-orgfd9e792" class="outline-2">
+<h2 id="orgfd9e792"><span class="section-number-2">2.</span> 检查Apport服务状态</h2>
+<div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl status apport.service 
 &#9679; apport.service - automatic crash report generation
@@ -56,22 +93,22 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-org0a2b612" class="outline-2">
-<h2 id="org0a2b612">启用Apport服务</h2>
-<div class="outline-text-2" id="text-org0a2b612">
+<div id="outline-container-org7bf2436" class="outline-2">
+<h2 id="org7bf2436"><span class="section-number-2">3.</span> 启用Apport服务</h2>
+<div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgd1ed2ad" class="outline-3">
-<h3 id="orgd1ed2ad">方法一：使用systemctl命令临时启用Apport</h3>
-<div class="outline-text-3" id="text-orgd1ed2ad">
+<div id="outline-container-orgd4aefd7" class="outline-3">
+<h3 id="orgd4aefd7"><span class="section-number-3">3.1.</span> 方法一：使用systemctl命令临时启用Apport</h3>
+<div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl start apport
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd863154" class="outline-3">
-<h3 id="orgd863154">方法二：修改配置文件永久启用Apport</h3>
-<div class="outline-text-3" id="text-orgd863154">
+<div id="outline-container-org3f59675" class="outline-3">
+<h3 id="org3f59675"><span class="section-number-3">3.2.</span> 方法二：修改配置文件永久启用Apport</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=0</code> 修改为 <code>enabled=1</code> 永久启用Apport。
 </p>
@@ -95,22 +132,22 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-org733cc5c" class="outline-2">
-<h2 id="org733cc5c">禁用Apport服务</h2>
-<div class="outline-text-2" id="text-org733cc5c">
+<div id="outline-container-org183ffe9" class="outline-2">
+<h2 id="org183ffe9"><span class="section-number-2">4.</span> 禁用Apport服务</h2>
+<div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgf88e8e2" class="outline-3">
-<h3 id="orgf88e8e2">方法一：使用systemctl命令临时禁用Apport</h3>
-<div class="outline-text-3" id="text-orgf88e8e2">
+<div id="outline-container-org37970bb" class="outline-3">
+<h3 id="org37970bb"><span class="section-number-3">4.1.</span> 方法一：使用systemctl命令临时禁用Apport</h3>
+<div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-shell">$ sudo systemctl stop apport
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7f10ef9" class="outline-3">
-<h3 id="org7f10ef9">方法二：修改配置文件永久禁用Apport</h3>
-<div class="outline-text-3" id="text-org7f10ef9">
+<div id="outline-container-org29797e2" class="outline-3">
+<h3 id="org29797e2"><span class="section-number-3">4.2.</span> 方法二：修改配置文件永久禁用Apport</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 使用vi修改配置文件 <code>/etc/default/apport</code> ，将最后一行 <code>enabled=1</code> 修改为 <code>enabled=0</code> 永久禁用Apport。
 </p>
@@ -134,9 +171,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 </div>
 </div>
-<div id="outline-container-org407a5f7" class="outline-2">
-<h2 id="org407a5f7">清理缓存</h2>
-<div class="outline-text-2" id="text-org407a5f7">
+<div id="outline-container-org37f9919" class="outline-2">
+<h2 id="org37f9919"><span class="section-number-2">5.</span> 清理缓存</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 缓存的错误日志位于此目录下： <code>/var/crash/</code> ，禁用Apport后，可以清理此目录下的文件。
 </p>
@@ -150,7 +187,6 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2025-01-07 二 09:39<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

@@ -1,33 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何清理Linux系统日志</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">如何清理Linux系统日志</h1>
-<div class="preview" id="org626422d">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgbb6e384">1. 查看日志文件使用量</a></li>
+<li><a href="#org6eb59ab">2. 手动清理日志文件</a>
+<ul>
+<li><a href="#orge634b95">2.1. 清理 N 天前的日志</a></li>
+<li><a href="#org71a7560">2.2. 限制日志文件大小</a></li>
+<li><a href="#orgda28e52">2.3. 限制日志文件数据</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="preview" id="orgd1aa1e5">
 <p>
 systemd-journal是Linux的日志系统。它收集和存储内核日志数据、系统日志消息、标准输出和各种系统服务的错误。
 </p>
@@ -45,9 +75,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </p>
 
 </div>
-<div id="outline-container-org1401143" class="outline-2">
-<h2 id="org1401143">查看日志文件使用量</h2>
-<div class="outline-text-2" id="text-org1401143">
+<div id="outline-container-orgbb6e384" class="outline-2">
+<h2 id="orgbb6e384"><span class="section-number-2">1.</span> 查看日志文件使用量</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 你可以使用以下任意一种方法检查日志文件大小。
 </p>
@@ -71,13 +101,13 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 </div>
 </div>
-<div id="outline-container-orgaa409d7" class="outline-2">
-<h2 id="orgaa409d7">手动清理日志文件</h2>
-<div class="outline-text-2" id="text-orgaa409d7">
+<div id="outline-container-org6eb59ab" class="outline-2">
+<h2 id="org6eb59ab"><span class="section-number-2">2.</span> 手动清理日志文件</h2>
+<div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge428c4c" class="outline-3">
-<h3 id="orge428c4c">清理 N 天前的日志</h3>
-<div class="outline-text-3" id="text-orge428c4c">
+<div id="outline-container-orge634b95" class="outline-3">
+<h3 id="orge634b95"><span class="section-number-3">2.1.</span> 清理 N 天前的日志</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 以下命令将清理2天前的日志：
 </p>
@@ -139,9 +169,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </table>
 </div>
 </div>
-<div id="outline-container-org84cdb8f" class="outline-3">
-<h3 id="org84cdb8f">限制日志文件大小</h3>
-<div class="outline-text-3" id="text-org84cdb8f">
+<div id="outline-container-org71a7560" class="outline-3">
+<h3 id="org71a7560"><span class="section-number-3">2.2.</span> 限制日志文件大小</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 使用以下命令可将日志文件大小限制到100M，它将清理日志文件直到低于100M：
 </p>
@@ -188,9 +218,9 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </table>
 </div>
 </div>
-<div id="outline-container-org89ba3e6" class="outline-3">
-<h3 id="org89ba3e6">限制日志文件数据</h3>
-<div class="outline-text-3" id="text-org89ba3e6">
+<div id="outline-container-orgda28e52" class="outline-3">
+<h3 id="orgda28e52"><span class="section-number-3">2.3.</span> 限制日志文件数据</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 使用以下命令可将日志文件数据限制到5个：
 </p>
@@ -205,7 +235,6 @@ systemd-journal仅仅把日志集中保存在单一结构的日志文件/var/log
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2023-12-15 五 14:08<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

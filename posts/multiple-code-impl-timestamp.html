@@ -1,36 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>不同编程语言实现方式：时间戳（Timestamp）</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">不同编程语言实现方式：时间戳（Timestamp）</h1>
-<div id="outline-container-orga44d0e2" class="outline-2">
-<h2 id="orga44d0e2">什么是时间戳</h2>
-<div class="outline-text-2" id="text-orga44d0e2">
-<div class="preview" id="org30b4dea">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org05b0410">1. 什么是时间戳</a></li>
+<li><a href="#org3acce00">2. 获取当前时间戳</a>
+<ul>
+<li><a href="#org975beb0">2.1. Java</a></li>
+<li><a href="#org1c64e57">2.2. JavaScript</a></li>
+<li><a href="#org54e7c56">2.3. Shell</a></li>
+<li><a href="#orgc71a736">2.4. MySQL</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org05b0410" class="outline-2">
+<h2 id="org05b0410"><span class="section-number-2">1.</span> 什么是时间戳</h2>
+<div class="outline-text-2" id="text-1">
+<div class="preview" id="orgfefb960">
 <p>
 时间戳是指格林威治时间1970年01月01日00时00分00秒（北京时间1970年01月01日08时00分00秒）起至现在的总秒数，不考虑闰秒（Leap Seconds）。
 </p>
@@ -42,13 +73,13 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org32c216d" class="outline-2">
-<h2 id="org32c216d">获取当前时间戳</h2>
-<div class="outline-text-2" id="text-org32c216d">
+<div id="outline-container-org3acce00" class="outline-2">
+<h2 id="org3acce00"><span class="section-number-2">2.</span> 获取当前时间戳</h2>
+<div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org6fa5268" class="outline-3">
-<h3 id="org6fa5268">Java</h3>
-<div class="outline-text-3" id="text-org6fa5268">
+<div id="outline-container-org975beb0" class="outline-3">
+<h3 id="org975beb0"><span class="section-number-3">2.1.</span> Java</h3>
+<div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #2aa1ae; background-color: #292e34;">// </span><span style="color: #2aa1ae; background-color: #292e34;">pure java</span>
 System.currentTimeMillis<span style="color: #4f97d7;">()</span> / <span style="color: #a45bad;">1000</span>
@@ -62,27 +93,27 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 </div>
 </div>
-<div id="outline-container-org05cd8ed" class="outline-3">
-<h3 id="org05cd8ed">JavaScript</h3>
-<div class="outline-text-3" id="text-org05cd8ed">
+<div id="outline-container-org1c64e57" class="outline-3">
+<h3 id="org1c64e57"><span class="section-number-3">2.2.</span> JavaScript</h3>
+<div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-javascript">Math.round<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">new</span> <span style="color: #ce537a; font-weight: bold;">Date</span><span style="color: #bc6ec5;">()</span> / <span style="color: #a45bad;">1000</span><span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org90e79fc" class="outline-3">
-<h3 id="org90e79fc">Shell</h3>
-<div class="outline-text-3" id="text-org90e79fc">
+<div id="outline-container-org54e7c56" class="outline-3">
+<h3 id="org54e7c56"><span class="section-number-3">2.3.</span> Shell</h3>
+<div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-shell">date +%s
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org5abb061" class="outline-3">
-<h3 id="org5abb061">MySQL</h3>
-<div class="outline-text-3" id="text-org5abb061">
+<div id="outline-container-orgc71a736" class="outline-3">
+<h3 id="orgc71a736"><span class="section-number-3">2.4.</span> MySQL</h3>
+<div class="outline-text-3" id="text-2-4">
 <div class="org-src-container">
 <pre class="src src-sql"><span style="color: #4f97d7; font-weight: bold;">SELECT</span> unix_timestamp<span style="color: #4f97d7;">(</span>now<span style="color: #bc6ec5;">()</span><span style="color: #4f97d7;">)</span>
 </pre>
@@ -93,7 +124,6 @@ Instant.now<span style="color: #4f97d7;">()</span>.getEpochSecond<span style="co
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2024-04-09 二 12:42<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

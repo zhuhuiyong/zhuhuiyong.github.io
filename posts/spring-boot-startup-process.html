@@ -1,36 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-15 日 22:27 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SpringBoot源码解析：SpringApplication启动流程</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">SpringBoot源码解析：SpringApplication启动流程</h1>
-<div id="outline-container-org77f3378" class="outline-2">
-<h2 id="org77f3378">概述</h2>
-<div class="outline-text-2" id="text-org77f3378">
-<div class="preview" id="orgdda5e6a">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgef9df34">1. 概述</a></li>
+<li><a href="#orgd9f0b41">2. 初始化阶段：SpringApplication对象的创建</a>
+<ul>
+<li><a href="#orgf3785d9">2.1. 静态run()方法的逻辑</a></li>
+<li><a href="#orgcf15064">2.2. SpringApplication构造函数的核心逻辑</a>
+<ul>
+<li><a href="#org27ffaab">2.2.1. 推断应用类型</a></li>
+<li><a href="#org223597c">2.2.2. 加载初始化器与监听器</a></li>
+<li><a href="#org6278a6d">2.2.3. 推断主类</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfd4cb80">3. 运行阶段：核心启动流程</a>
+<ul>
+<li><a href="#orgdfa6f40">3.1. 准备应用环境（prepareEnvironment）</a>
+<ul>
+<li><a href="#org66159e1">3.1.1. 创建环境 getOrCreateEnvironment</a></li>
+<li><a href="#org70cccf9">3.1.2. 配置环境 configureEnvironment</a></li>
+</ul>
+</li>
+<li><a href="#org2dce75a">3.2. 打印 Banner</a></li>
+<li><a href="#org5d7e807">3.3. 创建应用上下文（createApplicationContext）</a></li>
+<li><a href="#org9f2ec11">3.4. 准备上下文（prepareContext）</a></li>
+<li><a href="#orgeecb1dc">3.5. 刷新上下文（refreshContext）</a></li>
+<li><a href="#org5d4adca">3.6. 执行 ApplicationRunner 和 CommandLineRunner</a></li>
+<li><a href="#org810654d">3.7. 异常处理</a></li>
+</ul>
+</li>
+<li><a href="#orgd50157d">4. 总结</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgef9df34" class="outline-2">
+<h2 id="orgef9df34"><span class="section-number-2">1.</span> 概述</h2>
+<div class="outline-text-2" id="text-1">
+<div class="preview" id="org6e59258">
 <p>
 SpringBoot的核心优势之一便是“约定优于配置”的自动化启动机制，而这一切的入口都源于 <code>SpringApplication</code> 类。无论是通过 <code>SpringApplication.run()</code> 静态方法启动，还是手动实例化 <code>SpringApplication</code> 后调用 <code>run()</code> 方法，其底层都遵循一套固定的启动流程。
 </p>
@@ -51,9 +103,9 @@ SpringApplication的启动流程本质上是“初始化准备-环境构建-上�
 </p>
 </div>
 </div>
-<div id="outline-container-orgf5c2d33" class="outline-2">
-<h2 id="orgf5c2d33">初始化阶段：SpringApplication对象的创建</h2>
-<div class="outline-text-2" id="text-orgf5c2d33">
+<div id="outline-container-orgd9f0b41" class="outline-2">
+<h2 id="orgd9f0b41"><span class="section-number-2">2.</span> 初始化阶段：SpringApplication对象的创建</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 初始化阶段的核心是构建SpringApplication实例，完成基础组件的加载与初始化。启动入口通常有两种写法，本质逻辑一致：
 </p>
@@ -74,9 +126,9 @@ SpringApplication的启动流程本质上是“初始化准备-环境构建-上�
 </pre>
 </div>
 </div>
-<div id="outline-container-orgc80dd8e" class="outline-3">
-<h3 id="orgc80dd8e">静态run()方法的逻辑</h3>
-<div class="outline-text-3" id="text-orgc80dd8e">
+<div id="outline-container-orgf3785d9" class="outline-3">
+<h3 id="orgf3785d9"><span class="section-number-3">2.1.</span> 静态run()方法的逻辑</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 静态 <code>run()</code> 方法，用于实例化SpringApplication并调用其成员方法 <code>run()</code> ，源码如下：
 </p>
@@ -94,9 +146,9 @@ SpringApplication的启动流程本质上是“初始化准备-环境构建-上�
 </div>
 </div>
 </div>
-<div id="outline-container-orgb031757" class="outline-3">
-<h3 id="orgb031757">SpringApplication构造函数的核心逻辑</h3>
-<div class="outline-text-3" id="text-orgb031757">
+<div id="outline-container-orgcf15064" class="outline-3">
+<h3 id="orgcf15064"><span class="section-number-3">2.2.</span> SpringApplication构造函数的核心逻辑</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 调用 <code>new SpringApplication(primarySources)</code> 时，会完成初始化工作，源码位于 <code>SpringApplication</code> 类的构造方法：
 </p>
@@ -125,9 +177,9 @@ SpringApplication的启动流程本质上是“初始化准备-环境构建-上�
 </pre>
 </div>
 </div>
-<div id="outline-container-orgf396425" class="outline-4">
-<h4 id="orgf396425">推断应用类型</h4>
-<div class="outline-text-4" id="text-orgf396425">
+<div id="outline-container-org27ffaab" class="outline-4">
+<h4 id="org27ffaab"><span class="section-number-4">2.2.1.</span> 推断应用类型</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <p>
 <code>WebApplicationType</code> 用于标识应用类型，决定后续创建的上下文类型和是否启动 Web 服务器，主要分为三类：
 </p>
@@ -193,9 +245,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 </p>
 </div>
 </div>
-<div id="outline-container-org56afea8" class="outline-4">
-<h4 id="org56afea8">加载初始化器与监听器</h4>
-<div class="outline-text-4" id="text-org56afea8">
+<div id="outline-container-org223597c" class="outline-4">
+<h4 id="org223597c"><span class="section-number-4">2.2.2.</span> 加载初始化器与监听器</h4>
+<div class="outline-text-4" id="text-2-2-2">
 <p>
 通过 <code>SpringFactoriesLoader</code> 加载 META-INF/spring.factories 文件中配置的扩展类：
 </p>
@@ -247,9 +299,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 </div>
 </div>
 </div>
-<div id="outline-container-orgf718bc3" class="outline-4">
-<h4 id="orgf718bc3">推断主类</h4>
-<div class="outline-text-4" id="text-orgf718bc3">
+<div id="outline-container-org6278a6d" class="outline-4">
+<h4 id="org6278a6d"><span class="section-number-4">2.2.3.</span> 推断主类</h4>
+<div class="outline-text-4" id="text-2-2-3">
 <p>
 通过遍历当前线程的调用栈，找到包含main方法的类，源码如下：
 </p>
@@ -272,9 +324,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 </div>
 </div>
 </div>
-<div id="outline-container-orgee3054f" class="outline-2">
-<h2 id="orgee3054f">运行阶段：核心启动流程</h2>
-<div class="outline-text-2" id="text-orgee3054f">
+<div id="outline-container-orgfd4cb80" class="outline-2">
+<h2 id="orgfd4cb80"><span class="section-number-2">3.</span> 运行阶段：核心启动流程</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 实例化SpringApplication后，调用 <code>run()</code> 方法进入核心运行阶段，该方法是启动流程的核心，源码如下：
 </p>
@@ -343,9 +395,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 下文拆解该方法中的关键步骤，重点分析环境准备、上下文创建与刷新、Runner调用等核心环节。
 </p>
 </div>
-<div id="outline-container-orgf6d3bde" class="outline-3">
-<h3 id="orgf6d3bde">准备应用环境（prepareEnvironment）</h3>
-<div class="outline-text-3" id="text-orgf6d3bde">
+<div id="outline-container-orgdfa6f40" class="outline-3">
+<h3 id="orgdfa6f40"><span class="section-number-3">3.1.</span> 准备应用环境（prepareEnvironment）</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 <code>prepareEnvironment</code> 是 SpringBoot 启动流程中“环境准备阶段”的主要方法，此方法构建一个包含系统属性、环境变量、命令行参数、配置文件、Profile 配置等所有配置源的 ConfigurableEnvironment 对象，为后续上下文初始化和 Bean 加载提供统一的配置环境。源码如下：
 </p>
@@ -377,9 +429,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 </pre>
 </div>
 </div>
-<div id="outline-container-org510d551" class="outline-4">
-<h4 id="org510d551">创建环境 getOrCreateEnvironment</h4>
-<div class="outline-text-4" id="text-org510d551">
+<div id="outline-container-org66159e1" class="outline-4">
+<h4 id="org66159e1"><span class="section-number-4">3.1.1.</span> 创建环境 getOrCreateEnvironment</h4>
+<div class="outline-text-4" id="text-3-1-1">
 <p>
 <code>getOrCreateEnvironment</code> 是 <code>prepareEnvironment</code> 流程的第一步，此步骤使用 <code>ApplicationContextFactory</code> 工厂模式解耦环境创建逻辑，核心目标是：
 </p>
@@ -409,9 +461,9 @@ Deducer 是 SpringBoot 为扩展“应用类型推断逻辑”而设计的 SPI �
 </div>
 </div>
 </div>
-<div id="outline-container-orgf6ac4cd" class="outline-4">
-<h4 id="orgf6ac4cd">配置环境 configureEnvironment</h4>
-<div class="outline-text-4" id="text-orgf6ac4cd">
+<div id="outline-container-org70cccf9" class="outline-4">
+<h4 id="org70cccf9"><span class="section-number-4">3.1.2.</span> 配置环境 configureEnvironment</h4>
+<div class="outline-text-4" id="text-3-1-2">
 <p>
 <code>configureEnvironment</code> 是 <code>prepareEnvironment</code> 流程的子步骤，调用时机在 getOrCreateEnvironment（创建环境对象）之后、ConfigurationPropertySources.attach（绑定配置属性源）之前。此步骤的主要作用为：
 </p>
@@ -547,9 +599,9 @@ PropertySource 默认的优先级，依次为：
 </div>
 </div>
 </div>
-<div id="outline-container-orgec90774" class="outline-3">
-<h3 id="orgec90774">打印 Banner</h3>
-<div class="outline-text-3" id="text-orgec90774">
+<div id="outline-container-org2dce75a" class="outline-3">
+<h3 id="org2dce75a"><span class="section-number-3">3.2.</span> 打印 Banner</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 Banner 是 SpringBoot 启动时打印的标识（默认是 SpringBoot logo），可通过spring.main.banner-mode配置关闭，或自定义 Banner（如在resources/banner.txt中配置）。
 </p>
@@ -681,9 +733,9 @@ print方法的源码如下：
 </div>
 </div>
 </div>
-<div id="outline-container-org9e30ab9" class="outline-3">
-<h3 id="org9e30ab9">创建应用上下文（createApplicationContext）</h3>
-<div class="outline-text-3" id="text-org9e30ab9">
+<div id="outline-container-org5d7e807" class="outline-3">
+<h3 id="org5d7e807"><span class="section-number-3">3.3.</span> 创建应用上下文（createApplicationContext）</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 使用ApplicationContextFactory 工厂，根据 <code>WebApplicationType</code> 创建对应的上下文实例：
 </p>
@@ -745,9 +797,9 @@ print方法的源码如下：
 </table>
 </div>
 </div>
-<div id="outline-container-org21abb55" class="outline-3">
-<h3 id="org21abb55">准备上下文（prepareContext）</h3>
-<div class="outline-text-3" id="text-org21abb55">
+<div id="outline-container-org9f2ec11" class="outline-3">
+<h3 id="org9f2ec11"><span class="section-number-3">3.4.</span> 准备上下文（prepareContext）</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 这一阶段为上下文刷新做前置准备：
 </p>
@@ -1101,9 +1153,9 @@ bootstrapContext.close(context) 方法的主要作用为：
 </p>
 </div>
 </div>
-<div id="outline-container-org64e7c88" class="outline-3">
-<h3 id="org64e7c88">刷新上下文（refreshContext）</h3>
-<div class="outline-text-3" id="text-org64e7c88">
+<div id="outline-container-orgeecb1dc" class="outline-3">
+<h3 id="orgeecb1dc"><span class="section-number-3">3.5.</span> 刷新上下文（refreshContext）</h3>
+<div class="outline-text-3" id="text-3-5">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #4f97d7; font-weight: bold;">private</span> <span style="color: #ce537a; font-weight: bold;">void</span> <span style="color: #bc6ec5; font-weight: bold;">refreshContext</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">ConfigurableApplicationContext</span> <span style="color: #7590db;">context</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">{</span>
   <span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">this</span>.properties.isRegisterShutdownHook<span style="color: #2d9574;">()</span><span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">{</span>
@@ -1150,9 +1202,9 @@ bootstrapContext.close(context) 方法的主要作用为：
 </div>
 </div>
 </div>
-<div id="outline-container-orgfc9a424" class="outline-3">
-<h3 id="orgfc9a424">执行 ApplicationRunner 和 CommandLineRunner</h3>
-<div class="outline-text-3" id="text-orgfc9a424">
+<div id="outline-container-org5d4adca" class="outline-3">
+<h3 id="org5d4adca"><span class="section-number-3">3.6.</span> 执行 ApplicationRunner 和 CommandLineRunner</h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 这两个接口是 SpringBoot 提供的 “启动后执行逻辑” 的扩展点，区别在于：
 </p>
@@ -1187,18 +1239,18 @@ bootstrapContext.close(context) 方法的主要作用为：
 </div>
 </div>
 </div>
-<div id="outline-container-orgee09cbb" class="outline-3">
-<h3 id="orgee09cbb">异常处理</h3>
-<div class="outline-text-3" id="text-orgee09cbb">
+<div id="outline-container-org810654d" class="outline-3">
+<h3 id="org810654d"><span class="section-number-3">3.7.</span> 异常处理</h3>
+<div class="outline-text-3" id="text-3-7">
 <p>
 启动过程中若发生异常，会通过SpringBootExceptionReporter生成异常报告，并发布ApplicationFailedEvent事件，最终抛出异常终止启动。
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org0b466c3" class="outline-2">
-<h2 id="org0b466c3">总结</h2>
-<div class="outline-text-2" id="text-org0b466c3">
+<div id="outline-container-orgd50157d" class="outline-2">
+<h2 id="orgd50157d"><span class="section-number-2">4.</span> 总结</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 <b>关键点回顾</b>
 </p>
@@ -1217,7 +1269,6 @@ bootstrapContext.close(context) 方法的主要作用为：
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2026-02-15 日 22:26<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

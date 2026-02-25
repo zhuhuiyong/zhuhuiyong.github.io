@@ -1,99 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-15 日 22:47 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Something</title>
+<title>LaoZhuZhu</title>
 <meta name="author" content="zhuhuiyong" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 <style>.title { display: none }</style>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
-<h1 class="title">Something</h1>
-<div style="height: 40px; line-height: 40px; border: solid 1px #eeeeee; padding-left: 5px;font-size: 14px;">
-此网站使用 <a href="https://gnu.org/s/emacs" target="_blank">GNU Emacs</a> 和 <a href="http://orgmode.org/" target="_blank">Org Mode</a> 生成
+<h1 class="title">LaoZhuZhu</h1>
+<!--
+  <div style="height: 40px; line-height: 40px; border: solid 1px #eeeeee; padding-left: 5px;font-size: 14px;">
+  此网站使用 <a href="https://gnu.org/s/emacs" target="_blank">GNU Emacs</a> 和 <a href="http://orgmode.org/" target="_blank">Org Mode</a> 生成
+  </div>
+  -->
+<div id="outline-container-org703654c" class="outline-2">
+<h2 id="org703654c">最新文章</h2>
+<div class="outline-text-2" id="text-org703654c">
 </div>
-<div id="outline-container-orgc6defd0" class="outline-2">
-<h2 id="orgc6defd0">最新文章</h2>
-<div class="outline-text-2" id="text-orgc6defd0">
-</div>
-<div id="outline-container-org9ff6480" class="outline-3">
-<h3 id="org9ff6480"><a href="posts/spring-boot-startup-process.html">[2026-02-15] SpringBoot源码解析：SpringApplication启动流程</a></h3>
-<div class="outline-text-3" id="text-org9ff6480">
+<div id="outline-container-org9224c3f" class="outline-3">
+<h3 id="org9224c3f"><a href="posts/spring-boot-startup-process.html">[2026-02-15] SpringBoot源码解析：SpringApplication启动流程</a></h3>
+<div class="outline-text-3" id="text-org9224c3f">
 <p>
 SpringBoot的核心优势之一便是“约定优于配置”的自动化启动机制，而这一切的入口都源于 <code>SpringApplication</code> 类。无论是通过 <code>SpringApplication.run()</code> 静态方法启动，还是手动实例化 <code>SpringApplication</code> 后调用 <code>run()</code> 方法，其底层都遵循一套固定的启动流程。
 </p>
 </div>
 </div>
-<div id="outline-container-org2ff400b" class="outline-3">
-<h3 id="org2ff400b"><a href="posts/linux-command-vmstat.html">[2025-07-29] Linux vmstat命令：虚拟内存统计</a></h3>
-<div class="outline-text-3" id="text-org2ff400b">
+<div id="outline-container-orgb6af940" class="outline-3">
+<h3 id="orgb6af940"><a href="posts/linux-command-vmstat.html">[2025-07-29] Linux vmstat命令：虚拟内存统计</a></h3>
+<div class="outline-text-3" id="text-orgb6af940">
 <p>
 <code>vmstat</code> （Virtual Memory Statistics的缩写）是Linux/Unix系统中用于监控虚拟内存、进程、CPU活动的命令。它提供了一种查看系统整体性能状态的方法，包括CPU使用率、内存使用情况、虚拟内存交换情况以及I/O读写情况。虽然 <code>vmstat</code> 提供了全面的系统状态信息，但它不足之处在于无法对单个进程进行深入分析。
 </p>
 </div>
 </div>
-<div id="outline-container-org46c1d0c" class="outline-3">
-<h3 id="org46c1d0c"><a href="posts/linux-command-mkisofs.html">[2025-05-16] Linux mkisofs命令：制作ISO映像文件</a></h3>
-<div class="outline-text-3" id="text-org46c1d0c">
+<div id="outline-container-org1b41d43" class="outline-3">
+<h3 id="org1b41d43"><a href="posts/linux-command-mkisofs.html">[2025-05-16] Linux mkisofs命令：制作ISO映像文件</a></h3>
+<div class="outline-text-3" id="text-org1b41d43">
 <p>
 <code>mkisofs</code> 是一个多功能命令行实用程序，用于从目录创建 ISO 映像文件。ISO文件是光盘映像文件，可用于分发大量文件、进行备份或创建可引导媒体。该命令也称为 <code>genisoimage</code> 。
 </p>
 </div>
 </div>
-<div id="outline-container-orgd741e65" class="outline-3">
-<h3 id="orgd741e65"><a href="posts/linux-command-find.html">[2025-04-27] Linux Find命令：查找文件</a></h3>
-<div class="outline-text-3" id="text-orgd741e65">
+<div id="outline-container-org96ea906" class="outline-3">
+<h3 id="org96ea906"><a href="posts/linux-command-find.html">[2025-04-27] Linux Find命令：查找文件</a></h3>
+<div class="outline-text-3" id="text-org96ea906">
 <p>
 find 命令是 Linux 系统中非常强大和灵活的文件查找工具，可以用来根据各种条件查找文件，包括文件名、大小、类型、修改时间以及文件权限等。
 </p>
 </div>
 </div>
-<div id="outline-container-org14267c9" class="outline-3">
-<h3 id="org14267c9"><a href="posts/how-to-remove-ubuntu-kernel.html">[2025-02-12] 如何在Ubuntu中删除多余的内核</a></h3>
-<div class="outline-text-3" id="text-org14267c9">
+<div id="outline-container-orgb44fe28" class="outline-3">
+<h3 id="orgb44fe28"><a href="posts/how-to-remove-ubuntu-kernel.html">[2025-02-12] 如何在Ubuntu中删除多余的内核</a></h3>
+<div class="outline-text-3" id="text-orgb44fe28">
 <p>
 删除和清理不再使用的多余内核可以释放磁盘空间、提高利用率，并避免潜在的存储空间不足。本文将介绍在 <code>Ubuntu</code> 系统中删除多余内核的几种方法。
 </p>
 </div>
 </div>
-<div id="outline-container-org4f49aa8" class="outline-3">
-<h3 id="org4f49aa8"><a href="posts/how-to-gen-strings-on-linux.html">[2025-02-07] 如何在Linux中生成字符串</a></h3>
-<div class="outline-text-3" id="text-org4f49aa8">
+<div id="outline-container-orgd7f4145" class="outline-3">
+<h3 id="orgd7f4145"><a href="posts/how-to-gen-strings-on-linux.html">[2025-02-07] 如何在Linux中生成字符串</a></h3>
+<div class="outline-text-3" id="text-orgd7f4145">
 <p>
 本文介绍如何在Linux中，使用Shell命令生成随机长度的字段串，如何获取字符串长度。
 </p>
 </div>
 </div>
-<div id="outline-container-org6af8677" class="outline-3">
-<h3 id="org6af8677"><a href="posts/apport-enable-disable.html">[2025-01-07] Ubuntu系统启用禁用崩溃检测报告功能（Apport）</a></h3>
-<div class="outline-text-3" id="text-org6af8677">
+<div id="outline-container-orgedae5df" class="outline-3">
+<h3 id="orgedae5df"><a href="posts/apport-enable-disable.html">[2025-01-07] Ubuntu系统启用禁用崩溃检测报告功能（Apport）</a></h3>
+<div class="outline-text-3" id="text-orgedae5df">
 <p>
 Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测报告功能。本文将介绍如何启用和禁用崩溃检测报告功能。
 </p>
 </div>
 </div>
-<div id="outline-container-org6a1b5a6" class="outline-3">
-<h3 id="org6a1b5a6"><a href="posts/how-to-enable-clipboard-sharing-in-qemu-kvm.html">[2024-10-11] 如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</a></h3>
-<div class="outline-text-3" id="text-org6a1b5a6">
+<div id="outline-container-org33daf31" class="outline-3">
+<h3 id="org33daf31"><a href="posts/how-to-enable-clipboard-sharing-in-qemu-kvm.html">[2024-10-11] 如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</a></h3>
+<div class="outline-text-3" id="text-org33daf31">
 <p>
 使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
 </p>
@@ -103,9 +120,9 @@ Ubuntu系统中，应用崩溃时，会触发 <code>apport</code> 崩溃检测�
 </p>
 </div>
 </div>
-<div id="outline-container-org12a6657" class="outline-3">
-<h3 id="org12a6657"><a href="posts/linux-etc-fstab.html">[2024-09-03] Linux中的/etc/fstab文件介绍</a></h3>
-<div class="outline-text-3" id="text-org12a6657">
+<div id="outline-container-orgd6bd468" class="outline-3">
+<h3 id="orgd6bd468"><a href="posts/linux-etc-fstab.html">[2024-09-03] Linux中的/etc/fstab文件介绍</a></h3>
+<div class="outline-text-3" id="text-orgd6bd468">
 <p>
 fstab文件包含了你的电脑上的存储设备及其文件系统的信息。它是决定一个硬盘（分区）被怎样使用或者说整合到整个系统中的文件。具体来说：用fstab可以自动挂载各种文件系统格式的硬盘、分区、可移动设备和远程设备等。
 </p>
@@ -115,9 +132,9 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </p>
 </div>
 </div>
-<div id="outline-container-org86c5c4d" class="outline-3">
-<h3 id="org86c5c4d"><a href="posts/how-to-find-domain-ip.html">[2024-07-04] Linux系统中查找域名IP地址的方法</a></h3>
-<div class="outline-text-3" id="text-org86c5c4d">
+<div id="outline-container-orged0f929" class="outline-3">
+<h3 id="orged0f929"><a href="posts/how-to-find-domain-ip.html">[2024-07-04] Linux系统中查找域名IP地址的方法</a></h3>
+<div class="outline-text-3" id="text-orged0f929">
 <p>
 在Linux系统中，可以使用以下 5 个命令查找域名IP地址：
 </p>
@@ -131,8 +148,7 @@ fstab文件的全路径是/etc/fstab。它只是一个文本文件，你能够�
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
-    Last updated 2025-01-07 二 09:42<br>
+    Last updated 2026-02-25 三 15:19<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
 </div>

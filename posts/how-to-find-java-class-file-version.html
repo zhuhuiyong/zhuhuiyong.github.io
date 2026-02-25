@@ -1,36 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>查看Java .class文件版本号</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">查看Java .class文件版本号</h1>
-<div id="outline-container-org4455e73" class="outline-2">
-<h2 id="org4455e73">简介</h2>
-<div class="outline-text-2" id="text-org4455e73">
-<div class="preview" id="org555e36e">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org59f1d71">1. 简介</a></li>
+<li><a href="#orgad4ea42">2. Java .class 版本号</a></li>
+<li><a href="#org51c314a">3. 使用javap命令检查Class文件版本号</a></li>
+<li><a href="#org05ff089">4. 检查jar文件版本号</a></li>
+<li><a href="#org10a88bc">5. 参考</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org59f1d71" class="outline-2">
+<h2 id="org59f1d71"><span class="section-number-2">1.</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+<div class="preview" id="org79dcc0f">
 <p>
 本文将介绍如何查看.class文件和jar文件的Java发行版本。
 </p>
@@ -38,9 +65,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orge8e3ce9" class="outline-2">
-<h2 id="orge8e3ce9">Java .class 版本号</h2>
-<div class="outline-text-2" id="text-orge8e3ce9">
+<div id="outline-container-orgad4ea42" class="outline-2">
+<h2 id="orgad4ea42"><span class="section-number-2">2.</span> Java .class 版本号</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 编译Java文件时，将生成一个.class文件。在某些情况下，我们需要找到已编译类文件的Java发行版本。
 </p>
@@ -230,9 +257,9 @@
 </table>
 </div>
 </div>
-<div id="outline-container-org0d5ea36" class="outline-2">
-<h2 id="org0d5ea36">使用javap命令检查Class文件版本号</h2>
-<div class="outline-text-2" id="text-org0d5ea36">
+<div id="outline-container-org51c314a" class="outline-2">
+<h2 id="org51c314a"><span class="section-number-2">3.</span> 使用javap命令检查Class文件版本号</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 我们可以使用javap命令，查看.class文件的版本号。
 </p>
@@ -252,9 +279,9 @@ major version: 55
 </div>
 </div>
 </div>
-<div id="outline-container-orgeebbad4" class="outline-2">
-<h2 id="orgeebbad4">检查jar文件版本号</h2>
-<div class="outline-text-2" id="text-orgeebbad4">
+<div id="outline-container-org05ff089" class="outline-2">
+<h2 id="org05ff089"><span class="section-number-2">4.</span> 检查jar文件版本号</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 在 Java 中，jar 包是一种常用的打包和分发 Java 类的格式。如果你想查看一个 jar 包是使用哪个 JDK 版本编译的，可以有2种方法。
 </p>
@@ -291,9 +318,9 @@ jar包中还有一个MANIFEST文件，其中包含有关所使用JDK的一些头
 </div>
 </div>
 </div>
-<div id="outline-container-orgeb3184b" class="outline-2">
-<h2 id="orgeb3184b">参考</h2>
-<div class="outline-text-2" id="text-orgeb3184b">
+<div id="outline-container-org10a88bc" class="outline-2">
+<h2 id="org10a88bc"><span class="section-number-2">5.</span> 参考</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 <a href="https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-4.html</a>
 </p>
@@ -306,7 +333,6 @@ jar包中还有一个MANIFEST文件，其中包含有关所使用JDK的一些头
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 18:04<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

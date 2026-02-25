@@ -1,41 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux Find命令：查找文件</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux Find命令：查找文件</h1>
-<div class="PREVIEW" id="org5faa675">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3be3f79">1. 按照文件名称搜索</a>
+<ul>
+<li><a href="#orgd6b9e75">1.1. 文件名称大小写匹配</a></li>
+<li><a href="#org4be74e2">1.2. 文件名称不区分大小写匹配</a></li>
+</ul>
+</li>
+<li><a href="#org76baa0c">2. 按照文件类型搜索</a>
+<ul>
+<li><a href="#org891caf7">2.1. 查找目录</a></li>
+<li><a href="#orgc89768f">2.2. 查找文件</a></li>
+<li><a href="#orgd1a1530">2.3. 查找软链接</a></li>
+</ul>
+</li>
+<li><a href="#org37f7861">3. 按照文件大小搜索</a>
+<ul>
+<li><a href="#org2ff8061">3.1. 查找大小为50M的文件</a></li>
+<li><a href="#org1efc36e">3.2. 查找大于等于50M小于100M的文件</a></li>
+</ul>
+</li>
+<li><a href="#orgbf9f016">4. 按照修改时间搜索</a>
+<ul>
+<li><a href="#orgdd81161">4.1. 查找在过去 N 天内修改过的文件</a></li>
+<li><a href="#org2d122ed">4.2. 查找在特定日期范围内修改的文件</a></li>
+<li><a href="#org818be70">4.3. 查找在过去 N 分钟内修改过的文件</a></li>
+<li><a href="#org0eb94a3">4.4. 查找在过去 N 小时内修改过的文件</a></li>
+<li><a href="#org4341058">4.5. 查找在过去 N 秒内修改过的文件</a></li>
+<li><a href="#org41f8b3a">4.6. 查找在过去 N 天内访问过的文件</a></li>
+<li><a href="#org212caa8">4.7. 查找在过去 N 天内状态改变的文件</a></li>
+</ul>
+</li>
+<li><a href="#org265a6b2">5. 按照权限查找文件</a>
+<ul>
+<li><a href="#org60d9942">5.1. 按文件所有者查找文件</a></li>
+<li><a href="#org9b896d0">5.2. 按文件所属组查找</a></li>
+</ul>
+</li>
+<li><a href="#orga2ebfae">6. 结合多个条件查找文件</a></li>
+<li><a href="#org03be4cd">7. 使用 -exec 执行操作</a></li>
+</ul>
+</div>
+</div>
+<div class="PREVIEW" id="org31e2068">
 <p>
 find 命令是 Linux 系统中非常强大和灵活的文件查找工具，可以用来根据各种条件查找文件，包括文件名、大小、类型、修改时间以及文件权限等。
 </p>
 
 </div>
-<div id="outline-container-org91bcb9f" class="outline-2">
-<h2 id="org91bcb9f">按照文件名称搜索</h2>
-<div class="outline-text-2" id="text-org91bcb9f">
+<div id="outline-container-org3be3f79" class="outline-2">
+<h2 id="org3be3f79"><span class="section-number-2">1.</span> 按照文件名称搜索</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 find命令中，用于文件名称的参数如下：
 </p>
@@ -45,9 +105,9 @@ find命令中，用于文件名称的参数如下：
 <li>-inum: 按照 inode 号搜索。</li>
 </ul>
 </div>
-<div id="outline-container-orge04e6b6" class="outline-3">
-<h3 id="orge04e6b6">文件名称大小写匹配</h3>
-<div class="outline-text-3" id="text-orge04e6b6">
+<div id="outline-container-orgd6b9e75" class="outline-3">
+<h3 id="orgd6b9e75"><span class="section-number-3">1.1.</span> 文件名称大小写匹配</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
 使用 <code>-name</code> 选项，可以按照文件名称查找。这里的文件名称是区分大小写的。
 </p>
@@ -69,9 +129,9 @@ find命令中，用于文件名称的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-org0b1776c" class="outline-3">
-<h3 id="org0b1776c">文件名称不区分大小写匹配</h3>
-<div class="outline-text-3" id="text-org0b1776c">
+<div id="outline-container-org4be74e2" class="outline-3">
+<h3 id="org4be74e2"><span class="section-number-3">1.2.</span> 文件名称不区分大小写匹配</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 使用 <code>-iname</code> 选项，可以按照文件名称查找。这里的文件名称是不区分大小写的。
 </p>
@@ -94,9 +154,9 @@ find命令中，用于文件名称的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-orgffb0bb3" class="outline-2">
-<h2 id="orgffb0bb3">按照文件类型搜索</h2>
-<div class="outline-text-2" id="text-orgffb0bb3">
+<div id="outline-container-org76baa0c" class="outline-2">
+<h2 id="org76baa0c"><span class="section-number-2">2.</span> 按照文件类型搜索</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 find命令中，用于文件类型的参数如下：
 </p>
@@ -107,9 +167,9 @@ find命令中，用于文件类型的参数如下：
 <li>-type l：查找软链接文件</li>
 </ul>
 </div>
-<div id="outline-container-org1764f50" class="outline-3">
-<h3 id="org1764f50">查找目录</h3>
-<div class="outline-text-3" id="text-org1764f50">
+<div id="outline-container-org891caf7" class="outline-3">
+<h3 id="org891caf7"><span class="section-number-3">2.1.</span> 查找目录</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 使用 <code>-type d</code> 选项，可以用来查找目录。
 </p>
@@ -120,9 +180,9 @@ find命令中，用于文件类型的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-orgcf780f6" class="outline-3">
-<h3 id="orgcf780f6">查找文件</h3>
-<div class="outline-text-3" id="text-orgcf780f6">
+<div id="outline-container-orgc89768f" class="outline-3">
+<h3 id="orgc89768f"><span class="section-number-3">2.2.</span> 查找文件</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 使用 <code>-type f</code> 选项，可以用来查找普通文件。
 </p>
@@ -133,9 +193,9 @@ find命令中，用于文件类型的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-org375eae9" class="outline-3">
-<h3 id="org375eae9">查找软链接</h3>
-<div class="outline-text-3" id="text-org375eae9">
+<div id="outline-container-orgd1a1530" class="outline-3">
+<h3 id="orgd1a1530"><span class="section-number-3">2.3.</span> 查找软链接</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 使用 <code>-type l</code> 选项，可以用来查找软链接文件。
 </p>
@@ -147,9 +207,9 @@ find命令中，用于文件类型的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-orgc2d9da3" class="outline-2">
-<h2 id="orgc2d9da3">按照文件大小搜索</h2>
-<div class="outline-text-2" id="text-orgc2d9da3">
+<div id="outline-container-org37f7861" class="outline-2">
+<h2 id="org37f7861"><span class="section-number-2">3.</span> 按照文件大小搜索</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 使用 <code>size n[cwbkMG]</code> 选项，可以查找指定大小的文件。
 </p>
@@ -167,9 +227,9 @@ find命令中，用于文件类型的参数如下：
 <li>G： for Gigabytes (units of 1073741824 bytes) 按照GB单位搜索，必须是大写的G</li>
 </ul>
 </div>
-<div id="outline-container-orge16c689" class="outline-3">
-<h3 id="orge16c689">查找大小为50M的文件</h3>
-<div class="outline-text-3" id="text-orge16c689">
+<div id="outline-container-org2ff8061" class="outline-3">
+<h3 id="org2ff8061"><span class="section-number-3">3.1.</span> 查找大小为50M的文件</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 查找大小为50M的文件：
 </p>
@@ -179,9 +239,9 @@ find命令中，用于文件类型的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-orga9cbb7d" class="outline-3">
-<h3 id="orga9cbb7d">查找大于等于50M小于100M的文件</h3>
-<div class="outline-text-3" id="text-orga9cbb7d">
+<div id="outline-container-org1efc36e" class="outline-3">
+<h3 id="org1efc36e"><span class="section-number-3">3.2.</span> 查找大于等于50M小于100M的文件</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 查找大于等于50M并且小于100M的文件：
 </p>
@@ -192,9 +252,9 @@ find命令中，用于文件类型的参数如下：
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc19d1c" class="outline-2">
-<h2 id="orgdc19d1c">按照修改时间搜索</h2>
-<div class="outline-text-2" id="text-orgdc19d1c">
+<div id="outline-container-orgbf9f016" class="outline-2">
+<h2 id="orgbf9f016"><span class="section-number-2">4.</span> 按照修改时间搜索</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 find 命令中用于时间的参数如下：
 </p>
@@ -216,9 +276,9 @@ find 命令中用于时间的参数如下：
 下面是一些使用 find 命令查找指定时间范围内的文件的例子。
 </p>
 </div>
-<div id="outline-container-org49b31ec" class="outline-3">
-<h3 id="org49b31ec">查找在过去 N 天内修改过的文件</h3>
-<div class="outline-text-3" id="text-org49b31ec">
+<div id="outline-container-orgdd81161" class="outline-3">
+<h3 id="orgdd81161"><span class="section-number-3">4.1.</span> 查找在过去 N 天内修改过的文件</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 使用 <code>-mtime</code> 选项可以查找在过去 N 天内修改过的文件。-mtime 的值是一个整数，表示从现在开始向前推算的天数。例如：
 </p>
@@ -247,9 +307,9 @@ find 命令中用于时间的参数如下：
 </p>
 </div>
 </div>
-<div id="outline-container-org16e0d42" class="outline-3">
-<h3 id="org16e0d42">查找在特定日期范围内修改的文件</h3>
-<div class="outline-text-3" id="text-org16e0d42">
+<div id="outline-container-org2d122ed" class="outline-3">
+<h3 id="org2d122ed"><span class="section-number-3">4.2.</span> 查找在特定日期范围内修改的文件</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定日期范围内修改的文件。 <code>-newermt</code> 允许你指定一个起始日期和结束日期。
 </p>
@@ -267,9 +327,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </p>
 </div>
 </div>
-<div id="outline-container-org1caed28" class="outline-3">
-<h3 id="org1caed28">查找在过去 N 分钟内修改过的文件</h3>
-<div class="outline-text-3" id="text-org1caed28">
+<div id="outline-container-org818be70" class="outline-3">
+<h3 id="org818be70"><span class="section-number-3">4.3.</span> 查找在过去 N 分钟内修改过的文件</h3>
+<div class="outline-text-3" id="text-4-3">
 <p>
 使用 <code>-mmin</code> 选项可以查找在过去 N 分钟内修改过的文件。 <code>-mmin</code> 的值是一个整数，表示从现在开始向前推算的分钟数。
 </p>
@@ -297,9 +357,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </p>
 </div>
 </div>
-<div id="outline-container-orgd4d2e09" class="outline-3">
-<h3 id="orgd4d2e09">查找在过去 N 小时内修改过的文件</h3>
-<div class="outline-text-3" id="text-orgd4d2e09">
+<div id="outline-container-org0eb94a3" class="outline-3">
+<h3 id="org0eb94a3"><span class="section-number-3">4.4.</span> 查找在过去 N 小时内修改过的文件</h3>
+<div class="outline-text-3" id="text-4-4">
 <p>
 虽然 <code>find</code> 没有直接提供按小时查找的功能，但可以通过 <code>-mmin</code> 选项来实现。例如，查找过去 24 小时内修改的文件：
 </p>
@@ -316,9 +376,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </p>
 </div>
 </div>
-<div id="outline-container-org0fa7762" class="outline-3">
-<h3 id="org0fa7762">查找在过去 N 秒内修改过的文件</h3>
-<div class="outline-text-3" id="text-org0fa7762">
+<div id="outline-container-org4341058" class="outline-3">
+<h3 id="org4341058"><span class="section-number-3">4.5.</span> 查找在过去 N 秒内修改过的文件</h3>
+<div class="outline-text-3" id="text-4-5">
 <p>
 使用 <code>-cmin</code> 选项可以查找在过去 N 秒内修改过的文件。 <code>-cmin</code> 的值是一个整数，表示从现在开始向前推算的秒数。
 </p>
@@ -335,9 +395,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </p>
 </div>
 </div>
-<div id="outline-container-orged00121" class="outline-3">
-<h3 id="orged00121">查找在过去 N 天内访问过的文件</h3>
-<div class="outline-text-3" id="text-orged00121">
+<div id="outline-container-org41f8b3a" class="outline-3">
+<h3 id="org41f8b3a"><span class="section-number-3">4.6.</span> 查找在过去 N 天内访问过的文件</h3>
+<div class="outline-text-3" id="text-4-6">
 <p>
 使用 <code>-atime</code> 选项可以查找在过去 N 天内访问过的文件。 <code>-atime</code> 的值是一个整数，表示从现在开始向前推算的天数。
 </p>
@@ -354,9 +414,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </p>
 </div>
 </div>
-<div id="outline-container-org673ac69" class="outline-3">
-<h3 id="org673ac69">查找在过去 N 天内状态改变的文件</h3>
-<div class="outline-text-3" id="text-org673ac69">
+<div id="outline-container-org212caa8" class="outline-3">
+<h3 id="org212caa8"><span class="section-number-3">4.7.</span> 查找在过去 N 天内状态改变的文件</h3>
+<div class="outline-text-3" id="text-4-7">
 <p>
 使用 <code>-ctime</code> 选项可以查找在过去 N 天内状态改变的文件。 <code>-ctime</code> 的值是一个整数，表示从现在开始向前推算的天数。状态改变包括权限更改、所有者更改等。
 </p>
@@ -374,9 +434,9 @@ find 命令结合 <code>-newermt</code> 选项可以更精确地查找在特定�
 </div>
 </div>
 </div>
-<div id="outline-container-orgf536118" class="outline-2">
-<h2 id="orgf536118">按照权限查找文件</h2>
-<div class="outline-text-2" id="text-orgf536118">
+<div id="outline-container-org265a6b2" class="outline-2">
+<h2 id="org265a6b2"><span class="section-number-2">5.</span> 按照权限查找文件</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 find命令中，用于权限的参数有：
 </p>
@@ -385,9 +445,9 @@ find命令中，用于权限的参数有：
 <li>-group groupname：按文件所属组查找。</li>
 </ul>
 </div>
-<div id="outline-container-org6658dae" class="outline-3">
-<h3 id="org6658dae">按文件所有者查找文件</h3>
-<div class="outline-text-3" id="text-org6658dae">
+<div id="outline-container-org60d9942" class="outline-3">
+<h3 id="org60d9942"><span class="section-number-3">5.1.</span> 按文件所有者查找文件</h3>
+<div class="outline-text-3" id="text-5-1">
 <p>
 使用 <code>-user username</code> 选项，可以按照文件所有者查找文件。
 </p>
@@ -397,9 +457,9 @@ find命令中，用于权限的参数有：
 </div>
 </div>
 </div>
-<div id="outline-container-org344cb42" class="outline-3">
-<h3 id="org344cb42">按文件所属组查找</h3>
-<div class="outline-text-3" id="text-org344cb42">
+<div id="outline-container-org9b896d0" class="outline-3">
+<h3 id="org9b896d0"><span class="section-number-3">5.2.</span> 按文件所属组查找</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 使用 <code>-grou groupname</code> 选项，可以按照文件所属组查找文件。
 </p>
@@ -410,9 +470,9 @@ find命令中，用于权限的参数有：
 </div>
 </div>
 </div>
-<div id="outline-container-orgd0dfb1c" class="outline-2">
-<h2 id="orgd0dfb1c">结合多个条件查找文件</h2>
-<div class="outline-text-2" id="text-orgd0dfb1c">
+<div id="outline-container-orga2ebfae" class="outline-2">
+<h2 id="orga2ebfae"><span class="section-number-2">6.</span> 结合多个条件查找文件</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 你可以结合多个条件来查找文件。例如，查找在过去 7 天内修改过且文件大小大于 1MB 的文件：
 </p>
@@ -425,9 +485,9 @@ find命令中，用于权限的参数有：
 </p>
 </div>
 </div>
-<div id="outline-container-orgd629508" class="outline-2">
-<h2 id="orgd629508">使用 -exec 执行操作</h2>
-<div class="outline-text-2" id="text-orgd629508">
+<div id="outline-container-org03be4cd" class="outline-2">
+<h2 id="org03be4cd"><span class="section-number-2">7.</span> 使用 -exec 执行操作</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 你还可以结合 <code>-exec</code> 选项对查找到的文件执行某些操作。例如，删除过去 30 天内未修改的文件：
 </p>
@@ -443,7 +503,6 @@ find命令中，用于权限的参数有：
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2025-04-27 日 14:16<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

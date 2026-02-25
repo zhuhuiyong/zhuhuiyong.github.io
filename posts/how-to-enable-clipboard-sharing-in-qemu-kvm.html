@@ -1,36 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">如何在QEMU/KVM虚拟机上共享剪切板/支持主机和虚拟机间的复制粘贴</h1>
-<div id="outline-container-org229cfc8" class="outline-2">
-<h2 id="org229cfc8">简介</h2>
-<div class="outline-text-2" id="text-org229cfc8">
-<div class="PREVIEW" id="org73b0748">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgcdecb5a">1. 简介</a></li>
+<li><a href="#orgfbd6d23">2. Windows虚拟机</a></li>
+<li><a href="#org5f2c12b">3. Ubuntu虚拟机</a></li>
+<li><a href="#orge08c13f">4. CentOS虚拟机</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcdecb5a" class="outline-2">
+<h2 id="orgcdecb5a"><span class="section-number-2">1.</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+<div class="PREVIEW" id="orgeab2974">
 <p>
 使用QEMU虚拟机时，在主机和虚拟机之间共享剪切板是一项非常方便的特性。
 </p>
@@ -42,9 +68,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org5dec98a" class="outline-2">
-<h2 id="org5dec98a">Windows虚拟机</h2>
-<div class="outline-text-2" id="text-org5dec98a">
+<div id="outline-container-orgfbd6d23" class="outline-2">
+<h2 id="orgfbd6d23"><span class="section-number-2">2.</span> Windows虚拟机</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 Windows虚拟机可参考以下方法：
 </p>
@@ -56,9 +82,9 @@ Windows虚拟机可参考以下方法：
 </ol>
 </div>
 </div>
-<div id="outline-container-org2962893" class="outline-2">
-<h2 id="org2962893">Ubuntu虚拟机</h2>
-<div class="outline-text-2" id="text-org2962893">
+<div id="outline-container-org5f2c12b" class="outline-2">
+<h2 id="org5f2c12b"><span class="section-number-2">3.</span> Ubuntu虚拟机</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 Ubuntu系列的虚拟机使用以下命令：
 </p>
@@ -70,9 +96,9 @@ sudo apt install -y spice-vdagent
 </div>
 </div>
 </div>
-<div id="outline-container-orga4f2a16" class="outline-2">
-<h2 id="orga4f2a16">CentOS虚拟机</h2>
-<div class="outline-text-2" id="text-orga4f2a16">
+<div id="outline-container-orge08c13f" class="outline-2">
+<h2 id="orge08c13f"><span class="section-number-2">4.</span> CentOS虚拟机</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 CentOS系列的虚拟机使用以下命令：
 </p>
@@ -86,7 +112,6 @@ sudo yum install -y spice-vdagent
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2024-10-11 五 15:15<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

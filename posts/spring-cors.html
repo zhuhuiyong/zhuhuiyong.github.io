@@ -1,44 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SpringBoot处理CORS跨域请求</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">SpringBoot处理CORS跨域请求</h1>
-<div id="outline-container-org4cbfe78" class="outline-2">
-<h2 id="org4cbfe78">原文地址</h2>
-<div class="outline-text-2" id="text-org4cbfe78">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org709b345">1. 原文地址</a></li>
+<li><a href="#orgba126f3">2. Overview</a></li>
+<li><a href="#org6f36b44">3. Controller Method CORS Configuration</a>
+<ul>
+<li><a href="#org5996672">3.1. @CrossOrigin on a @RequestMapping Annotated Handler Method</a></li>
+<li><a href="#orge7ea91f">3.2. @CrossOrigin on the Controller</a></li>
+<li><a href="#orgedaa2aa">3.3. @CrossOrigin on Controller and Handler Method</a></li>
+</ul>
+</li>
+<li><a href="#org3baeebf">4. Global CORS Configuration</a>
+<ul>
+<li><a href="#org33e5093">4.1. JavaConfig</a></li>
+<li><a href="#org47c6be9">4.2. XML Namespace</a></li>
+</ul>
+</li>
+<li><a href="#org4ae5d2f">5. CORS With Spring Security</a></li>
+<li><a href="#org73bf543">6. How It Works</a></li>
+<li><a href="#orgb0b4e31">7. Conclusion</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org709b345" class="outline-2">
+<h2 id="org709b345"><span class="section-number-2">1.</span> 原文地址</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 <a href="https://www.baeldung.com/spring-cors">https://www.baeldung.com/spring-cors</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org73bf130" class="outline-2">
-<h2 id="org73bf130">Overview</h2>
-<div class="outline-text-2" id="text-org73bf130">
-<div class="preview" id="org7224df3">
+<div id="outline-container-orgba126f3" class="outline-2">
+<h2 id="orgba126f3"><span class="section-number-2">2.</span> Overview</h2>
+<div class="outline-text-2" id="text-2">
+<div class="preview" id="orgc4c73e9">
 <p>
 In any modern browser, <a href="https://www.baeldung.com/cs/cors-preflight-requests">Cross-Origin Resource Sharing (CORS)</a> is a relevant specification with the emergence of HTML5 and JS clients that consume data via REST APIs.
 </p>
@@ -54,9 +94,9 @@ Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/s
 </div>
 </div>
 </div>
-<div id="outline-container-org84f738a" class="outline-2">
-<h2 id="org84f738a">Controller Method CORS Configuration</h2>
-<div class="outline-text-2" id="text-org84f738a">
+<div id="outline-container-org6f36b44" class="outline-2">
+<h2 id="org6f36b44"><span class="section-number-2">3.</span> Controller Method CORS Configuration</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 <b>Enabling CORS is straightforward &#x2013; just add the annotation <code>@CrossOrigin</code>.</b>
 </p>
@@ -65,9 +105,9 @@ Spring provides first-class <a href="http://docs.spring.io/spring/docs/current/s
 We can implement this in several different ways.
 </p>
 </div>
-<div id="outline-container-org2c7ecd4" class="outline-3">
-<h3 id="org2c7ecd4">@CrossOrigin on a @RequestMapping Annotated Handler Method</h3>
-<div class="outline-text-3" id="text-org2c7ecd4">
+<div id="outline-container-org5996672" class="outline-3">
+<h3 id="org5996672"><span class="section-number-3">3.1.</span> @CrossOrigin on a @RequestMapping Annotated Handler Method</h3>
+<div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@RestController</span>
 <span style="color: #a45bad;">@RequestMapping</span><span style="color: #4f97d7;">(</span><span style="color: #2d9574;">"/account"</span><span style="color: #4f97d7;">)</span>
@@ -98,9 +138,9 @@ can see that we didn't set any configuration for the <code>@CrossOrigin</code> a
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc83600b" class="outline-3">
-<h3 id="orgc83600b">@CrossOrigin on the Controller</h3>
-<div class="outline-text-3" id="text-orgc83600b">
+<div id="outline-container-orge7ea91f" class="outline-3">
+<h3 id="orge7ea91f"><span class="section-number-3">3.2.</span> @CrossOrigin on the Controller</h3>
+<div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>origins = <span style="color: #2d9574;">"http://example.com"</span>, maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
 <span style="color: #a45bad;">@RestController</span>
@@ -124,9 +164,9 @@ This time, we added <code>@CrossOrigin</code> on the class level. So, both <code
 </p>
 </div>
 </div>
-<div id="outline-container-org3e35000" class="outline-3">
-<h3 id="org3e35000">@CrossOrigin on Controller and Handler Method</h3>
-<div class="outline-text-3" id="text-org3e35000">
+<div id="outline-container-orgedaa2aa" class="outline-3">
+<h3 id="orgedaa2aa"><span class="section-number-3">3.3.</span> @CrossOrigin on Controller and Handler Method</h3>
+<div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@CrossOrigin</span><span style="color: #4f97d7;">(</span>maxAge = <span style="color: #a45bad;">3600</span><span style="color: #4f97d7;">)</span>
 <span style="color: #a45bad;">@RestController</span>
@@ -152,9 +192,9 @@ Spring will combine attributes from both annotations to create a merged CORS con
 </div>
 </div>
 </div>
-<div id="outline-container-org0fe588e" class="outline-2">
-<h2 id="org0fe588e">Global CORS Configuration</h2>
-<div class="outline-text-2" id="text-org0fe588e">
+<div id="outline-container-org3baeebf" class="outline-2">
+<h2 id="org3baeebf"><span class="section-number-2">4.</span> Global CORS Configuration</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 As an alternative to the fine-grained annotation-based configuration, Spring lets us define a global CORS configuration out of our controllers. This is similar to using a <code>Filter</code> based solution but can be declared within Spring MVC and combined with a fine-grained <code>@CrossOrigin</code> configuration.
 </p>
@@ -163,9 +203,9 @@ As an alternative to the fine-grained annotation-based configuration, Spring let
 By default, all origins and GET, HEAD, and POST methods are allowed.
 </p>
 </div>
-<div id="outline-container-org98bd73d" class="outline-3">
-<h3 id="org98bd73d">JavaConfig</h3>
-<div class="outline-text-3" id="text-org98bd73d">
+<div id="outline-container-org33e5093" class="outline-3">
+<h3 id="org33e5093"><span class="section-number-3">4.1.</span> JavaConfig</h3>
+<div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-java"><span style="color: #a45bad;">@Configuration</span>
 <span style="color: #a45bad;">@EnableWebMvc</span>
@@ -195,9 +235,9 @@ It is worth noting that since version 2.4.0, Spring Boot introduced <code>allowe
 </p>
 </div>
 </div>
-<div id="outline-container-orge6b6ed9" class="outline-3">
-<h3 id="orge6b6ed9">XML Namespace</h3>
-<div class="outline-text-3" id="text-orge6b6ed9">
+<div id="outline-container-org47c6be9" class="outline-3">
+<h3 id="org47c6be9"><span class="section-number-3">4.2.</span> XML Namespace</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 This minimal XML configuration enables CORS on a /** path pattern with the same default properties as the JavaConfig one:
 </p>
@@ -231,9 +271,9 @@ It's also possible to declare several CORS mappings with customized properties:
 </div>
 </div>
 </div>
-<div id="outline-container-org6d11178" class="outline-2">
-<h2 id="org6d11178">CORS With Spring Security</h2>
-<div class="outline-text-2" id="text-org6d11178">
+<div id="outline-container-org4ae5d2f" class="outline-2">
+<h2 id="org4ae5d2f"><span class="section-number-2">5.</span> CORS With Spring Security</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 If we use Spring Security in our project, we must take an extra step to make sure it plays well with CORS. That's because CORS needs to be processed first. Otherwise, Spring Security will reject the request before it reaches Spring MVC.
 </p>
@@ -286,9 +326,9 @@ Here, we create a  CorsConfiguration  instance using the default constructor a
 </p>
 </div>
 </div>
-<div id="outline-container-orga571220" class="outline-2">
-<h2 id="orga571220">How It Works</h2>
-<div class="outline-text-2" id="text-orga571220">
+<div id="outline-container-org73bf543" class="outline-2">
+<h2 id="org73bf543"><span class="section-number-2">6.</span> How It Works</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 CORS requests are automatically dispatched to the various registered HandlerMappings. They handle CORS preflight requests and intercept CORS simple and actual requests using a  <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/cors/CorsProcessor.html"><i>CorsProcessor</i></a>  implementation (DefaultCorsProcessor by default) to add the relevant CORS response headers (such as  Access-Control-Allow-Origin_).
 </p>
@@ -304,9 +344,9 @@ CORS requests are automatically dispatched to the various registered HandlerMap
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd8b48da" class="outline-2">
-<h2 id="orgd8b48da">Conclusion</h2>
-<div class="outline-text-2" id="text-orgd8b48da">
+<div id="outline-container-orgb0b4e31" class="outline-2">
+<h2 id="orgb0b4e31"><span class="section-number-2">7.</span> Conclusion</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 In this article, we showed how Spring provides support for enabling CORS in our application.
 </p>
@@ -328,7 +368,6 @@ The full source code for the examples is available <a href="https://github.com/
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2023-12-06 三 19:18<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>

@@ -1,36 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-07-29 二 13:08 -->
+<!-- 2026-02-25 三 15:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux区域设置（locale）</title>
 <meta name="author" content="zhuhy" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgcss.css">
-<link rel="stylesheet" type="text/css" href="/themes/simple/css/orgstyle.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgbase.css">
+<link rel="stylesheet" type="text/css" href="/themes/danliden/css/orgstyle.css">
 <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({id:"3J1LdRG6wZ4yWQly",ck:"3J1LdRG6wZ4yWQly"})</script>
+<script src="/statics/scripts/dark-mode.js" defer></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<hr style="border-top: 1px solid black;">
-<div class="topnav" style="display: flex; justify-content: space-between; align-items: center;">
-    <h1 style="margin-top: 0; margin-bottom: 0; margin-left:0px;">Something</h1> 
-    <div>
-        <a href="/" style="font-weight:bold; font-style:italic;">首页</a> /
-        <a href="/posts.html" style="font-weight:bold; font-style:italic;">文章</a> /
-        <a href="/rss.xml" style="font-weight:bold; font-style:italic;">RSS</a>
-    </div>
-</div>
-<hr style="border-top: 1px solid black;">
+<hr class="topnav-rule"/>
+<header class="site-header">
+  <a href="/" class="site-header__brand">
+    <h2>LaoZhuZhu</h2>
+  </a>
+  <nav class="topnav-links" aria-label="Primary">
+    <a href="/posts.html">文章</a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <a class="topnav-icon" href="/rss.xml" aria-label="RSS feed">
+      <svg class="rss-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 4h1a14 14 0 0 1 14 14v1"/>
+        <path d="M5 11h1a7 7 0 0 1 7 7v1"/>
+        <circle cx="6" cy="18" r="2"/>
+      </svg>
+    </a>
+    <span class="topnav-divider" aria-hidden="true">/</span>
+    <button id="theme-toggle" class="nav-theme-toggle topnav-icon" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+  </nav>
+</header>
+<hr class="topnav-rule"/>
 </div>
 <div id="content" class="content">
 <h1 class="title">Linux区域设置（locale）</h1>
-<div id="outline-container-org3210b16" class="outline-2">
-<h2 id="org3210b16">简介</h2>
-<div class="outline-text-2" id="text-org3210b16">
-<div class="preview" id="orgd3d392f">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgda54106">1. 简介</a></li>
+<li><a href="#org72c34eb">2. 区域设置（locale）分类</a></li>
+<li><a href="#org8a4f0cc">3. 区域设置（locale）优先级</a></li>
+<li><a href="#org1f9dcdb">4. 如何查看区域设置信息(locale)</a></li>
+<li><a href="#org8493234">5. 如何设置区域设置（locale）</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgda54106" class="outline-2">
+<h2 id="orgda54106"><span class="section-number-2">1.</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+<div class="preview" id="org72310b8">
 <p>
 区域设置是一组环境变量，用于定义Linux系统上应用程序和shell会话的语言、国家/地区和字符编码设置（或任何其他特殊变体首选项）。
 </p>
@@ -46,9 +73,9 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orgc6b075b" class="outline-2">
-<h2 id="orgc6b075b">区域设置（locale）分类</h2>
-<div class="outline-text-2" id="text-orgc6b075b">
+<div id="outline-container-org72c34eb" class="outline-2">
+<h2 id="org72c34eb"><span class="section-number-2">2.</span> 区域设置（locale）分类</h2>
+<div class="outline-text-2" id="text-2">
 <table>
 
 
@@ -127,9 +154,9 @@
 </table>
 </div>
 </div>
-<div id="outline-container-orgda6f856" class="outline-2">
-<h2 id="orgda6f856">区域设置（locale）优先级</h2>
-<div class="outline-text-2" id="text-orgda6f856">
+<div id="outline-container-org8a4f0cc" class="outline-2">
+<h2 id="org8a4f0cc"><span class="section-number-2">3.</span> 区域设置（locale）优先级</h2>
+<div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>LANGUAGE</li>
 <li>LC_ALL</li>
@@ -138,9 +165,9 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf58f774" class="outline-2">
-<h2 id="orgf58f774">如何查看区域设置信息(locale)</h2>
-<div class="outline-text-2" id="text-orgf58f774">
+<div id="outline-container-org1f9dcdb" class="outline-2">
+<h2 id="org1f9dcdb"><span class="section-number-2">4.</span> 如何查看区域设置信息(locale)</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 要查看有关当前的区域设置信息，请使用 <code>locale</code> 或 <code>localectl</code> 命令。
 </p>
@@ -212,9 +239,9 @@ en_BW.utf8
 </div>
 </div>
 </div>
-<div id="outline-container-org3edc066" class="outline-2">
-<h2 id="org3edc066">如何设置区域设置（locale）</h2>
-<div class="outline-text-2" id="text-org3edc066">
+<div id="outline-container-org8493234" class="outline-2">
+<h2 id="org8493234"><span class="section-number-2">5.</span> 如何设置区域设置（locale）</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 如果要更改或设置区域设置，请使用 <code>update-locale</code> 命令。
 <code>LANG</code> 变量允许您设置整个系统的locale。以下命令将 <code>LANG</code> 设置为 <code>en_IN.UTF-8</code> 并删除 <code>LANGUAGE</code> 的定义。
@@ -261,7 +288,6 @@ $ sudo localectl set-locale <span style="color: #7590db;">LC_TIME</span>=en_IN.U
 </div>
 <div id="postamble" class="status">
 <div id="footer">
-    Copyright 2023 - 2025 LaoZhuZhu.COM<br>
     Last updated 2024-01-02 二 20:49<br>
     Built with <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.3 (<a href="https://orgmode.org">Org</a> mode 9.7.26).
 </div>
